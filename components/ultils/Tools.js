@@ -1,5 +1,18 @@
 import CurrencyConvert from './CurrencyConvert'
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
+const ASSET_BASE_URL = "http://127.0.0.1:8000/storage"// API_BASE_URL.replace(/\/api\/?$/, "")
+
+export function buildImageUrl(path) {
+    if (!path) return "/assets/images/placeholder.png"
+    if (path.startsWith("http://") || path.startsWith("https://")) return path
+    const normalizedBase = ASSET_BASE_URL.endsWith("/") ? ASSET_BASE_URL.slice(0, -1) : ASSET_BASE_URL
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    let url = `${normalizedBase}${normalizedPath}`;
+    console.log(url)
+    return url
+}
+
 export function randomString(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -31,17 +44,17 @@ export function displayPrice(price, comparePrice) {
     return (
         <div className={`price product-item__price ${(comparePrice > price) ? 'price--on-sale' : ''}`}>
             <dl>
-                <div className="price__sale">
+                <div className="price__sale" styl={{display: 'block'}}>
                     <dd>
                         <span className="price-item price-item--sale">
                             <span className="money"><CurrencyConvert amount={parseInt(price)} /></span>
                         </span>
                     </dd>
-                    <dd className={`price__compare ${(comparePrice > price) ? 'show' : 'hidden'}`}>
+                    {/* <dd className={`price__compare ${(comparePrice > price) ? 'show' : 'hidden'}`}>
                         <s className="price-item price-item--regular">
                             <span className="money"><CurrencyConvert amount={parseInt(comparePrice)} /></span>
                         </s>
-                    </dd>
+                    </dd> */}
                 </div>
             </dl>
         </div>
@@ -81,9 +94,9 @@ export function featuredlabel(active, text) {
 
 export function unitvariant(option) {
     let i = true;
-    option.map((item) => {
-        if (item.variant.length > 1) i = false;
-    })
+    // option.map((item) => {
+    //     if (item.variant.length > 1) i = false;
+    // })
     return i;
 }
 

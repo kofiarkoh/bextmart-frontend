@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image'
 import update from 'immutability-helper';
 import Popup from "reactjs-popup";
-import { unitvariant, groupOption, arrayOption } from './Tools'
+import { unitvariant, groupOption, arrayOption, buildImageUrl } from './Tools'
 import UtilUpsells from './ProductUpsells'
 import ProductQuickView from './ProductQuickView'
 import useTranslation from './useTranslation'
@@ -108,19 +108,24 @@ const ProductCompare = ({ product }) => {
                                             <div className="cart-modal__content-left">
                                                 <div className="cart-modal__product-content" data-cart-modal-product="">
                                                     <div className="cart-modal__content-product">
-                                                        <Image className="cart-modal-product__image"
-                                                            src={product.image[0].imgpath} alt={product.name} width={70} height={70} />
+                                                        <Image
+                                                            className="cart-modal-product__image"
+                                                            src={buildImageUrl(product?.photos?.[0] || product?.image?.[0]?.imgpath)}
+                                                            alt={product?.name || "product"}
+                                                            width={70}
+                                                            height={70}
+                                                        />
                                                         <div className="cart-modal-product__info">
                                                             <h3 className="cart-modal-product__name h4">{product.name}</h3>
                                                             <dl>
-                                                                {
+                                                                {/* {
                                                                     product.option.map((item, index) => (
                                                                         <div key={index} className="cart-modal-product__option h4">
                                                                             <dt>{t(item.title)}: </dt>
                                                                             <dd>{t(item.variant[0].title)}</dd>
                                                                         </div>
                                                                     ))
-                                                                }
+                                                                } */}
                                                             </dl>
                                                             <div className="cart-modal-product__price">
                                                                 <span className="price">

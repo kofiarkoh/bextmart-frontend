@@ -6,11 +6,13 @@ import ProductQuickView from "./ProductQuickView";
 import ProductWishlist from './ProductWishlist'
 import ProductCompare from './ProductCompare'
 import ProductAddtoCart from './ProductAddtoCart'
-import { displayRating, displayPrice, displayInventoryBar } from './Tools'
+import { displayRating, displayPrice, displayInventoryBar, buildImageUrl } from './Tools'
 import useTranslation from './useTranslation'
 
 const ProductItemGrid = ({ product }) => {
     const { t } = useTranslation();
+    const primaryPhoto = product?.photos?.[0]
+    const secondaryPhoto = product?.photos?.[1] || primaryPhoto
     return (
         <>
             <div className="product-item__grid ">
@@ -18,12 +20,12 @@ const ProductItemGrid = ({ product }) => {
                     <Link className='product-item__link product-item__hover_image' href={`/product/${product.handle}`}>
                         <div className='product-item__image'>
                             <div className='product-item__image'>
-                                <Image src={product.image[0].imgpath} priority="true" alt={product.image[0].imgalt} width={182} height={182} />
+                                <img style={{ width: 182, height: 182, objectFit: "contain" }} src={buildImageUrl(primaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
                             </div>
                         </div>
                         <div className='product-item__image_second'>
                             <div className='product-item__image'>
-                                <Image src={product.image[1].imgpath} priority="true" alt={product.image[1].imgalt} width={182} height={182} />
+                                <img style={{ width: 182, height: 182, objectFit: "contain"  }} src={buildImageUrl(secondaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
                             </div>
                         </div>
                     </Link>
@@ -35,13 +37,16 @@ const ProductItemGrid = ({ product }) => {
                     </div>
                     <ProductAddtoCart product={product} />
                 </div>
-                <div className="product-item__bottom">
+                <div className="product-item__bottom" style={{
+                    display: 'block'
+                }}>
                     <Link href={`/product/${product.handle}`} className="product-item__title h5">
                         {product.name}
                     </Link>
-                    {displayRating(product.stars)}
-                    {displayPrice(product.price, product.price_compare)}
-                    {displayInventoryBar(product.quantity, product.quantity_total, t("Left"))}
+                    {displayRating(3.4)}
+                    <div style={{
+                        paddingTop: "10px",
+                    }}>GHC {product.price}</div>
                 </div>
             </div>
         </>

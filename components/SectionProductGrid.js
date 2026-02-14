@@ -1,27 +1,23 @@
 import React from "react";
-import Link from 'next/link';
-import ProductItemGrid from './ultils/ProductItemGrid'
-import useTranslation from './ultils/useTranslation'
-import Product_en from "../public/locales/en/en_Product.json";
-import Product_jp from "../public/locales/jp/jp_Product.json";
-import Product_fr from "../public/locales/fr/fr_Product.json";
-import Product_it from "../public/locales/it/it_Product.json";
-import styles from '../public/assets/styles/Home.module.css'
+import Link from "next/link";
+import { useSelector } from "react-redux";
+import ProductItemGrid from "./ultils/ProductItemGrid";
+import useTranslation from "./ultils/useTranslation";
+import { useSearchProductsQuery } from "../store/productsApi";
+import styles from "../public/assets/styles/Home.module.css";
+
 
 const SectionProductGrid = (props) => {
-    const { t, locale } = useTranslation();
-    let Productdata, titlecenter = false;
-    switch (locale) {
-        case 'en':
-            Productdata = Product_en.slice(3, 18); break;
-        case 'fr':
-            Productdata = Product_fr.slice(3, 18); break;
-        case 'it':
-            Productdata = Product_it.slice(3, 18); break;
-        case 'jp':
-            Productdata = Product_jp.slice(3, 18); break;
-    }
-    if(props.titlecenter) titlecenter = true;
+    const { t } = useTranslation();
+    const { data, isLoading, isError } = useSearchProductsQuery();
+    const products = useSelector((state) => state.products.items);
+    const resolvedItems = products?.length
+        ? products
+        : data?.data?.data || data?.data || data?.results || data || [];
+    const displayItems = Array.isArray(resolvedItems)
+        ? resolvedItems.slice(0, 15)
+        : [];
+    const titlecenter = Boolean(props.titlecenter);
 
     return (
         <>
@@ -36,13 +32,21 @@ const SectionProductGrid = (props) => {
                             <div className={styles.products_grid_content}>
                                 <div className="collection-grid__content">
                                     <div className={`${styles.products_grid_row } row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5`}>
-                                        {
-                                            Productdata.map((item, index) => (
-                                                <div key={index} className="product-item__content col d-none d-xxl-block d-xl-block d-lg-block d-md-block d-sm-block d-block">
-                                                    <ProductItemGrid product={item} /> 
-                                                </div>
-                                            ))
-                                        }
+                                        {isLoading && (
+                                            <div className="col">
+                                                <div className="product-item__content">Loading...</div>
+                                            </div>
+                                        )}
+                                        {!isLoading && isError && (
+                                            <div className="col">
+                                                <div className="product-item__content">Failed to load products.</div>
+                                            </div>
+                                        )}
+                                        {!isLoading && !isError && displayItems.map((item, index) => (
+                                            <div key={item?.id || index} className="product-item__content col d-none d-xxl-block d-xl-block d-lg-block d-md-block d-sm-block d-block">
+                                                <ProductItemGrid product={item} />
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

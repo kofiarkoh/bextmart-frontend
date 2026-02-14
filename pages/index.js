@@ -35,7 +35,7 @@ export default function Home() {
       <Header />
       <main>
         <SectionSlideshowIndex1 />
-        <SectionCategoriesSlider />
+        {/* <SectionCategoriesSlider />
         <SectionProductTabDeal />
         <SectionBrandListing />
         <SectionTwoBanners
@@ -66,8 +66,8 @@ export default function Home() {
           banner1={DataIndexBanners().img7}
           banner2={DataIndexBanners().img8}
           link1={DataIndexBanners().img7_link}
-          link2={DataIndexBanners().img8_link} />
-        <SectionProductSlider />
+          link2={DataIndexBanners().img8_link} /> */}
+        {/* <SectionProductSlider /> */}
         <SectionProductGrid />
       </main>
       <Footer />

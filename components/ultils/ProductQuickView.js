@@ -7,7 +7,7 @@ import SwiperCore, { Navigation, Pagination, Thumbs } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import { displayRating, displayPrice, arrayOption1, arrayOption2 } from './Tools';
+import { displayRating, displayPrice, arrayOption1, arrayOption2, buildImageUrl } from './Tools';
 import UtilUpsells from './ProductUpsells'
 import { useAtom } from 'jotai'
 import { cartCount, cartTotal, cartData } from './Store'
@@ -41,8 +41,8 @@ const ProductQuickView = ({ product, directly }) => {
     }
 
     useEffect(() => {
-        if (product.option.length > 0) setOption1(product.option[0].variant[0].title);
-        if (product.option.length > 1) setOption2(product.option[1].variant[0].title);
+        if (product?.option?.length > 0) setOption1(product.option[0].variant[0].title);
+        if (product?.option?.length > 1) setOption2(product.option[1].variant[0].title);
     }, [])
 
     function checkOption() {
@@ -129,6 +129,10 @@ const ProductQuickView = ({ product, directly }) => {
         swiper.slideTo(index);
     }
 
+    const photos = Array.isArray(product?.photos) && product.photos.length > 0
+        ? product.photos
+        : (product?.image || []).map((item) => item.imgpath)
+
     return (
         <div className="product-item__quickview">
             <button type="button" className={`product-item__icon ${(directly === "1") ? 'show' : 'hidden'}`} onClick={() => setOpen(o => !o)}>
@@ -161,10 +165,10 @@ const ProductQuickView = ({ product, directly }) => {
                                                             onSwiper={setSwiper}
                                                             className='swiper-container'>
                                                             {
-                                                                product.image.map((item) => (
-                                                                    <SwiperSlide key={item.idpro}>
+                                                                photos.map((item, index) => (
+                                                                    <SwiperSlide key={`${item}-${index}`}>
                                                                         <div className="product-item__image">
-                                                                            <Image src={item.imgpath} alt={item.imgalt} width={560} height={560} />
+                                                                            <Image src={buildImageUrl(item)} alt={product?.name || "product"} width={560} height={560} />
                                                                         </div>
                                                                     </SwiperSlide>
                                                                 ))
@@ -181,10 +185,10 @@ const ProductQuickView = ({ product, directly }) => {
                                                             className="quickview-thumbs"
                                                         >
                                                             {
-                                                                product.image.map((item, index) => (
-                                                                    <SwiperSlide key={`thumb-${item.idpro}`}>
+                                                                photos.map((item, index) => (
+                                                                    <SwiperSlide key={`thumb-${item}-${index}`}>
                                                                         <div className="product-item__image" onClick={() => changeImage(index)}>
-                                                                            <Image src={item.imgpath} alt={item.imgalt} width={133} height={133} />
+                                                                            <Image src={buildImageUrl(item)} alt={product?.name || "product"} width={133} height={133} />
                                                                         </div>
                                                                     </SwiperSlide>
                                                                 ))
@@ -217,7 +221,7 @@ const ProductQuickView = ({ product, directly }) => {
                                                 </div>
                                                 </div>
                                                 <div className="variant-selects">
-                                                    {
+                                                    {/* {
                                                         product.option.map((item, indexi) => (
                                                             <fieldset key={item.handle} className="js product-form__input" data-type="input">
                                                                 <legend className="form__label">
@@ -246,7 +250,7 @@ const ProductQuickView = ({ product, directly }) => {
                                                                 </div>
                                                             </fieldset>
                                                         ))
-                                                    }
+                                                    } */}
                                                 </div>
                                                 <div className="product-form__buttons">
                                                     <div className="product-form__buttons-group row">
@@ -320,19 +324,19 @@ const ProductQuickView = ({ product, directly }) => {
                                     <div className="cart-modal__content-left">
                                         <div className="cart-modal__product-content" data-cart-modal-product="">
                                             <div className="cart-modal__content-product">
-                                                <Image className="cart-modal-product__image"
-                                                    src={product.image[0].imgpath} alt={product.name} width={70} height={70} loading="lazy" />
+                                                    <Image className="cart-modal-product__image"
+                                                    src={buildImageUrl(photos[0])} alt={product?.name || "product"} width={70} height={70} loading="lazy" />
                                                 <div className="cart-modal-product__info">
                                                     <h3 className="cart-modal-product__name h4">{product.name}</h3>
                                                     <dl>
-                                                        {
+                                                        {/* {
                                                             product.option.map((item, index) => (
                                                                 <div key={index} className="cart-modal-product__option h4">
                                                                     <dt>{item.title}: {(index === 0) ? option1 : option2}</dt>
                                                                     <dd>{ }</dd>
                                                                 </div>
                                                             ))
-                                                        }
+                                                        } */}
                                                     </dl>
                                                     <div className="cart-modal-product__price">
                                                         <span className="price">
