@@ -70,14 +70,16 @@ export default function AccountPage() {
                 const data = await login({ email: logindata.email, password: logindata.password }).unwrap()
                 setTextStatus(t("Completed"));
                 setClassStatus("submit_complete");
-                setTimeout(() => {
+                //setTimeout(() => {
                     setClassStatus('');
                     setLoginSuccess(true);
-                    if (data?.user) {
-                        localStorage.setItem('yam-user', JSON.stringify(data.user));
-                        dispatch(setCredentials({ user: data.user }))
-                    }
-                }, 500);
+                    console.log('login data', data.data);
+
+                        localStorage.setItem('yam-user', JSON.stringify(data.data.user));
+                        localStorage.setItem('auth_token', JSON.stringify(data.data.token));
+                        dispatch(setCredentials({ user: data.data.user, "token": data.data.token }))
+
+               // }, 500);
             } catch (error) {
                 setClassStatus('');
                 setTextStatus(t("Sign_In"));

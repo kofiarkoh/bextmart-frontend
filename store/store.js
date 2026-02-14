@@ -14,11 +14,3 @@ export const store = configureStore({
 
 setupListeners(store.dispatch)
 
-if (typeof window !== 'undefined') {
-  const token = localStorage.getItem('auth_token')
-  const storedUser = localStorage.getItem('yam-user')
-  const user = storedUser ? JSON.parse(storedUser) : null
-  if (token || user) {
-    store.dispatch(setCredentials({ token, user }))
-  }
-}
