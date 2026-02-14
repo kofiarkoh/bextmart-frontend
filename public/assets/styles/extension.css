@@ -442,7 +442,7 @@
 .product-item__bottom .product-item__title,
 .product-item__title {
     display: inline-block;
-    *display: inline;
+    /* *display: inline; */
     zoom: 1;
     transition: all 500ms ease;
     line-height: 20px;
@@ -1288,7 +1288,7 @@
 }
 
 .spr-badge {
-    *zoom: 1;
+    zoom: 1;
     min-height: auto;
     min-width: auto;
     display: block
@@ -3005,7 +3005,7 @@ a.product__text {
 
 .product-template__bottom .box-divider h2 {
     display: inline-block;
-    *display: inline;
+    display: inline;
     zoom: 1;
     background-color: var(--color_content_bg);
     position: relative;

@@ -13,11 +13,11 @@ const CurrencyConvert = (props) => {
     const [options, setOptions] = useState([]);
     const [output, setOutput] = useState(props.amount);
     useEffect(() => {
-        Axios.get(
-            `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
-            .then((res) => {
-                setInfo(res.data[from]);
-            });
+        // Axios.get(
+        //     `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
+        //     .then((res) => {
+        //         setInfo(res.data[from]);
+        //     });
     }, [from]);
 
     useEffect(() => {

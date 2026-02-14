@@ -225,7 +225,6 @@
     text-transform: uppercase;
     text-align: center;
     display: inline-block;
-    *display: inline;
     zoom: 1;
     line-height: 1em;
     text-decoration: underline;

@@ -96,7 +96,6 @@ tr.cart_item {
     color: var(--color_body);
     font-weight: 500;
     display: inline-block;
-    *display: inline;
     zoom: 1;
 }
 

@@ -6,7 +6,7 @@ import useTranslation from './useTranslation'
 import ProductItemList from './ProductItemList'
 import { SVGArrowDown } from '../../public/assets/SVG';
 import {HorizontalData} from '../data/DataHeader'
-import MenuBKG from '../../public/assets/images/MenuBkg.png'
+import MenuBKG from '../../public/assets/images/MenuBKG.png'
 
 const HorizontalMenu = () => {
     const { t } = useTranslation();

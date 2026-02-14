@@ -804,7 +804,8 @@ deferred-media {
   transform: scale3d(1.05, 1.05, 1);
 }
 
-.effect-apollo:hover>a::before .effect-parent::before {
+.effect-apollo:hover>a::before,
+.effect-apollo:hover .effect-parent::before {
   transform: scale3d(1.9, 1.4, 1) rotate3d(0, 0, 1, 45deg) translate3d(0, 200%, 0);
 }
 

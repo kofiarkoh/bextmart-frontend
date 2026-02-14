@@ -237,7 +237,6 @@
     color: var(--color_heading);
     margin-right: 5px;
     display: inline-block;
-    *display: inline;
     zoom: 1;
 }
 

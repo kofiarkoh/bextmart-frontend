@@ -141,7 +141,6 @@
 
 .article_related_title_h2 {
     display: inline-block;
-    *display: inline;
     zoom: 1;
     background-color: var(--color_content_bg);
     position: relative;
