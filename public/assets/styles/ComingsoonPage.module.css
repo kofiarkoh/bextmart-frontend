@@ -1,0 +1,151 @@
+.full_height {
+    height: 100%;
+}
+
+.password_main {
+    flex-grow: 1;
+}
+
+.password_header {
+    padding: 1.5rem 0 1.5rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.password_header_div {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.password_header_div_a {
+    flex: 1;
+    max-width: 40%
+}
+
+.password-header_div_a_img {
+    max-width: 100%;
+    height: auto !important;
+}
+
+.field__input {
+    height: 40px;
+    line-height: 40px;
+    padding: 1.2rem 15px 0;
+}
+
+.password__content {
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background-position: 50% center;
+    background-size: cover;
+}
+
+.password__content_title {
+    font-size: 60px;
+    margin-bottom: 30px;
+    line-height: 1em;
+    color: var(--color_primary);
+}
+
+@media screen and (min-width: 768px) {
+
+    .password__content_newsletter,
+    .password__content_title {
+        max-width: 50%;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .password__content {
+        background-position: 10% center;
+    }
+}
+
+.newsletter_form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.newsletter_form__field_wrapper {
+    flex: 1;
+}
+
+.newsletter__subheading {
+    margin-bottom: 15px;
+}
+
+.newsletter__subheading_p {
+    margin-bottom: 0;
+}
+
+.newsletter__button {
+    margin-left: 5px;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+}
+
+.password-header {
+    top: 0;
+    bottom: auto;
+}
+
+.footer {
+    top: auto;
+    bottom: 0;
+}
+
+.countdown {
+    display: block;
+    margin-top: 60px;
+}
+
+.copyright {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+@media screen and (max-width: 767px) {
+    .newsletter__subheading {
+        text-align: center;
+    }
+
+    .copyright {
+        text-align: center;
+    }
+}
+
+.newsletter_form__field_wrapper {
+    border: 0;
+}
+
+.password_notify {
+    color: red;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.contact_submit_button_complete {
+    background-color: #de6e37;
+    color: #fff;
+}
+
+.contact_submit_button_loading {
+    color: #FFF;
+    display: inline-block;
+    box-shadow: inset 100px 0 0 0 #de6e37;
+    -webkit-transition: ease-out 2s;
+    -moz-transition: ease-out 2s;
+    transition: ease-out 2s;
+}

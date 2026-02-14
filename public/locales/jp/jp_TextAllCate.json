@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "text": "レイアウト",
+        "url":"/collection"     
+    },
+    {
+        "id": 2,
+        "text": "母と赤ちゃん",
+        "url":"/collection/women-fashion"       
+    },
+    {
+        "id": 3,
+        "text": "健康と美しさ",
+        "url":"/collection/men-fashion"         
+    },
+    {
+        "id": 4,
+        "text": "エレクトロニクス",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 5,
+        "text": "家、庭",
+        "url":"/collection/tops-tees"         
+    },
+    {
+        "id": 6,
+        "text": "台所用品",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 7,
+        "text": "服と靴",
+        "url":"/collections"          
+    },
+    {
+        "id": 8,
+        "text": "ラップトップ & マックブック",
+        "url":"/collection/women-fashion"          
+    },
+    {
+        "id": 9,
+        "text": "書籍 - ギフト",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 10,
+        "text": "屋外",
+        "url":"/collection/clothing-sets"          
+    },
+    {
+        "id": 11,
+        "text": "ペット用品",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 12,
+        "text": "家具",
+        "url":"/collection/men-fashion"          
+    }
+]

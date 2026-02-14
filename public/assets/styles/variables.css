@@ -1,0 +1,81 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --font_body: 'Poppins', sans-serif;
+	--font_heading: 'Poppins', sans-serif;
+	--font_subheading: ;
+    --color_body: #535353;
+	--color_primary: #1445c5;	
+	--color_heading: #1e1e1e;	
+	--color_line: #dcdcdc;	
+	--color_content_bg: #fafafa;
+	--collection_toolbar_bg: #f3f3f4;
+    --color_dropdown_text: #828282;
+	--color_dropdown_text_hover: #1445c5;
+	--color_dropdown_heading: #1e1e1e;
+	--color_dropdown_border: #E6E6E6;
+	--color_dropdown_bg: #fff;
+	--color_dropdown_price: #1445c5;
+	--color_boxshadow: #e6e6e6;
+    --color_header_text: #000000;
+	--color_header_text_hover: #1445c5;
+	--color_header_border: #E6E6E6;	
+	--color_header_bg: #ffffff;		
+	--color_header_boxshadow: #E6E6E6;
+	--color_topheader_text: #ffffff;	
+	--color_topheader_text_hover: #84a4f7;
+	--color_topheader_border: #ffffff;	
+	--color_topheader_bg: #010b23;
+    --color_navigation_bg: #ffffff;
+	--color_navigation_text: #27272f;	
+	--color_navigation_text_hover: #1445c5;
+    --color_navigation_border: #e6e6e6;
+    --color_product_title_text : #000000;	
+    --color_product_text : #000000;
+    --color_product_hover: #1445c5;	
+    --color_product_line: #dcdcdc;	
+	--color_product_bg: #ffffff;
+	--color_price_text : #1445c5;
+	--color_price_compare_text : #828282;	
+	--color_rating_text: #fbce1d;
+	--color_price_text_detail: #df1e31;
+	--color_price_compare_text_detail: #696969;
+    --color_btn_text: #ffffff;
+	--color_btn_border: #1445c5;
+	--color_btn_bg: #1445c5;
+    --color_btn_text1: #8b8b99;
+	--color_btn_border1: #dcdcdc;
+	--color_btn_bg1: #ffffff;
+    --color_footer_title_text : #1e1e1e;
+	--color_footer_text : #1e1e1e;	
+	--color_footer_text_hover : #1445c5;	
+	--color_footer_border : #dddddd;
+	--color_footer_bg : #ffffff;	
+	--color_copyright_border : #f3f3f4;
+	--color_copyright_text : #ffffff;			
+	--color_copyright_text_hover : #1445c5;			
+	--color_copyright_bg : #1e1e1e;
+    --color_newsletter_text: #646464;
+    --color_newsletter_border: #e6e6e6;
+    --color_newsletter_bg: #ffffff;
+    --color_btnnewsletter_text: #ffffff;
+    --color_btnnewsletter_border: #1445c5;
+    --color_btnnewsletter_bg: #1445c5;
+    --color_scrolltop_text: #ffffff;
+    --color_scrolltop_border: #1445c5;
+    --color_scrolltop_bg: #1445c5;
+    --color_popup_nlt_bg: rgba(20,69,197,.9);
+	--color_nlt_per: #ef4b4a;
+	--color_timezone: #F6DF0F;
+	--color_timezone_text: #fff;	
+
+    --duration-short: 100ms;
+    --duration-default: 200ms;
+    --duration-long: 500ms;
+
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+
+    --opacity-animated:1;
+}	  

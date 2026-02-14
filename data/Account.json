@@ -1,0 +1,153 @@
+[
+    {
+        "firstname": "Jin",
+        "lastname": "Alkaid",
+        "avatar": "/assets/images/avatar.png",
+        "email": "yam@gmail.com",
+        "password": "MTIzNDU2Nzg5Z2hRVUFKR3dHWXMzWGZk",
+        "accessToken": "eWFtQGdtYWlsLmNvbWdoUVVBSkd3R1lzM1hmZE1USXpORFUyTnpnNVoyaFJWVUZLUjNkSFdYTXpXR1pr",
+        "randomtext": "ghQUAJGwGYs3Xfd",
+        "phone": "123456789",
+        "address": "Saigon Avenue Tower, Tam Binh ward, Thu Duc city, Ho Chi Minh city, Vietnam",
+        "orderlist": [
+            {
+                "order_id": "1269413",
+                "date": "Nov 09, 2016",
+                "payment_status": "Authorized",
+                "fulfillment_status": "Fulfilled",
+                "shipping_cost": "18",
+                "total": "701.2",
+                "sum_cost": "719.2",
+                "productlist": [
+                    {
+                        "product_id": 1,
+                        "qty": 1,
+                        "total": "30.20",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Red"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "S"                                
+                            }
+                        ]
+                    },
+                    {
+                        "product_id": 2,
+                        "qty": 1,
+                        "total": "281.00",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Black"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "M"                                
+                            }
+                        ]
+                    },
+                    {
+                        "product_id": 3,
+                        "qty": 2,
+                        "total": "390.00",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Blue"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "L"                                
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "order_id": "1335877",
+                "date": "Mar 31, 2021",
+                "payment_status": "Authorized",
+                "fulfillment_status": "Fulfilled",
+                "shipping_cost": "18",
+                "total": "783",
+                "sum_cost": "801",
+                "productlist": [
+                    {
+                        "product_id": 4,
+                        "qty": 1,
+                        "total": "279",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Black"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "S"                                
+                            }
+                        ]
+                    },
+                    {
+                        "product_id": 5,
+                        "qty": 1,
+                        "total": "266.00",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Black"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "M"                                
+                            }
+                        ]
+                    },
+                    {
+                        "product_id": 6,
+                        "qty": 1,
+                        "total": "238.00",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Blue"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "L"                                
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "order_id": "1423677",
+                "date": "Nov 01, 2022",
+                "payment_status": "Authorized",
+                "fulfillment_status": "Unfulfilled",
+                "shipping_cost": "18",
+                "total": "250",
+                "sum_cost": "268",
+                "productlist": [
+                    {
+                        "product_id": 7,
+                        "qty": 3,
+                        "total": "217",
+                        "options": [
+                            {
+                                "title": "Color",
+                                "variant_title": "Black"                         
+                            },
+                            {
+                                "title": "Size",
+                                "variant_title": "S"                                
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

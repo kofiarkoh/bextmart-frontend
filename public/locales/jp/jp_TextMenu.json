@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "text": "ホームページ" ,
+        "url":"/"      
+    },
+    {
+        "id": 2,
+        "text": "コレクション",
+        "url":"/collections"
+    },
+    {
+        "id": 3,
+        "text": "ベスト・セラー" ,
+        "url":"/collection/women-fashion" 
+    },
+    {
+        "id": 4,
+        "text": "ページ" ,
+        "url":"/page-about"      
+    },
+    {
+        "id": 5,
+        "text": "ブログ" ,
+        "url":"/blog"      
+    },
+    {
+        "id": 6,
+        "text": "お問い合わせ" ,
+        "url":"/page-contact"      
+    }
+]

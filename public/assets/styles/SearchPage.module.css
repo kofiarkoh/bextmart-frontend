@@ -1,0 +1,42 @@
+.search_content {
+    margin-bottom: 30px;
+    margin-top: 15px;
+}
+
+@media screen and (min-width: 768px) {
+    .search_toptext {
+        margin-bottom: 60px;
+    }
+
+    .search_content {
+        margin-bottom: 80px;
+        margin-top: 30px;
+    }
+}
+
+.search_toptext {
+    margin-top: 35px;
+    margin-bottom: 10px;
+    display: block;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 575px) {
+    .search_content {
+        margin-top: 0px;
+    }
+
+    .search_toptext {
+        font-size: 12px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+.no_product{
+    text-align: center;
+    margin-top: 50px;
+}

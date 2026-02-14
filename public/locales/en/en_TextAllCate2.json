@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "text": "Bed",
+        "url":"/collection"     
+    },
+    {
+        "id": 2,
+        "text": "Book Shelf",
+        "url":"/collection/women-fashion"       
+    },
+    {
+        "id": 3,
+        "text": "Cafeteria",
+        "url":"/collection/men-fashion"         
+    },
+    {
+        "id": 4,
+        "text": "Cupboard",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 5,
+        "text": "Desk",
+        "url":"/collection/tops-tees"         
+    },
+    {
+        "id": 6,
+        "text": "Door",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 7,
+        "text": "Drawer",
+        "url":"/collections"          
+    },
+    {
+        "id": 8,
+        "text": "Lamp Lighting",
+        "url":"/collection/women-fashion"          
+    },
+    {
+        "id": 9,
+        "text": "Make-Up",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 10,
+        "text": "Shower",
+        "url":"/collection/clothing-sets"          
+    },
+    {
+        "id": 11,
+        "text": "Sofa & Wall Art",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 12,
+        "text": "Television",
+        "url":"/collection/men-fashion"          
+    }
+]

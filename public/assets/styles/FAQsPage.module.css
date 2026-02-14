@@ -1,0 +1,120 @@
+.main_faqs__title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.8em;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    margin-top: 60px;
+    color: var(--color_heading);
+    font-family: var(--font_heading);
+}
+
+.faqs_questions__item {
+    font-size: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.faqs_questions__item:not(:first-child) {
+    margin-top: 5px;
+}
+
+.faqs_questions__item_accordion__title {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    padding: 10px 30px 10px 15px;
+    margin-bottom: 0;
+}
+
+.faqs_questions__item_accordion__title:before {
+    right: 15px;
+}
+
+.faqs_questions__item_accordion__title_span {
+    font-size: 16px !important;
+    line-height: 20px;
+}
+
+.faqs_questions__item_accordion__content {
+    font-size: 14px;
+    line-height: 1.6em;
+    color: var(--color_body);
+    padding: 15px;
+}
+
+.faqs_questions__item_accordion__content.show {
+    display: block;
+}
+
+.faqs-contact__content_field_textarea {
+    top: 30px;
+    background-color: #f7f7f7;
+}
+
+
+.faqs_contact__content_field__input {
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    background-color: #f7f7f7;
+}
+
+.faqs_contact__content_contact__fields_field:nth-child(2) {
+    margin-top: 20px;
+}
+
+.faqs_contact__content_contact__button {
+    text-align: center;
+}
+
+.faqs_contact__content_contact__button_button {
+    min-width: 120px;
+}
+
+.main_faqs__layout {
+    margin-bottom: 60px;
+}
+
+.faqs_textarea__label {
+    top: 30px;
+}
+
+@media only screen and (max-width: 575px) {
+    .faqs_contact__content_contact__fields_field {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .faqs_contact__content_contact__button {
+        margin-top: 0;
+    }
+
+    .main_faqs__title {
+        margin-top: 30px;
+    }
+}
+
+.contact_submit_button_complete {
+    background-color: #de6e37;
+    color: #fff;
+}
+
+.contact_submit_button_loading {
+    color: #FFF;
+    display: inline-block;
+    box-shadow: inset 100px 0 0 0 #de6e37;
+    -webkit-transition: ease-out 2s;
+    -moz-transition: ease-out 2s;
+    transition: ease-out 2s;
+}
+
+.contact_notify {
+    color: red;
+    padding-bottom: 20px;
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+}

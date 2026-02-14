@@ -1,0 +1,151 @@
+[
+    {
+        "id": 1,
+        "handle": "women-fashion",
+        "name":"レディースファッション",
+        "product_count": 18,
+        "featured_image":"/assets/images/collection-img1.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner1.jpg",
+                "imgalt": "レディースファッション"
+            },
+            {
+                "bannerid": 2,
+                "imgpath": "/assets/images/collection-banner2.jpg",
+                "imgalt": "レディースファッション"
+            },
+            {
+                "bannerid": 3,
+                "imgpath": "/assets/images/collection-banner3.jpg",
+                "imgalt": "レディースファッション"
+            }
+        ],
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます.",
+        "sub_collections": [
+            {
+                "id": 7,
+                "name": "ドレス",
+                "handle":"dresses",
+                "thumb":"/assets/images/collection-sub1.jpg",
+                "product_count": 31
+            },
+            {
+                "id": 8,
+                "name": "衣類セット",
+                "handle":"clothing-sets",
+                "thumb":"/assets/images/collection-sub2.jpg",
+                "product_count": 20
+            },
+            {
+                "id": 9,
+                "name": "トップス＆ティー",
+                "handle":"tops-tees",
+                "thumb":"/assets/images/collection-sub3.jpg",
+                "product_count": 50
+            },
+            {
+                "id": 10,
+                "name": "アウター＆コート",
+                "handle":"outerwear-coats",
+                "thumb":"/assets/images/collection-sub4.jpg",
+                "product_count": 15
+            },
+            {
+                "id": 22,
+                "name": "パジャマ＆ローブ",
+                "handle":"sleepwear-robes",
+                "thumb":"/assets/images/collection-sub5.jpg",
+                "product_count": 25
+            },
+            {
+                "id": 12,
+                "name": "ジーンズ",
+                "handle":"jeans",
+                "thumb":"/assets/images/collection-sub6.jpg",
+                "product_count": 27
+            },
+            {
+                "id": 2,
+                "name": "メンズファッション",
+                "handle":"men-fashion",
+                "thumb":"/assets/images/collection-sub7.jpg",
+                "product_count": 45
+            },
+            {
+                "id": 3,
+                "name": "キッズファッション",
+                "handle":"kids-fashion",
+                "thumb":"/assets/images/collection-sub8.jpg",
+                "product_count": 50
+            }
+        ],
+        "productsID": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+        "layout":"grid-leftsidebar" 
+    },
+    {
+        "id": 2,
+        "handle": "men-fashion",
+        "name":"メンズファッション",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img2.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "レディースファッション"
+            }
+        ],
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます."        ,
+        "productsID": "7,8,9,10,11,12,13,14,15,16,6,5",
+        "layout":"grid-rightsidebar"
+    },
+    {
+        "id": 3,
+        "handle": "kids-fashion",
+        "name":"キッズファッション",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img3.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "レディースファッション"
+            }
+        ],
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます."        ,
+        "productsID": "13,14,15,16,6,5,7,8,9,10,11,12",
+        "layout":"grid-nosidebar"
+    },
+    {
+        "id": 4,
+        "handle": "dresses",
+        "name":"ドレス",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img4.jpg",
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます."        ,
+        "productsID": "7,8,9,10,11,12",
+        "layout":"list-leftsidebar"
+    },
+    {
+        "id": 5,
+        "handle": "clothing-sets",
+        "name":"衣類セット",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img5.jpg",
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます."        ,
+        "productsID": "3,4,7,9,11,15",
+        "layout":"list-rightsidebar"
+    },
+    {
+        "id": 6,
+        "handle": "tops-tees",
+        "name":"トップス＆ティー",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img6.jpg",
+        "desc": "ファッション ブログは、怠惰な朝でも着こなすためのインスピレーションを与えてくれます。 今シーズンの最もホットなトレンドに目を向けましたか? これらのブログは、どの服や色があなたのフレームに合っているかを理解するのに役立ちます. 彼らはまた、銀行を壊すことなくダースの完璧な外観を作成するために、ピースを組み合わせて一致させるためのアイデアを提供することもできます."        ,
+        "productsID": "11,12,13,14,15",
+        "layout":"list-nosidebar"
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "text": "Disposizione",
+        "url":"/collection"     
+    },
+    {
+        "id": 2,
+        "text": "Madre e bambino",
+        "url":"/collection/women-fashion"       
+    },
+    {
+        "id": 3,
+        "text": "Salute & Bellezza",
+        "url":"/collection/men-fashion"         
+    },
+    {
+        "id": 4,
+        "text": "Elettronica",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 5,
+        "text": "Casa & Giardino",
+        "url":"/collection/tops-tees"         
+    },
+    {
+        "id": 6,
+        "text": "Utensili da cucina",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 7,
+        "text": "Abbigliamento e scarpe",
+        "url":"/collections"          
+    },
+    {
+        "id": 8,
+        "text": "Laptop e Macbook",
+        "url":"/collection/women-fashion"          
+    },
+    {
+        "id": 9,
+        "text": "Libri - Regali",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 10,
+        "text": "All'aperto",
+        "url":"/collection/clothing-sets"          
+    },
+    {
+        "id": 11,
+        "text": "Prodotti per animali",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 12,
+        "text": "Mobilia",
+        "url":"/collection/men-fashion"          
+    }
+]

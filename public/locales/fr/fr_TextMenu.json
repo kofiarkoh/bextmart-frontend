@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "text": "Page d'accueil" ,
+        "url":"/"      
+    },
+    {
+        "id": 2,
+        "text": "Le recueil",
+        "url":"/collections"
+    },
+    {
+        "id": 3,
+        "text": "Best-seller" ,
+        "url":"/collection/women-fashion" 
+    },
+    {
+        "id": 4,
+        "text": "Pages" ,
+        "url":"/page-about"      
+    },
+    {
+        "id": 5,
+        "text": "Blog" ,
+        "url":"/blog"      
+    },
+    {
+        "id": 6,
+        "text": "Contactez-nous" ,
+        "url":"/page-contact"      
+    }
+]

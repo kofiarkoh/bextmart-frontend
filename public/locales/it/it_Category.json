@@ -1,0 +1,151 @@
+[
+    {
+        "id": 1,
+        "handle": "women-fashion",
+        "name":"Moda femminile",
+        "product_count": 18,
+        "featured_image":"/assets/images/collection-img1.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner1.jpg",
+                "imgalt": "Moda femminile"
+            },
+            {
+                "bannerid": 2,
+                "imgpath": "/assets/images/collection-banner2.jpg",
+                "imgalt": "Moda femminile"
+            },
+            {
+                "bannerid": 3,
+                "imgpath": "/assets/images/collection-banner3.jpg",
+                "imgalt": "Moda femminile"
+            }
+        ],
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna.",
+        "sub_collections": [
+            {
+                "id": 7,
+                "name": "Vestiti",
+                "handle":"dresses",
+                "thumb":"/assets/images/collection-sub1.jpg",
+                "product_count": 31
+            },
+            {
+                "id": 8,
+                "name": "Set di abbigliamento",
+                "handle":"clothing-sets",
+                "thumb":"/assets/images/collection-sub2.jpg",
+                "product_count": 20
+            },
+            {
+                "id": 9,
+                "name": "Top e magliette",
+                "handle":"tops-tees",
+                "thumb":"/assets/images/collection-sub3.jpg",
+                "product_count": 50
+            },
+            {
+                "id": 10,
+                "name": "Capispalla e cappotti",
+                "handle":"outerwear-coats",
+                "thumb":"/assets/images/collection-sub4.jpg",
+                "product_count": 15
+            },
+            {
+                "id": 22,
+                "name": "Pigiami e accappatoi",
+                "handle":"sleepwear-robes",
+                "thumb":"/assets/images/collection-sub5.jpg",
+                "product_count": 25
+            },
+            {
+                "id": 12,
+                "name": "Jeans",
+                "handle":"jeans",
+                "thumb":"/assets/images/collection-sub6.jpg",
+                "product_count": 27
+            },
+            {
+                "id": 2,
+                "name": "Moda maschile",
+                "handle":"men-fashion",
+                "thumb":"/assets/images/collection-sub7.jpg",
+                "product_count": 45
+            },
+            {
+                "id": 3,
+                "name": "Moda per bambini",
+                "handle":"kids-fashion",
+                "thumb":"/assets/images/collection-sub8.jpg",
+                "product_count": 50
+            }
+        ],
+        "productsID": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+        "layout":"grid-leftsidebar" 
+    },
+    {
+        "id": 2,
+        "handle": "men-fashion",
+        "name":"Moda maschile",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img2.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "Moda femminile"
+            }
+        ],
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna."        ,
+        "productsID": "7,8,9,10,11,12,13,14,15,16,6,5",
+        "layout":"grid-rightsidebar"
+    },
+    {
+        "id": 3,
+        "handle": "kids-fashion",
+        "name":"Moda per bambini",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img3.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "Moda femminile"
+            }
+        ],
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna."        ,
+        "productsID": "13,14,15,16,6,5,7,8,9,10,11,12",
+        "layout":"grid-nosidebar"
+    },
+    {
+        "id": 4,
+        "handle": "dresses",
+        "name":"Vestiti",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img4.jpg",
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna."        ,
+        "productsID": "7,8,9,10,11,12",
+        "layout":"list-leftsidebar"
+    },
+    {
+        "id": 5,
+        "handle": "clothing-sets",
+        "name":"Set di abbigliamento",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img5.jpg",
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna."        ,
+        "productsID": "3,4,7,9,11,15",
+        "layout":"list-rightsidebar"
+    },
+    {
+        "id": 6,
+        "handle": "tops-tees",
+        "name":"Top e magliette",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img6.jpg",
+        "desc": "I blog di moda possono darti l'ispirazione per vestirti bene anche in quelle pigre mattine. Hai gli occhi puntati sulle tendenze più calde di questa stagione? Questi blog sono ottimi per aiutarti a capire quali capi di abbigliamento e colori si adattano alla tua struttura. Possono anche fornirti idee su come mescolare e abbinare i pezzi per creare una dozzina di look perfetti senza spendere una fortuna."        ,
+        "productsID": "11,12,13,14,15",
+        "layout":"list-nosidebar"
+    }
+]

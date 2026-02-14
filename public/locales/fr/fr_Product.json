@@ -1,0 +1,1721 @@
+[
+    {
+        "id": 1,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product1-1.jpg",
+                "imgalt": "Tipo di prodotto avanzato"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product1-2.jpg",
+                "imgalt": "Tipo di prodotto avanzato"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Tipo di prodotto avanzato"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Tipo di prodotto avanzato"
+            },
+            {
+                "idpro": 5,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Tipo di prodotto avanzato"
+            }
+        ],
+        "name": "Tee-shirts",
+        "handle": "tshirt",
+        "price": "30.20",
+        "price_compare":"37.00",
+        "stripe_APIID":"price_1MJTRCLwm9282g3BDOZDidog",
+        "stars":"5",
+        "SKU": "tshirt-1",
+        "Brand":"YAM2022",
+        "Type": "Mode Homme",
+        "quantity":"30",
+        "quantity_total":"100",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "red",
+                        "title": "Red"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    },
+                    {
+                        "handle": "green",
+                        "title": "Green"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "sizechart":"/assets/images/product/sizechart.jpg",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "layout":"advanced",
+        "advanced": [
+            {
+                "id":1,
+                "name": "Hat",
+                "handle":"hat",
+                "thumb":"/assets/images/product/Product19-1.jpg"
+            },
+            {
+                "id":1,
+                "name": "Shorts",
+                "handle":"shorts",
+                "thumb":"/assets/images/product/Product20-1.jpg"
+            }
+        ],
+        "related_product": "19,20,11,12,13,14",
+        "review":[
+            {
+                "id":1,
+                "name":"Jin Alkaid",
+                "avatar":"/assets/images/review_avatar1.png",
+                "country":"Vietnam",
+                "rating":5,
+                "content": "Grande boutique. Je les utilise depuis des années et j'ai plusieurs machines. Envoyez-leur vos amis et votre famille. Tom, au magasin, est fantastique et Rob, au service, était attentionné et minutieux."
+            },
+            {
+                "id":2,
+                "name":"Taylor",
+                "avatar":"/assets/images/review_avatar2.jpg",
+                "country":"Etats-Unis",
+                "rating":5,
+                "content": "Le Fitness Shop était un super endroit pour acheter. Leurs vendeurs étaient serviables, mais ils n'étaient en aucun cas insistants. J'ai apprécié l'expérience!."
+            },
+            {
+                "id":3,
+                "name":"Sophie Hanan",
+                "avatar":"/assets/images/review_avatar3.jpg",
+                "country":"Japon",
+                "rating":5,
+                "content": "Très bon service. Toujours serviable et sympathique quand j'ai besoin d'équipement! Bien approvisionné et ils vous fourniront ce dont vous avez besoin!"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product21-1.jpg",
+                "imgalt": "Chemises en popeline à boutonnage"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product21-2.jpg",
+                "imgalt": "Chemises en popeline à boutonnage"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product21-3.jpg",
+                "imgalt": "Chemises en popeline à boutonnage"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product21-4.jpg",
+                "imgalt": "Chemises en popeline à boutonnage"
+            },
+            {
+                "idpro": 5,
+                "imgpath": "/assets/images/product/Product21-5.jpg",
+                "imgalt": "Chemises en popeline à boutonnage"
+            }
+        ],
+        "name": "Chemises en popeline à boutonnage",
+        "handle":"single-breasted-poplin",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJTS0Lwm9282g3BopxjKb3Y",
+        "stars":"4",
+        "SKU": "YAMPro-2",
+        "Brand":"YAM2022",
+        "Type": "Caméra",
+        "quantity":"20",
+        "quantity_total":"80",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "pink",
+                        "title": "Pink",
+                        "groupimages":[
+                            {
+                                "idpro": 1,
+                                "imgpath": "/assets/images/product/Product21-1.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 2,
+                                "imgpath": "/assets/images/product/Product21-2.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 3,
+                                "imgpath": "/assets/images/product/Product21-3.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 4,
+                                "imgpath": "/assets/images/product/Product21-4.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 5,
+                                "imgpath": "/assets/images/product/Product21-5.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            }
+                        ]
+                    },
+                    {
+                        "handle": "yellow",
+                        "title": "Yellow",
+                        "groupimages":[
+                            {
+                                "idpro": 1,
+                                "imgpath": "/assets/images/product/Product22-1.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 2,
+                                "imgpath": "/assets/images/product/Product22-2.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 3,
+                                "imgpath": "/assets/images/product/Product22-3.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 4,
+                                "imgpath": "/assets/images/product/Product22-4.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 5,
+                                "imgpath": "/assets/images/product/Product22-5.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            }
+                        ]
+                    },
+                    {
+                        "handle": "red",
+                        "title": "Red",
+                        "groupimages":[
+                            {
+                                "idpro": 1,
+                                "imgpath": "/assets/images/product/Product23-1.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 2,
+                                "imgpath": "/assets/images/product/Product23-2.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 3,
+                                "imgpath": "/assets/images/product/Product23-3.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 4,
+                                "imgpath": "/assets/images/product/Product23-4.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 5,
+                                "imgpath": "/assets/images/product/Product23-5.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            }
+                        ]
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue",
+                        "groupimages":[
+                            {
+                                "idpro": 1,
+                                "imgpath": "/assets/images/product/Product24-1.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 2,
+                                "imgpath": "/assets/images/product/Product24-2.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 3,
+                                "imgpath": "/assets/images/product/Product24-3.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 4,
+                                "imgpath": "/assets/images/product/Product24-4.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            },
+                            {
+                                "idpro": 5,
+                                "imgpath": "/assets/images/product/Product24-5.jpg",
+                                "imgalt": "Chemises en popeline à boutonnage"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "sizechart":"/assets/images/product/sizechart.jpg",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "layout":"group-images",
+        "related_product": "1,2,11,12,13,14",
+        "review":[
+            {
+                "id":1,
+                "name":"Taylor",
+                "avatar":"/assets/images/review_avatar2.jpg",
+                "country":"Etats-Unis",
+                "rating":5,
+                "content": "Le Fitness Shop était un super endroit pour acheter. Leurs vendeurs étaient serviables, mais ils n'étaient en aucun cas insistants. J'ai apprécié l'expérience!."
+            },
+            {
+                "id":2,
+                "name":"Sophie Hanan",
+                "avatar":"/assets/images/review_avatar3.jpg",
+                "country":"Japon",
+                "rating":5,
+                "content": "Très bon service. Toujours serviable et sympathique quand j'ai besoin d'équipement! Bien approvisionné et ils vous fourniront ce dont vous avez besoin!"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product3-1.jpg",
+                "imgalt": "Grand Aspirateur"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product2-1.jpg",
+                "imgalt": "Grand Aspirateur"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Grand Aspirateur"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Grand Aspirateur"
+            }
+        ],
+        "name": "Grand Aspirateur",
+        "handle":"large-vacuum-clear",
+        "price": "195.00",
+        "stars":"5",
+        "SKU": "YAMPro-3",
+        "Brand":"Kala2022",
+        "Type": "Électrique",
+        "price_compare":"200.00",
+        "stripe_APIID":"price_1MJXuqLwm9282g3BpessfexA",
+        "quantity":"40",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    },
+                    {
+                        "handle": "red",
+                        "title": "Red"
+                    },
+                    {
+                        "handle": "green",
+                        "title": "Green"
+                    }
+                ]
+            }
+        ],
+        "layout":"sidebar",
+        "related_product": "9,20,11,12,13,14",
+        "review":[
+            {
+                "id":1,
+                "name":"Sophie Hanan",
+                "avatar":"/assets/images/review_avatar3.jpg",
+                "country":"Japon",
+                "rating":5,
+                "content": "Très bon service. Toujours serviable et sympathique quand j'ai besoin d'équipement! Bien approvisionné et ils vous fourniront ce dont vous avez besoin!"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product4-1.jpg",
+                "imgalt": "Écran du casque sans fil"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product5-1.jpg",
+                "imgalt": "Écran du casque sans fil"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product6-1.jpg",
+                "imgalt": "Écran du casque sans fil"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product7-1.jpg",
+                "imgalt": "Écran du casque sans fil"
+            },
+            {
+                "idpro": 5,
+                "imgpath": "/assets/images/product/Product9-1.jpg",
+                "imgalt": "Écran du casque sans fil"
+            }
+        ],
+        "name": "Écran du casque sans fil",
+        "handle":"wireless-headset-screen",
+        "price": "279.00",
+        "price_compare":"350.00",
+        "stripe_APIID":"price_1MJXxULwm9282g3BSKj07Do9",
+        "stars":"5",
+        "SKU": "YAMPro-4",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "label_new": true,    
+        "quantity":"10",
+        "quantity_total":"200",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "white",
+                        "title": "White"
+                    },
+                    {
+                        "handle": "gold",
+                        "title": "Gold"
+                    }
+                ]
+            },
+            {
+                "handle": "type",
+                "title": "Type",
+                "variant": [
+                    {
+                        "handle": "standard",
+                        "title": "Standard"
+                    },
+                    {
+                        "handle": "pro",
+                        "title": "Pro"
+                    },
+                    {
+                        "handle": "promax",
+                        "title": "Pro Max"
+                    }
+                ]
+            }
+        ],
+        "layout":"box",
+        "related_product": "2,3,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 5,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product5-1.jpg",
+                "imgalt": "TeletK Ventilateur portatif"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product6-1.jpg",
+                "imgalt": "TeletK Ventilateur portatif"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "TeletK Ventilateur portatif"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "TeletK Ventilateur portatif"
+            }
+        ],
+        "name": "TeletK Ventilateur portatif",
+        "handle":"teletk-portable-fan",
+        "price": "266.00",
+        "price_compare":"300.00",
+        "stripe_APIID":"price_1MJXxvLwm9282g3BI4TfGtu2",
+        "stars":"4",
+        "SKU": "YAMPro-5",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "label_hot": true,        
+        "quantity":"60",
+        "quantity_total":"200",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    }
+                ]
+            }
+        ],
+        "layout":"group-items",
+        "related_product": "19,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 6,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product6-1.jpg",
+                "imgalt": "Testeur de manette de jeu 2022"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product2-1.jpg",
+                "imgalt": "Testeur de manette de jeu 2022"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Testeur de manette de jeu 2022"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Testeur de manette de jeu 2022"
+            }
+        ],
+        "name": "Testeur de manette de jeu 2022",
+        "handle":"gamepad-tester-2022",
+        "price": "238.00",
+        "price_compare":"250.00",
+        "stripe_APIID":"price_1MJXyFLwm9282g3BNdVw45I3",
+        "stars":"5",
+        "SKU": "YAMPro-6",
+        "Brand":"YAM2022",
+        "Type": "Jeux",
+        "label_featured": true,
+        "quantity":"35",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    },
+                    {
+                        "handle": "white",
+                        "title": "White"
+                    },
+                    {
+                        "handle": "green",
+                        "title": "Green"
+                    },
+                    {
+                        "handle": "red",
+                        "title": "Red"
+                    }
+                ]
+            }
+        ],
+        "layout":"stacked1",
+        "related_product": "7,8,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 7,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product7-1.jpg",
+                "imgalt": "Nouveau casque noir"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product8-1.jpg",
+                "imgalt": "Nouveau casque noir"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Nouveau casque noir"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Nouveau casque noir"
+            }
+        ],
+        "name": "Nouveau casque noir",
+        "handle":"new-black-headphone",
+        "price": "217.00",
+        "price_compare":"250.00",
+        "stripe_APIID":"price_1MJXyZLwm9282g3BCdxzSGwR",
+        "stars":"5",
+        "SKU": "YAMPro-7",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"12",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "layout":"stacked2",
+        "related_product": "9,10,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 8,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product8-1.jpg",
+                "imgalt": "YAM Verre trempé"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product7-1.jpg",
+                "imgalt": "YAM Verre trempé"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "YAM Verre trempé"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "YAM Verre trempé"
+            }
+        ],
+        "name": "YAM Verre trempé",
+        "handle":"yam-tempered-glass",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJXyxLwm9282g3B9vhb3Nl5",
+        "stars":"5",
+        "SKU": "YAMPro-8",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"32",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "19,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 9,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product9-1.jpg",
+                "imgalt": "oniteur portatif"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product8-1.jpg",
+                "imgalt": "oniteur portatif"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "oniteur portatif"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "oniteur portatif"
+            }
+        ],
+        "name": "Moniteur portatif",
+        "handle":"portable-monitor",
+        "price": "211.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJXzMLwm9282g3BLAPLKAI1",
+        "stars":"4",
+        "SKU": "YAMPro-9",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"47",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "19,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 10,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product10-1.jpg",
+                "imgalt": "Machine à poudre BlueTooth"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product9-1.jpg",
+                "imgalt": "Machine à poudre BlueTooth"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Machine à poudre BlueTooth"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Machine à poudre BlueTooth"
+            }
+        ],
+        "name": "Machine à poudre BlueTooth",
+        "handle":"blueth-powder-machine",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJXzpLwm9282g3BdT3LYPLX",
+        "stars":"4",
+        "SKU": "YAMPro-10",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"38",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "1,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 11,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product11-1.jpg",
+                "imgalt": "Nouveau trépied allongé"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product9-1.jpg",
+                "imgalt": "Nouveau trépied allongé"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Nouveau trépied allongé"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Nouveau trépied allongé"
+            }
+        ],
+        "name": "Nouveau trépied allongé",
+        "handle":"new-extended-tripod",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY0ALwm9282g3BeELcVkXF",
+        "stars":"5",
+        "SKU": "YAMPro-11",
+        "Brand":"YAM2022",
+        "Type": "Caméra",
+        "quantity":"10",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "19,10,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 12,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product12-1.jpg",
+                "imgalt": "Verre résistant aux rayures"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product10-1.jpg",
+                "imgalt": "Verre résistant aux rayures"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Verre résistant aux rayures"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Verre résistant aux rayures"
+            }
+        ],
+        "name": "Verre résistant aux rayures",
+        "handle":"scratch-resistant-glass",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY0sLwm9282g3BaB3RrmZC",
+        "stars":"5",
+        "SKU": "YAMPro-12",
+        "Brand":"YAM2022",
+        "Type": "Sunglass",
+        "quantity":"50",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "19,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 13,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product13-1.jpg",
+                "imgalt": "Casque sans fil 3.0"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product11-1.jpg",
+                "imgalt": "Casque sans fil 3.0"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Casque sans fil 3.0"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Casque sans fil 3.0"
+            }
+        ],
+        "name": "Casque sans fil 3.0",
+        "handle":"wireless-headphones-3",
+        "price": "253.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY1GLwm9282g3BGIC1jYDj",
+        "stars":"5",
+        "SKU": "YAMPro-13",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"31",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "5,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 14,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product14-1.jpg",
+                "imgalt": "iFINE Aspirateur"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product12-1.jpg",
+                "imgalt": "iFINE Aspirateur"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "iFINE Aspirateur"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "iFINE Aspirateur"
+            }
+        ],
+        "name": "iFINE Aspirateur",
+        "handle":"ifine-vacuum-cleaner",
+        "price": "141.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY1cLwm9282g3BoT4Qqm9R",
+        "stars":"5",
+        "SKU": "YAMPro-14",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"53",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "6,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 15,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product15-1.jpg",
+                "imgalt": "LGG Incurvé 2.0"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product13-1.jpg",
+                "imgalt": "LGG Incurvé 2.0"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "LGG Incurvé 2.0"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "LGG Incurvé 2.0"
+            }
+        ],
+        "name": "LGG Incurvé 2.0",
+        "handle":"lgg-curved-2",
+        "price": "211.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY2xLwm9282g3BTZ9seAq0",
+        "stars":"5",
+        "SKU": "YAMPro-15",
+        "Brand":"YAM2022",
+        "Type": "Jeux",
+        "quantity":"27",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "7,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 16,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product16-1.jpg",
+                "imgalt": "Monsieur Cooler 2022"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product14-1.jpg",
+                "imgalt": "Monsieur Cooler 2022"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Monsieur Cooler 2022"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Monsieur Cooler 2022"
+            }
+        ],
+        "name": "Monsieur Cooler 2022",
+        "handle":"mr-cooler-2022",
+        "price": "281.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY3PLwm9282g3BaDTLTKnS",
+        "stars":"5",
+        "SKU": "YAMPro-1",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"45",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "8,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 17,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product17-1.jpg",
+                "imgalt": "Samsanh NEO QLED 8K"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product15-1.jpg",
+                "imgalt": "Samsanh NEO QLED 8K"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Samsanh NEO QLED 8K"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Samsanh NEO QLED 8K"
+            }
+        ],
+        "name": "Samsanh NEO QLED 8K",
+        "handle":"samsanh-neo-qled-8k",
+        "price": "253.00",
+        "price_compare":"421.00",
+        "stripe_APIID":"price_1MJY3iLwm9282g3BZt5m6Z5S",
+        "stars":"5",
+        "SKU": "YAMPro-1",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"70",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "9,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 18,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product18-1.jpg",
+                "imgalt": "Nuovo telefono da 7700 mAh"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product16-1.jpg",
+                "imgalt": "Nuovo telefono da 7700 mAh"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Nuovo telefono da 7700 mAh"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Nuovo telefono da 7700 mAh"
+            }
+        ],
+        "name": "Nuovo telefono da 7700 mAh",
+        "handle":"new-7700mah-phone",
+        "price": "211.00",
+        "price_compare":"250.00",
+        "stripe_APIID":"price_1MJY44Lwm9282g3BOvhT5jkQ",
+        "stars":"5",
+        "SKU": "YAMPro-1",
+        "Brand":"YAM2022",
+        "Type": "Électrique",
+        "quantity":"46",
+        "quantity_total":"150",        
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "related_product": "1,20,11,12,13,14",
+        "review":[
+        ]
+    },
+    {
+        "id": 19,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product19-1.jpg",
+                "imgalt": "Chapeau"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product1-1.jpg",
+                "imgalt": "Chapeau"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Chapeau"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Chapeau"
+            }
+        ],
+        "name": "Chapeau",
+        "handle":"hat",
+        "price": "11.00",
+        "price_compare":"50.00",
+        "stripe_APIID":"price_1MJY4QLwm9282g3BYMTE7olZ",
+        "stars":"5",
+        "SKU": "hat-1",
+        "Brand":"YAM2022",
+        "Type": "Mode Homme",
+        "quantity":"46",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "layout":"advanced",
+        "advanced": [
+            {
+                "id":1,
+                "name": "T-shirt",
+                "handle":"tshirt",
+                "thumb":"/assets/images/product/Product1-1.jpg"
+            },
+            {
+                "id":2,
+                "name": "Shorts",
+                "handle":"shorts",
+                "thumb":"/assets/images/product/Product20-1.jpg"
+            }
+        ],
+        "related_product": "1,20,11,12,13,14",
+        "review":[
+            {
+                "id":1,
+                "name":"Taylor",
+                "avatar":"/assets/images/review_avatar2.jpg",
+                "country":"Etats-Unis",
+                "rating":5,
+                "content": "Le Fitness Shop était un super endroit pour acheter. Leurs vendeurs étaient serviables, mais ils n'étaient en aucun cas insistants. J'ai apprécié l'expérience!."
+            }
+        ]
+    },
+    {
+        "id": 20,
+        "image": [
+            {
+                "idpro": 1,
+                "imgpath": "/assets/images/product/Product20-1.jpg",
+                "imgalt": "Shorts"
+            },
+            {
+                "idpro": 2,
+                "imgpath": "/assets/images/product/Product1-3.jpg",
+                "imgalt": "Shorts"
+            },
+            {
+                "idpro": 3,
+                "imgpath": "/assets/images/product/Product1-2.jpg",
+                "imgalt": "Shorts"
+            },
+            {
+                "idpro": 4,
+                "imgpath": "/assets/images/product/Product1-4.jpg",
+                "imgalt": "Shorts"
+            }
+        ],
+        "name": "Shorts",
+        "handle":"shorts",
+        "price": "51.00",
+        "price_compare":"60.00",
+        "stripe_APIID":"price_1MJY4lLwm9282g3B9ceasACW",
+        "stars":"5",
+        "SKU": "shorts-1",
+        "Brand":"YAM2022",
+        "Type": "Mode Homme",
+        "quantity":"46",
+        "quantity_total":"150",
+        "shortdesc":"Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette.",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.<br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-1.png' alt=''/><br><img src='https://cdn.shopify.com/s/files/1/1082/3240/files/desc-2.png' alt=''/>",
+        "option": [
+            {
+                "handle": "color",
+                "title": "Color",
+                "variant": [
+                    {
+                        "handle": "black",
+                        "title": "Black"
+                    },
+                    {
+                        "handle": "blue",
+                        "title": "Blue"
+                    }
+                ]
+            },
+            {
+                "handle": "size",
+                "title": "Size",
+                "variant": [
+                    {
+                        "handle": "s",
+                        "title": "S"
+                    },
+                    {
+                        "handle": "m",
+                        "title": "M"
+                    },
+                    {
+                        "handle": "l",
+                        "title": "L"
+                    }
+                ]
+            }
+        ],
+        "layout":"advanced",
+        "advanced": [
+            {
+                "id":1,
+                "name": "T-shirt",
+                "handle":"tshirt",
+                "thumb":"/assets/images/product/Product1-1.jpg"
+            },
+            {
+                "id":2,
+                "name": "Chapeau",
+                "handle":"hat",
+                "thumb":"/assets/images/product/Product19-1.jpg"
+            }
+        ],
+        "related_product": "1,19,11,12,13,14",
+        "review":[
+            {
+                "id":1,
+                "name":"Sophie Hanan",
+                "avatar":"/assets/images/review_avatar3.jpg",
+                "country":"Japon",
+                "rating":5,
+                "content": "Très bon service. Toujours serviable et sympathique quand j'ai besoin d'équipement! Bien approvisionné et ils vous fourniront ce dont vous avez besoin!"
+            }
+        ]
+    }
+]

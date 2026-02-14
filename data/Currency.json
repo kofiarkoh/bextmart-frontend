@@ -1,0 +1,22 @@
+[
+    {
+        "name": "US Dollar",
+        "code": "usd",
+        "symbol": "$"
+    },
+    {
+        "name": "Euro",
+        "code": "eur",
+        "symbol": "€"
+    },
+    {
+        "name": "Japanese",
+        "code": "jpy",
+        "symbol": "¥"
+    },
+    {
+        "name": "Indian",
+        "code": "inr",
+        "symbol": "₹"
+    }
+]

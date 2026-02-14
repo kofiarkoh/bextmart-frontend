@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "text": "Lit",
+        "url":"/collection"     
+    },
+    {
+        "id": 2,
+        "text": "Étagère à livres",
+        "url":"/collection/women-fashion"       
+    },
+    {
+        "id": 3,
+        "text": "Cafétéria",
+        "url":"/collection/men-fashion"         
+    },
+    {
+        "id": 4,
+        "text": "Armoire",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 5,
+        "text": "Pupitre",
+        "url":"/collection/tops-tees"         
+    },
+    {
+        "id": 6,
+        "text": "Porte",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 7,
+        "text": "Tiroir",
+        "url":"/collections"          
+    },
+    {
+        "id": 8,
+        "text": "Éclairage de la lampe",
+        "url":"/collection/women-fashion"          
+    },
+    {
+        "id": 9,
+        "text": "Se réconcilier",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 10,
+        "text": "Douche",
+        "url":"/collection/clothing-sets"          
+    },
+    {
+        "id": 11,
+        "text": "Canapé et Art Mural",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 12,
+        "text": "Télévision",
+        "url":"/collection/men-fashion"          
+    }
+]

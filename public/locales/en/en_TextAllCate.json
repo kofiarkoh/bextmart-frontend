@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "text": "Shop Layout",
+        "url":"/collection"     
+    },
+    {
+        "id": 2,
+        "text": "Mother & Baby",
+        "url":"/collection/women-fashion"       
+    },
+    {
+        "id": 3,
+        "text": "Health & Beauty",
+        "url":"/collection/men-fashion"         
+    },
+    {
+        "id": 4,
+        "text": "Electronics",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 5,
+        "text": "Home, Garden",
+        "url":"/collection/tops-tees"         
+    },
+    {
+        "id": 6,
+        "text": "Kitchen Utensils",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 7,
+        "text": "Clothing & Shoes",
+        "url":"/collections"          
+    },
+    {
+        "id": 8,
+        "text": "Laptop & Macbook",
+        "url":"/collection/women-fashion"          
+    },
+    {
+        "id": 9,
+        "text": "Books - Gifts",
+        "url":"/collection/dresses"          
+    },
+    {
+        "id": 10,
+        "text": "Outdoors",
+        "url":"/collection/clothing-sets"          
+    },
+    {
+        "id": 11,
+        "text": "Pet Supplies",
+        "url":"/collection/kids-fashion"          
+    },
+    {
+        "id": 12,
+        "text": "Furniture",
+        "url":"/collection/men-fashion"          
+    }
+]

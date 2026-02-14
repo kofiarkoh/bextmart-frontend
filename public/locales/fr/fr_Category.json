@@ -1,0 +1,151 @@
+[
+    {
+        "id": 1,
+        "handle": "women-fashion",
+        "name":"La mode des femmes",
+        "product_count": 18,
+        "featured_image":"/assets/images/collection-img1.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner1.jpg",
+                "imgalt": "La mode des femmes"
+            },
+            {
+                "bannerid": 2,
+                "imgpath": "/assets/images/collection-banner2.jpg",
+                "imgalt": "La mode des femmes"
+            },
+            {
+                "bannerid": 3,
+                "imgpath": "/assets/images/collection-banner3.jpg",
+                "imgalt": "La mode des femmes"
+            }
+        ],
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner.",
+        "sub_collections": [
+            {
+                "id": 7,
+                "name": "Robes",
+                "handle":"dresses",
+                "thumb":"/assets/images/collection-sub1.jpg",
+                "product_count": 31
+            },
+            {
+                "id": 8,
+                "name": "Ensembles de vêtements",
+                "handle":"clothing-sets",
+                "thumb":"/assets/images/collection-sub2.jpg",
+                "product_count": 20
+            },
+            {
+                "id": 9,
+                "name": "Hauts et T-shirts",
+                "handle":"tops-tees",
+                "thumb":"/assets/images/collection-sub3.jpg",
+                "product_count": 50
+            },
+            {
+                "id": 10,
+                "name": "Vêtements d'extérieur et Manteaux",
+                "handle":"outerwear-coats",
+                "thumb":"/assets/images/collection-sub3.jpg",
+                "product_count": 50
+            },
+            {
+                "id": 22,
+                "name": "Vêtements de nuit et Peignoirs",
+                "handle":"sleepwear-robes",
+                "thumb":"/assets/images/collection-sub5.jpg",
+                "product_count": 25
+            },
+            {
+                "id": 12,
+                "name": "Jeans",
+                "handle":"jeans",
+                "thumb":"/assets/images/collection-sub6.jpg",
+                "product_count": 27
+            },
+            {
+                "id": 2,
+                "name": "La mode masculine",
+                "handle":"men-fashion",
+                "thumb":"/assets/images/collection-sub7.jpg",
+                "product_count": 45
+            },
+            {
+                "id": 3,
+                "name": "Mode Enfants",
+                "handle":"kids-fashion",
+                "thumb":"/assets/images/collection-sub8.jpg",
+                "product_count": 50
+            }
+        ],
+        "productsID": "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]",
+        "layout":"grid-leftsidebar" 
+    },
+    {
+        "id": 2,
+        "handle": "men-fashion",
+        "name":"La mode masculine",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img2.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "La mode des femmes"
+            }
+        ],
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner."        ,
+        "productsID": "7,8,9,10,11,12,13,14,15,16,6,5",
+        "layout":"grid-rightsidebar"
+    },
+    {
+        "id": 3,
+        "handle": "kids-fashion",
+        "name":"Mode Enfants",
+        "product_count": 12,
+        "featured_image":"/assets/images/collection-img3.jpg",
+        "banner": [
+            {
+                "bannerid": 1,
+                "imgpath": "/assets/images/collection-banner4.jpg",
+                "imgalt": "La mode des femmes"
+            }
+        ],
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner."        ,
+        "productsID": "13,14,15,16,6,5,7,8,9,10,11,12",
+        "layout":"grid-nosidebar"
+    },
+    {
+        "id": 4,
+        "handle": "dresses",
+        "name":"Robes",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img4.jpg",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner."        ,
+        "productsID": "7,8,9,10,11,12",
+        "layout":"list-leftsidebar"
+    },
+    {
+        "id": 5,
+        "handle": "clothing-sets",
+        "name":"Ensembles de vêtements",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img5.jpg",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner."        ,
+        "productsID": "3,4,7,9,11,15",
+        "layout":"list-rightsidebar"
+    },
+    {
+        "id": 6,
+        "handle": "tops-tees",
+        "name":"Hauts et T-shirts",
+        "product_count": 6,
+        "featured_image":"/assets/images/collection-img6.jpg",
+        "desc": "Les blogs de mode peuvent vous inspirer pour bien vous habiller, même les matins paresseux. Vous avez un œil sur les tendances les plus chaudes de cette saison ? Ces blogs sont parfaits pour vous aider à déterminer les vêtements et les couleurs qui conviennent à votre silhouette. Ils peuvent également vous donner des idées pour mélanger et assortir des pièces afin de créer une douzaine de looks parfaits sans vous ruiner."        ,
+        "productsID": "11,12,13,14,15",
+        "layout":"list-nosidebar"
+    }
+]
