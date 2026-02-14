@@ -1,30 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head'
 import { useRouter } from "next/router";
-import { useAtom } from 'jotai'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { userLoggedData } from '../components/ultils/Store'
 import useTranslation from '../components/ultils/useTranslation'
-import base64 from 'base-64'
 import Header from '../components/Header'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import Footer from '../components/Footer'
 import styles from '../public/assets/styles/AccountPage.module.css'
-import Account from '../data/Account.json';
+import { useLoginMutation, useGetMeQuery } from '../store/authApi'
+import { setCredentials } from '../store/authSlice'
 
 export default function AccountPage() {
     const router = useRouter();
     const { t } = useTranslation();
     const ref_email = useRef(null);
     const ref_email_reset = useRef(null);    
-    const [userlogged, setuserlogged] = useAtom(userLoggedData);
+    const dispatch = useDispatch()
+    const authToken = useSelector((state) => state.auth.token)
     const [loginSuccess, setLoginSuccess] = useState(false);
+    const [login] = useLoginMutation()
+    useGetMeQuery(undefined, { skip: !authToken })
     if (typeof window !== 'undefined') {
         document.body.className = "";
         document.body.classList.add('template-account-login');
     }
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem('yam-user')) != null) {
+        if (authToken) {
             setLoginSuccess(true);
             const timer = setInterval(() => {
                 router.push("/account")
@@ -33,7 +35,7 @@ export default function AccountPage() {
                 clearInterval(timer);
             };
         }
-    }, [userlogged, router]);
+    }, [authToken, router]);
 
     const [loginError, setLoginError] = useState(null);
     const [resetNotify, setResetNotify] = useState(null);
@@ -52,41 +54,35 @@ export default function AccountPage() {
     }
 
     const loginInputChange = e => {
-        setLoginData({ ...logindata, [e.target.name]: [e.target.value] });
+        setLoginData({ ...logindata, [e.target.name]: e.target.value });
     }
 
-    function loginSubmit(e) {
+    async function loginSubmit(e) {
         e.preventDefault();
         if (!isValidEmail(logindata.email)) {
             setLoginError(t("Email_is_invalid"));
             ref_email.current.focus();
         } else {
             setLoginError(null);
-            const findemail = Account.findIndex(a => (a.email === String(logindata.email)));
-            if (findemail >= 0) {
-                const ramdomtext = Account[findemail].randomtext;
-                const encodepass = base64.encode(logindata.password + '' + ramdomtext);
-                const token = base64.encode(logindata.email + '' + ramdomtext + '' + encodepass);
-                const findAccount = Account.findIndex(a => (a.email === String(logindata.email) && a.password === encodepass && a.accessToken === token));
-                if (findemail >= 0) {
-                    setTextStatus(t("Checking"));
-                    setClassStatus("submit_loading");
-                    setTimeout(() => {
-                        setTextStatus(t("Completed"));
-                        setClassStatus("submit_complete");
-                        setTimeout(() => {
-                            setClassStatus('');                            
-                            setLoginSuccess(true);
-                            const accountObject = { "email": Account[findAccount].email, "name": Account[findAccount].firstname, "avatar": Account[findAccount].avatar, "token": token }
-                            localStorage.setItem('yam-user', JSON.stringify(accountObject));
-                            setuserlogged(accountObject);
-                        }, 500);
-                    }, 1500);
-                } else {
-                    setLoginError(t("Email_incorrect"));                    
-                }
-            } else {
-                setLoginError(t("Email_incorrect"));                
+            setTextStatus(t("Checking"));
+            setClassStatus("submit_loading");
+            try {
+                const data = await login({ email: logindata.email, password: logindata.password }).unwrap()
+                setTextStatus(t("Completed"));
+                setClassStatus("submit_complete");
+                setTimeout(() => {
+                    setClassStatus('');
+                    setLoginSuccess(true);
+                    if (data?.user) {
+                        localStorage.setItem('yam-user', JSON.stringify(data.user));
+                        dispatch(setCredentials({ user: data.user }))
+                    }
+                }, 500);
+            } catch (error) {
+                setClassStatus('');
+                setTextStatus(t("Sign_In"));
+                const apiMessage = error?.data?.message || error?.data?.detail
+                setLoginError(apiMessage || t("Email_incorrect"));
             }
         }
     }
