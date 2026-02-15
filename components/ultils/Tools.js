@@ -9,7 +9,6 @@ export function buildImageUrl(path) {
     const normalizedBase = ASSET_BASE_URL.endsWith("/") ? ASSET_BASE_URL.slice(0, -1) : ASSET_BASE_URL
     const normalizedPath = path.startsWith("/") ? path : `/${path}`
     let url = `${normalizedBase}${normalizedPath}`;
-    console.log(url)
     return url
 }
 

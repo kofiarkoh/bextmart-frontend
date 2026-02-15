@@ -7,11 +7,11 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import { SVGArrowLeft, SVGArrowRight } from '../../public/assets/SVG';
+import { buildImageUrl } from './Tools';
 
 SwiperCore.use([Navigation, Pagination, Zoom]);
 const ProductPageGallery = ({ productImg }) => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
     return (
         <>
             <div className='product-template__media-content row gallery-normal'>
@@ -42,7 +42,11 @@ const ProductPageGallery = ({ productImg }) => {
                                 productImg.map((item) => (
                                     <SwiperSlide key={item.idpro}>
                                         <div className="product-item__image swiper-zoom-container">
-                                            <Image src={item.imgpath} priority="true" alt={item.imgalt} width={720} height={720} />
+                                            <img src={buildImageUrl(item)} style={{
+                                                width: 720,
+                                                height: 720,
+                                                objectFit: "contain"
+                                            }} priority="true" alt={buildImageUrl(item)} width={720} height={720} />
                                         </div>
                                     </SwiperSlide>
                                 ))
@@ -77,7 +81,11 @@ const ProductPageGallery = ({ productImg }) => {
                                     productImg.map((item) => (
                                         <SwiperSlide key={`thumb-${item.idpro}`}>
                                             <div className=".product-item__image">
-                                                <Image src={item.imgpath} alt={item.imgalt} width={133} height={133} />
+                                                <img src={buildImageUrl(item)} style={{
+                                                    width: 133,
+                                                    height: 133,
+                                                    objectFit: "contain"
+                                                }} alt={item.imgalt} />
                                             </div>
                                         </SwiperSlide>
                                     ))

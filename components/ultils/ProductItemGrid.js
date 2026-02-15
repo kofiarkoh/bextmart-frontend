@@ -17,7 +17,7 @@ const ProductItemGrid = ({ product }) => {
         <>
             <div className="product-item__grid ">
                 <div className="product-item__top">
-                    <Link className='product-item__link product-item__hover_image' href={`/product/${product.handle}`}>
+                    <Link className='product-item__link product-item__hover_image' href={`/product/${product.id}`}>
                         <div className='product-item__image'>
                             <div className='product-item__image'>
                                 <img style={{ width: 182, height: 182, objectFit: "contain" }} src={buildImageUrl(primaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
@@ -40,7 +40,7 @@ const ProductItemGrid = ({ product }) => {
                 <div className="product-item__bottom" style={{
                     display: 'block'
                 }}>
-                    <Link href={`/product/${product.handle}`} className="product-item__title h5">
+                    <Link href={`/product/${product.id}`} className="product-item__title h5">
                         {product.name}
                     </Link>
                     {displayRating(3.4)}

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Head from 'next/head'
 import Link from 'next/link';
 import Image from 'next/image'
 import { useRouter } from "next/router";
+import { useSelector } from 'react-redux'
 import StickyBox from "react-sticky-box";
 import { useAtom } from 'jotai'
 import { cartCount, cartTotal, cartData } from '../../components/ultils/Store'
@@ -19,7 +20,7 @@ import ProductPageGalleryStacked from '../../components/ultils/ProductPageGaller
 import ProductItemList from '../../components/ultils/ProductItemList'
 import ProductPageRelated from '../../components/ultils/ProductPageRelated'
 import ProductPageReview from '../../components/ultils/ProductPageReview'
-import { displayRating, displayPrice, arrayOption1, arrayOption2 } from '../../components/ultils/Tools'
+import { displayRating, displayPrice, arrayOption1, arrayOption2, buildImageUrl } from '../../components/ultils/Tools'
 import ProductWishlist from '../../components/ultils/ProductWishlist'
 import ExtNotification from '../../components/ExtNotification'
 import { SVGArrowLeft, SVGArrowRight, SVGArrowDown, SVGDiamond, SVGMinus, SVGPlus, SVGTwitter, SVGFacebook, SVGPinterest, SVGClose } from '../../public/assets/SVG';
@@ -35,37 +36,31 @@ import { Collections_Menu_jp } from "../../public/locales/jp/jp_TextMenuCol";
 import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
 import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
+import { useGetProductQuery } from '../../store/productsApi'
 
 const ProductPage = () => {
+
     const { t, locale } = useTranslation();
-    let { ProductData, Collections_Menu, ProductSidebar } = [];
+    let { Collections_Menu, ProductSidebar } = [];
     switch (locale) {
         case 'en':
-            ProductData = Product_en;
             Collections_Menu = Collections_Menu_en;
             ProductSidebar = Product_en.slice(0, 5);
             break;
         case 'fr':
-            ProductData = Product_fr;
             Collections_Menu = Collections_Menu_fr;
             ProductSidebar = Product_fr.slice(0, 5);
             break;
         case 'it':
-            ProductData = Product_it;
             Collections_Menu = Collections_Menu_it;
             ProductSidebar = Product_it.slice(0, 5);
             break;
         case 'jp':
-            ProductData = Product_jp;
             Collections_Menu = Collections_Menu_jp;
             ProductSidebar = Product_jp.slice(0, 5);
             break;
     }
-
-    const router = useRouter();
-    const { pid } = router.query;
-    const [isLoading, setisLoading] = useState(true);
-    const [product, setProduct] = useState([]);
+    
     const [option1, setOption1] = useState(null);
     const [option2, setOption2] = useState(null);
     const [qty, setQty] = useState(1);
@@ -84,32 +79,75 @@ const ProductPage = () => {
     const ref_reviewbox = useRef();
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
-    const [groupImages, setGroupImages] = useState(null);
+    const [groupImages, setGroupImages] = useState([]);
 
-    useEffect(() => {
-        const findPro = ProductData.findIndex(a => (a.handle === String(pid)));
-        if (findPro >= 0) {
-            setProduct(ProductData[findPro]);
-            setGroupImages(ProductData[findPro].image)
-            if (ProductData[findPro].option.length > 0) setOption1(ProductData[findPro].option[0].variant[0].title);
-            if (ProductData[findPro].option.length > 1) setOption2(ProductData[findPro].option[1].variant[0].title);
-            setTotal(qty * parseInt(ProductData[findPro].price));
-            if (ProductData[findPro].layout != undefined) setProView(ProductData[findPro].layout);
-            // sidebar on/off
-            if (proView.includes('sidebar') || proView.includes('rightbar') || proView.includes('advanced') || proView.includes('group-images')) {
-                setHasSidebar(true);
-                setColumnView('col-12 col-md-4-5');
-            } else {
-                setHasSidebar(false);
-                setColumnView('col-12 col-md-12');
-            }
-        }
-        setTimeout(() => {
-            setisLoading(false);
-        }, 1000);
+    const router = useRouter();
+    const { pid } = router.query;
+    const productId = router.isReady ? (Array.isArray(pid) ? pid[0] : pid) : null;
+    const { data, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
+    const selectedProduct = useSelector((state) => state.products.selected);
+    const apiProduct = selectedProduct || data?.data || data?.product || data || null;
 
-    }, [pid, hasSidebar, proView])
-    useEffect(() => { }, [product, ProductData, qty, total, isLoading]);
+
+    const product = useMemo(() => {
+
+        if (!apiProduct) return null;
+        const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
+        const image = photos.length
+            ? photos.map((photo, index) => ({
+                idpro: `${apiProduct.id || productId}-${index}`,
+                imgpath: buildImageUrl(photo),
+                imgalt: apiProduct.name || 'product',
+            }))
+            : [{
+                idpro: `${apiProduct.id || productId}-0`,
+                imgpath: buildImageUrl(null),
+                imgalt: apiProduct.name || 'product',
+            }];
+
+         setGroupImages(photos);
+        return {
+            id: apiProduct.id,
+            name: apiProduct.name,
+            price: apiProduct.price,
+            price_compare: apiProduct.price_compare || apiProduct.compare_price || apiProduct.price,
+            quantity: apiProduct.quantity ?? 0,
+            quantity_total: apiProduct.quantity ?? 0,
+            stars: apiProduct.stars ?? 0,
+            desc: apiProduct.description || '',
+            shortdesc: apiProduct.description || '',
+            description: apiProduct.description || '',
+            photos,
+            image,
+            handle: apiProduct.slug || apiProduct.handle || apiProduct.id || productId,
+            option: Array.isArray(apiProduct.option) ? apiProduct.option : [],
+            advanced: apiProduct.advanced,
+            related_product: apiProduct.related_product,
+            review: apiProduct.review,
+            layout: apiProduct.layout,
+            SKU: apiProduct.SKU || apiProduct.sku || '',
+            Brand: apiProduct.Brand || apiProduct.brand || '',
+            Type: apiProduct.Type || apiProduct.type || '',
+        };
+    }, [apiProduct, productId]);
+    
+
+    // useEffect(() => {
+    //     if (!product) return;
+    //     setGroupImages(product.image || []);
+    //     if (product.option.length > 0) setOption1(product.option[0].variant[0].title);
+    //     if (product.option.length > 1) setOption2(product.option[1].variant[0].title);
+    //     setTotal(qty * parseInt(product.price));
+    //     if (product.layout !== undefined) setProView(product.layout);
+    //     if (proView.includes('sidebar') || proView.includes('rightbar') || proView.includes('advanced') || proView.includes('group-images')) {
+    //         setHasSidebar(true);
+    //         setColumnView('col-12 col-md-4-5');
+    //     } else {
+    //         setHasSidebar(false);
+    //         setColumnView('col-12 col-md-12');
+    //     }
+    // }, [product, qty, proView])
+    const isLoading = isProductLoading;
 
     const { asPath } = useRouter();
     const origin =
@@ -309,7 +347,7 @@ const ProductPage = () => {
         }
     }
 
-    if (product.name != undefined) {
+    if (product?.name != undefined) {
         return (
             <>
                 <Head>
@@ -474,7 +512,7 @@ const ProductPage = () => {
                                                     <div className="product-template__description">
                                                         <div className={`product-template__title-area ${styles.details_strong}`}>{t("Quick_overview")}</div>
                                                         <div className="product-template__content-area">
-                                                            {product.shortdesc}
+                                                            <div dangerouslySetInnerHTML={{ __html: product.shortdesc || "" }} />
                                                         </div>
                                                     </div>
                                                     <div className="product-template__sharing">
