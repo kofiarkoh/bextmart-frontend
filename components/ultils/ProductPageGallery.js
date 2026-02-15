@@ -40,7 +40,7 @@ const ProductPageGallery = ({ productImg }) => {
                             className='swiper-container'>
                             {
                                 productImg.map((item) => (
-                                    <SwiperSlide key={item.idpro}>
+                                    <SwiperSlide key={item}>
                                         <div className="product-item__image swiper-zoom-container">
                                             <img src={buildImageUrl(item)} style={{
                                                 width: 720,
@@ -79,7 +79,7 @@ const ProductPageGallery = ({ productImg }) => {
                             >
                                 {
                                     productImg.map((item) => (
-                                        <SwiperSlide key={`thumb-${item.idpro}`}>
+                                        <SwiperSlide key={`thumb-${item}`}>
                                             <div className=".product-item__image">
                                                 <img src={buildImageUrl(item)} style={{
                                                     width: 133,

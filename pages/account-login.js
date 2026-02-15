@@ -73,10 +73,9 @@ export default function AccountPage() {
                 //setTimeout(() => {
                     setClassStatus('');
                     setLoginSuccess(true);
-                    console.log('login data', data.data);
 
                         localStorage.setItem('yam-user', JSON.stringify(data.data.user));
-                        localStorage.setItem('auth_token', JSON.stringify(data.data.token));
+                        localStorage.setItem('auth_token', data.data.token);
                         dispatch(setCredentials({ user: data.data.user, "token": data.data.token }))
 
                // }, 500);

@@ -5,9 +5,6 @@ import Image from 'next/image'
 import { useRouter } from "next/router";
 import { useSelector } from 'react-redux'
 import StickyBox from "react-sticky-box";
-import { useAtom } from 'jotai'
-import { cartCount, cartTotal, cartData } from '../../components/ultils/Store'
-import update from 'immutability-helper';
 import Popup from "reactjs-popup";
 import useTranslation from '../../components/ultils/useTranslation'
 import Header from '../../components/Header'
@@ -20,7 +17,7 @@ import ProductPageGalleryStacked from '../../components/ultils/ProductPageGaller
 import ProductItemList from '../../components/ultils/ProductItemList'
 import ProductPageRelated from '../../components/ultils/ProductPageRelated'
 import ProductPageReview from '../../components/ultils/ProductPageReview'
-import { displayRating, displayPrice, arrayOption1, arrayOption2, buildImageUrl } from '../../components/ultils/Tools'
+import { displayRating, displayPrice, buildImageUrl } from '../../components/ultils/Tools'
 import ProductWishlist from '../../components/ultils/ProductWishlist'
 import ExtNotification from '../../components/ExtNotification'
 import { SVGArrowLeft, SVGArrowRight, SVGArrowDown, SVGDiamond, SVGMinus, SVGPlus, SVGTwitter, SVGFacebook, SVGPinterest, SVGClose } from '../../public/assets/SVG';
@@ -37,39 +34,40 @@ import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
 import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
+import { useAddToCartMutation } from '../../store/cartApi'
 
 const ProductPage = () => {
 
-    const { t, locale } = useTranslation();
+    const t = (text) =>  text;
     let { Collections_Menu, ProductSidebar } = [];
-    switch (locale) {
-        case 'en':
-            Collections_Menu = Collections_Menu_en;
-            ProductSidebar = Product_en.slice(0, 5);
-            break;
-        case 'fr':
-            Collections_Menu = Collections_Menu_fr;
-            ProductSidebar = Product_fr.slice(0, 5);
-            break;
-        case 'it':
-            Collections_Menu = Collections_Menu_it;
-            ProductSidebar = Product_it.slice(0, 5);
-            break;
-        case 'jp':
-            Collections_Menu = Collections_Menu_jp;
-            ProductSidebar = Product_jp.slice(0, 5);
-            break;
-    }
+
+     Collections_Menu = Collections_Menu_en;
+     ProductSidebar = Product_en.slice(0, 5);
+    // switch (locale) {
+    //     case 'en':
+           
+    //         break;
+    //     case 'fr':
+    //         Collections_Menu = Collections_Menu_fr;
+    //         ProductSidebar = Product_fr.slice(0, 5);
+    //         break;
+    //     case 'it':
+    //         Collections_Menu = Collections_Menu_it;
+    //         ProductSidebar = Product_it.slice(0, 5);
+    //         break;
+    //     case 'jp':
+    //         Collections_Menu = Collections_Menu_jp;
+    //         ProductSidebar = Product_jp.slice(0, 5);
+    //         break;
+    // }
     
     const [option1, setOption1] = useState(null);
     const [option2, setOption2] = useState(null);
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(0);
-    const [scCount, setscCount] = useAtom(cartCount);
-    const [scTotal, setscTotal] = useAtom(cartTotal);
-    const [scData, setscData] = useAtom(cartData);
     const [classStatus, setClassStatus] = useState('');
     const [statusText, setStatusText] = useState(t("Add_to_Cart"));
+    const [addToCartApi] = useAddToCartMutation();
     const [proView, setProView] = useState('sidebar');
     const [columnView, setColumnView] = useState('col-12 col-md-4-5');
     const [hasSidebar, setHasSidebar] = useState(true);
@@ -280,70 +278,23 @@ const ProductPage = () => {
         } else { if (qty === 1) { (number) ? '' : setQty((q) => q + 1); } }
     }
 
-    function AddtoCart() {
-        let data = localStorage.getItem('yam-shoppingcart');
-        if (data !== null && data !== '[]' && data !== '[null]') {
-            data = JSON.parse(data);
-        } else { data = []; }
-        let totaladded = 0;
-        let groupoption = []
-        if (product.option.length === 2) groupoption = product.option[0].title + '-' + option1 + '#' + product.option[1].title + '-' + option2;
-        else {
-            if (product.option.length === 1) groupoption = product.option[0].title + '-' + option1;
-            else groupoption = '';
-        }
-        const productAdded = product.id + '@' + groupoption;
-
-        let productAddedOptions = [];
-        if (product.option.length === 2) productAddedOptions = arrayOption2(product.option[0].title, option1, product.option[1].title, option2);
-        else {
-            if (product.option.length === 1) productAddedOptions = arrayOption1(product.option[0].title, option1);
-            else productAddedOptions = '';
-        }
-
-        const productObject = { "id": product.id, "productCode": productAdded, options: productAddedOptions, "qty": qty, "total": total };
-        const indexInStored = data.findIndex(a => a.productCode === productAdded);
-        if (indexInStored === -1) {
-            // Add New One                
-            data = [...data, productObject];
-            localStorage.setItem('yam-shoppingcart', JSON.stringify(data));
+    async function AddtoCart() {
+        console.log('Adding to cart:', { product_id: product.id, quantity: qty }); // Debug log
+        if (!product?.id) return;
+        try {
+            console.log('Adding to cart:', { product_id: product.id, quantity: qty }); // Debug log
             setClassStatus('cart-loadding');
             setStatusText(t("Adding_to_Cart"));
+            await addToCartApi({ product_id: product.id, quantity: qty }).unwrap();
+            setClassStatus('cart-complete');
+            setStatusText(t("Added_success"));
             setTimeout(() => {
-                setClassStatus('cart-complete');
-                setStatusText(t("Added_success"));
-                setscCount((c) => c + 1);
-                data.map(a => totaladded = totaladded + a.total);
-                setscTotal(totaladded);
-                setscData(data);
-                setTimeout(() => {
-                    setClassStatus('');
-                    setStatusText(t("Add_to_Cart"))
-                }, 500);
-            }, 1000);
-        } else {
-            // Replace existing                 
-            const objOld = data[indexInStored];
-            const qtyNew = parseInt(objOld.qty) + 1;
-            const totalNew = parseInt(objOld.total) + parseInt(product.price);
-            const objNew = { "id": product.id, "productCode": productAdded, options: productAddedOptions, "qty": qtyNew, "total": totalNew };
-            const newData = update(data, {
-                $splice: [[indexInStored, 1, objNew]]
-            });
-            localStorage.setItem('yam-shoppingcart', JSON.stringify(newData));
-            setClassStatus('cart-loadding');
-            setStatusText(t("Adding_to_Cart"));
-            setTimeout(() => {
-                setClassStatus('cart-complete');
-                setStatusText(t("Added_success"));
-                newData.map(a => totaladded = totaladded + a.total);
-                setscTotal(totaladded);
-                setscData(newData);
-                setTimeout(() => {
-                    setClassStatus('');
-                    setStatusText(t("Add_to_Cart"))
-                }, 1000);
-            }, 1000);
+                setClassStatus('');
+                setStatusText(t("Add_to_Cart"));
+            }, 500);
+        } catch (error) {
+            setClassStatus('');
+            setStatusText(t("Add_to_Cart"));
         }
     }
 
@@ -410,7 +361,7 @@ const ProductPage = () => {
                                                                             <span className="form__label-title">{t(item.title)}: {(indexi === 0) ? t(option1) : t(option2)}</span>
                                                                         </legend>
                                                                         <div className={`product-form__item product-form__${item.title.toLowerCase()}`}>
-                                                                            {
+                                                                            {/* {
                                                                                 item.variant.map((vari, indexj) => (
                                                                                     <div key={vari.handle}>
                                                                                         <label className="product-form-value__item product-form__" htmlFor={`option-${item.handle}-variant-${vari.handle}`}>
@@ -430,7 +381,7 @@ const ProductPage = () => {
                                                                                         </label>
                                                                                     </div>
                                                                                 ))
-                                                                            }
+                                                                            } */}
                                                                         </div>
                                                                     </fieldset>
                                                                     {
