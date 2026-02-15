@@ -1,18 +1,28 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 
-import { useAtom } from 'jotai'
-import { cartCount, cartTotal } from './Store'
 import CurrencyConvert from './CurrencyConvert'
 import useTranslation from './useTranslation'
+import { useGetCartQuery } from '../../store/cartApi'
+import { useSelector } from 'react-redux'
 
 import { SVGCart, SVGCartMobile, SVGClose } from '../../public/assets/SVG';
 import DrawerCartItem from './DrawerCartItem'
 
 const DrawerCart = () => {
     const { t } = useTranslation();
-    const [sccount] = useAtom(cartCount);
-    const [scTotal] = useAtom(cartTotal);
+    useGetCartQuery();
+    const cartItems = useSelector((state) => state.cart.items);
+    const sccount = Array.isArray(cartItems)
+        ? cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0)
+        : 0;
+    const scTotal = Array.isArray(cartItems)
+        ? cartItems.reduce((sum, item) => {
+            const price = parseFloat(item?.product?.price || item?.price || 0);
+            const qty = item?.quantity || 0;
+            return sum + (price * qty);
+        }, 0)
+        : 0;
     // Toggle Drawer
     const [isOpen, setIsOpen] = useState(false);
     const useEscape = () => {
