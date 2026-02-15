@@ -33,7 +33,11 @@ export default function CartPage() {
 
     const router = useRouter();
     const { t, locale } = useTranslation();
-    const { isLoading } = useGetCartQuery();
+    const authToken = useSelector((state) => state.auth?.token);
+    const { isLoading, refetch } = useGetCartQuery(undefined, { skip: !authToken });
+    React.useEffect(() => {
+        if (authToken) refetch();
+    }, [authToken, refetch]);
     const cartItems = useSelector((state) => state.cart.items);
     const scCount = useMemo(
         () => (Array.isArray(cartItems)

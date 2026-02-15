@@ -12,7 +12,6 @@ import {useEffect} from "react";
 function MyApp({Component, pageProps}) {
 	useEffect(() => {
 		const token = localStorage.getItem("auth_token");
-
 		let user = null;
 		const storedUser = localStorage.getItem("yam-user");
 		if (storedUser) {

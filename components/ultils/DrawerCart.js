@@ -11,7 +11,11 @@ import DrawerCartItem from './DrawerCartItem'
 
 const DrawerCart = () => {
     const { t } = useTranslation();
-    useGetCartQuery();
+    const authToken = useSelector((state) => state.auth?.token);
+    const { refetch } = useGetCartQuery(undefined, { skip: !authToken });
+    useEffect(() => {
+        if (authToken) refetch();
+    }, [authToken, refetch]);
     const cartItems = useSelector((state) => state.cart.items);
     const sccount = Array.isArray(cartItems)
         ? cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0)
