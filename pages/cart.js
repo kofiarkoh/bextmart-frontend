@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Head from 'next/head'
 import Link from 'next/link';
 import Image from 'next/image'
 import { useRouter } from "next/router";
-import { useAtom } from 'jotai'
-import update from 'immutability-helper';
 import { loadStripe } from '@stripe/stripe-js';
-import { cartCount, cartTotal } from '../components/ultils/Store'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import Product_en from "../public/locales/en/en_Product.json";
-import Product_jp from "../public/locales/jp/jp_Product.json";
-import Product_fr from "../public/locales/fr/fr_Product.json";
-import Product_it from "../public/locales/it/it_Product.json";
 import CartPageSkeleton from '../components/ultils/CartPageSkeleton'
 import ExtNotification from '../components/ExtNotification'
-import { SVGTrash, SVGMinus, SVGPlus } from '../public/assets/SVG';
+import { SVGTrash } from '../public/assets/SVG';
 import styles from '../public/assets/styles/CartPage.module.css'
-import { Quantity } from '../public/locales/en/en';
+import { useGetCartQuery } from '../store/cartApi'
+import { useSelector } from 'react-redux'
+import { buildImageUrl } from '../components/ultils/Tools'
 
 let stripePromise;
 const getStripe = () => {
@@ -38,90 +33,35 @@ export default function CartPage() {
 
     const router = useRouter();
     const { t, locale } = useTranslation();
-    const [scCount, setscCount] = useAtom(cartCount);
-    const [scTotal, setscTotal] = useAtom(cartTotal);
-    const [cartData, setCartData] = useState(null);
-    const [isLoading, setisLoading] = useState(true);
+    const { isLoading } = useGetCartQuery();
+    const cartItems = useSelector((state) => state.cart.items);
+    const scCount = useMemo(
+        () => (Array.isArray(cartItems)
+            ? cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0)
+            : 0),
+        [cartItems]
+    );
+    const scTotal = useMemo(
+        () => (Array.isArray(cartItems)
+            ? cartItems.reduce((sum, item) => {
+                const price = parseFloat(item?.product?.price || item?.price || 0);
+                const qty = item?.quantity || 0;
+                return sum + (price * qty);
+            }, 0)
+            : 0),
+        [cartItems]
+    );
 
-    let ProductConnect = {};
-    switch (locale) {
-        case 'en':
-            ProductConnect = Product_en; break;
-        case 'fr':
-            ProductConnect = Product_fr; break;
-        case 'it':
-            ProductConnect = Product_it; break;
-        case 'jp':
-            ProductConnect = Product_jp; break;
-    }
+    const cartData = cartItems;
 
-    useEffect(() => {
-        let data = localStorage.getItem('yam-shoppingcart');
-        if (data !== null && data !== '[]' && data !== '[null]') {
-            data = JSON.parse(data);
-            setCartData(data);
-        }
-        setTimeout(() => {
-            setisLoading(false);
-        }, 1000);
-    }, [isLoading]);
-    useEffect(() => { }, [cartData])
-
-    function changeQty(item, number, price) {
-        let qtyNew = 0;
-        (number) ? qtyNew = parseInt(item.qty - 1) : qtyNew = parseInt(item.qty + 1);
-        const totalNew = qtyNew * parseInt(price);
-        if (qtyNew > 0) {
-            updateItem(item, qtyNew, totalNew);
-        } else {
-            removeItem(item);
-        }
-    }
-
-    function changeQtyInput(item, number, price) {
-        const qtyNew = parseInt(number);
-        const totalNew = qtyNew * parseInt(price);
-        updateItem(item, qtyNew, totalNew);
-    }
-
-    function updateItem(item, qtyNew, totalNew) {
-        const data = cartData;
-        const indexInStored = data.findIndex(a => a.productCode === item.productCode);
-        const objNew = { "id": item.id, "productCode": item.productCode, options: item.options, "qty": qtyNew, "total": totalNew };
-        const newData = update(data, {
-            $splice: [[indexInStored, 1, objNew]]
-        });
-        localStorage.setItem('yam-shoppingcart', JSON.stringify(newData));
-        let totaladded = 0;
-        newData.map(a => totaladded = totaladded + a.total);
-        setscTotal(totaladded);
-        setCartData(newData);
-    }
-
-    function removeItem(item) {
-        let data = localStorage.getItem('yam-shoppingcart');
-        if (data !== null && data !== '[]' && data !== '[null]') {
-            data = JSON.parse(data);
-        } else {
-            data = [];
-        }
-        const cartExisted = data.findIndex(a => a.productCode === item.productCode);
-        data.splice(cartExisted, 1);
-        localStorage.setItem('yam-shoppingcart', JSON.stringify(data));
-        setscCount((c) => c - 1);
-        let totalAfterRemoved = 0;
-        data.map(a => totalAfterRemoved = totalAfterRemoved + a.total);
-        setscTotal(totalAfterRemoved);
-        setCartData(data);
-    }
 
     async function handleCheckout() {
         let items = [];
-        cartData.map((item, index) => {
-            let product = ProductConnect[ProductConnect.findIndex(pc => item.id === pc.id)];
+        cartData.map((item) => {
+            const product = item.product || {};
             let stripeItem = {
                 price: product.stripe_APIID,
-                quantity: item.qty
+                quantity: item.quantity || 0
             }
             if (product.stripe_APIID != '' || product.stripe_APIID != undefined) {
                 if (items.findIndex(a => a.price === product.stripe_APIID) === -1) {
@@ -161,17 +101,21 @@ export default function CartPage() {
                                 <tbody>
                                     {
                                         cartData.map((item, index) => {
-                                            let product = ProductConnect[ProductConnect.findIndex(pc => item.id === pc.id)];
+                                            const product = item.product || {};
+                                            const productId = product.id || item.product_id;
+                                            const productName = product.name || t("Product");
+                                            const productImage = buildImageUrl(product?.photos?.[0]);
+                                            const productPrice = product.price || item.price || 0;
                                             return (
                                                 <tr key={index} className={styles.cart_item} id={`CartItem-${index}`}>
                                                     <td className={styles.cart_item__media}>
-                                                        <Image src={product.image[0].imgpath} alt='' className='product-item__image' width={80} height={80} />
+                                                        <img src={productImage} alt={productName} className='product-item__image' width={80} height={80} />
                                                     </td>
                                                     <td className={styles.cart_item__details}>
-                                                        <Link className={`${styles.cart_item__name} break`} href={`/product/${product.handle}`}>{product.name}</Link>
+                                                        <Link className={`${styles.cart_item__name} break`} href={`/product/${productId}`}>{productName}</Link>
                                                         <dl>
                                                             {
-                                                                (item.options.length > 0)
+                                                                (Array.isArray(item.options) && item.options.length > 0)
                                                                     ?
                                                                     item.options.map((option, index) => (
                                                                         <div className={styles.product_option} key={index}>
@@ -187,27 +131,19 @@ export default function CartPage() {
                                                     <td className="center cart-item__prices">
                                                         <div className="cart-item__price-wrapper medium-up">
                                                             <span className="price">
-                                                                <span className="money"><CurrencyConvert amount={parseInt(product.price)} /></span>
+                                                                <span className="money"><CurrencyConvert amount={parseFloat(productPrice)} /></span>
                                                             </span>
                                                         </div>
                                                     </td>
                                                     <td className={`${styles.cart_item__quantity} center`}>
                                                         <div className="quantity">
-                                                            <button className="quantity__button no-js-hidden" name="minus" type="button" onClick={(e) => changeQty(item, true, product.price)}>
-                                                                <span className="visually-hidden">Decrease quantity</span>
-                                                                <SVGMinus />
-                                                            </button>
-                                                            <input onChange={(e) => changeQtyInput(item, e.target.value, product.price)} className="quantity__input" type="number" name="updates[]" value={item.qty} min="0" autoComplete="off" />
-                                                            <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(item, false, product.price)}>
-                                                                <span className="visually-hidden">Increase quantit</span>
-                                                                <SVGPlus />
-                                                            </button>
+                                                            <input className="quantity__input" type="number" name="updates[]" value={item.quantity || 0} min="0" readOnly />
                                                         </div>
                                                     </td>
                                                     <td className="center cart-item__totals">
-                                                        <CurrencyConvert amount={parseInt(item.total)} />
+                                                        <CurrencyConvert amount={parseFloat(productPrice) * (item.quantity || 0)} />
                                                     </td>
-                                                    <td className={`${styles.cart_item__remove} center`} onClick={() => removeItem(item)}>
+                                                    <td className={`${styles.cart_item__remove} center`}>
                                                         <SVGTrash />
                                                     </td>
                                                 </tr>

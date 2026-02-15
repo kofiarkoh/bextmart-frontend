@@ -24,7 +24,7 @@ const DrawerCartItem = () => {
                         <div className="cart__dropdown-item" key={index}>
                             <div className="cart__dropdown-item">
                                 <Link href={`/product/${productId}`} className='cart__dropdown-product-image'>
-                                    <Image src={productImage} alt={productName} width={61} height={61} />
+                                    <img src={productImage} alt={productName} width={61} height={61} />
                                 </Link>
                                 <div className="cart__dropdown-product-info">
                                     <h3 className="cart__dropdown-product-title">
