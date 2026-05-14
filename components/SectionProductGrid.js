@@ -15,7 +15,7 @@ const SectionProductGrid = (props) => {
         ? products
         : data?.data?.data || data?.data || data?.results || data || [];
     const displayItems = Array.isArray(resolvedItems)
-        ? resolvedItems.slice(0, 15)
+        ? resolvedItems.slice(0, 5)
         : [];
     const titlecenter = Boolean(props.titlecenter);
 

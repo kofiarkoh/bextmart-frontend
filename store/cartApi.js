@@ -50,8 +50,28 @@ export const cartApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Cart'],
     }),
+    updateCartItem: builder.mutation({
+      query: ({ id, quantity }) => ({
+        url: `${CART_BASE_URL}/cart/items/${id}`,
+        method: 'PUT',
+        body: { quantity },
+      }),
+      invalidatesTags: ['Cart'],
+    }),
+    removeCartItem: builder.mutation({
+      query: (id) => ({
+        url: `${CART_BASE_URL}/cart/items/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Cart'],
+    }),
   }),
   overrideExisting: false,
 })
 
-export const { useGetCartQuery, useAddToCartMutation } = cartApi
+export const {
+  useGetCartQuery,
+  useAddToCartMutation,
+  useUpdateCartItemMutation,
+  useRemoveCartItemMutation,
+} = cartApi

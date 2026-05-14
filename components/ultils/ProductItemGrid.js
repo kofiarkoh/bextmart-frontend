@@ -12,7 +12,6 @@ import useTranslation from './useTranslation'
 const ProductItemGrid = ({ product }) => {
     const { t } = useTranslation();
     const primaryPhoto = product?.photos?.[0]
-    const secondaryPhoto = product?.photos?.[1] || primaryPhoto
     return (
         <>
             <div className="product-item__grid ">
@@ -21,11 +20,6 @@ const ProductItemGrid = ({ product }) => {
                         <div className='product-item__image'>
                             <div className='product-item__image'>
                                 <img style={{ width: 182, height: 182, objectFit: "contain" }} src={buildImageUrl(primaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
-                            </div>
-                        </div>
-                        <div className='product-item__image_second'>
-                            <div className='product-item__image'>
-                                <img style={{ width: 182, height: 182, objectFit: "contain"  }} src={buildImageUrl(secondaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
                             </div>
                         </div>
                     </Link>

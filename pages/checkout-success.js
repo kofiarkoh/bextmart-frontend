@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head'
+import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer';
 import useTranslation from '../components/ultils/useTranslation'
-import { useAtom } from 'jotai'
-import { cartCount, cartTotal, cartData } from '../components/ultils/Store'
+import { useDispatch } from 'react-redux'
+import { clearCart } from '../store/cartSlice'
 
 export default function CheckoutSuccessPage() {
     const { t } = useTranslation();
-    const [sccount, setscCount] = useAtom(cartCount);
-    const [scTotal, setscTotal] = useAtom(cartTotal);
-    const [items, setItems] = useAtom(cartData);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setscCount(0);
-        setscTotal(0);
-        setItems([]);
-        localStorage.removeItem('yam-shoppingcart');
-    }, []);
-    useEffect(() => { }, [sccount, scTotal, items])
+        dispatch(clearCart());
+    }, [dispatch]);
 
     return (
         <>
             <Head>
-                <title>{t("Cart_page")}</title>
+                <title>Order Confirmed</title>
             </Head>
             <Header />
             <main>
                 <div className='main-cart-items'>
-                    <div className='cart-template__layout '>
+                    <div className='cart-template__layout'>
                         <div className='container'>
-                            <div className='cart-template__content checkout-notify'>
-                                <h2>{t("Checkout_Success")}</h2>
+                            <div className='cart-template__content checkout-notify' style={{ textAlign: 'center', padding: '60px 0' }}>
+                                <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
+                                <h2 style={{ marginBottom: 12 }}>{t("Checkout_Success")}</h2>
+                                <p style={{ color: 'var(--color_body)', marginBottom: 32, fontSize: 15 }}>
+                                    Your order has been placed. We will contact you shortly.
+                                </p>
+                                <Link href="/" className="button button--primary">Continue Shopping</Link>
                             </div>
                         </div>
                     </div>

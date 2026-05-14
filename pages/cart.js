@@ -2,8 +2,6 @@ import React, { useMemo } from 'react';
 import Head from 'next/head'
 import Link from 'next/link';
 import Image from 'next/image'
-import { useRouter } from "next/router";
-import { loadStripe } from '@stripe/stripe-js';
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
@@ -13,17 +11,9 @@ import CartPageSkeleton from '../components/ultils/CartPageSkeleton'
 import ExtNotification from '../components/ExtNotification'
 import { SVGTrash } from '../public/assets/SVG';
 import styles from '../public/assets/styles/CartPage.module.css'
-import { useGetCartQuery } from '../store/cartApi'
+import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation } from '../store/cartApi'
 import { useSelector } from 'react-redux'
 import { buildImageUrl } from '../components/ultils/Tools'
-
-let stripePromise;
-const getStripe = () => {
-    if (!stripePromise) {
-        stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-    }
-    return stripePromise;
-};
 
 export default function CartPage() {
     if (typeof window !== 'undefined') {
@@ -31,10 +21,12 @@ export default function CartPage() {
         document.body.classList.add('template-cart');
     }
 
-    const router = useRouter();
     const { t, locale } = useTranslation();
     const authToken = useSelector((state) => state.auth?.token);
     const { isLoading, refetch } = useGetCartQuery(undefined, { skip: !authToken });
+    const [updateCartItem] = useUpdateCartItemMutation();
+    const [removeCartItem] = useRemoveCartItemMutation();
+    const [loadingItemId, setLoadingItemId] = React.useState(null);
     React.useEffect(() => {
         if (authToken) refetch();
     }, [authToken, refetch]);
@@ -58,33 +50,27 @@ export default function CartPage() {
 
     const cartData = cartItems;
 
-
-    async function handleCheckout() {
-        let items = [];
-        cartData.map((item) => {
-            const product = item.product || {};
-            let stripeItem = {
-                price: product.stripe_APIID,
-                quantity: item.quantity || 0
+    async function handleUpdateQty(itemId, newQty) {
+        setLoadingItemId(itemId);
+        try {
+            if (newQty < 1) {
+                await removeCartItem(itemId).unwrap();
+            } else {
+                await updateCartItem({ id: itemId, quantity: newQty }).unwrap();
             }
-            if (product.stripe_APIID != '' || product.stripe_APIID != undefined) {
-                if (items.findIndex(a => a.price === product.stripe_APIID) === -1) {
-                    items = items.concat(stripeItem);
-                }
-            }
-        })
-        
-        const stripe = await getStripe();
-        const { error } = await stripe.redirectToCheckout({
-            lineItems: items,
-            mode: 'payment',
-            successUrl: `${window.location.origin}/checkout-success`,
-            cancelUrl: `${window.location.origin}/checkout-cancel`,
-        });
-        console.warn(error.message);
+        } finally {
+            setLoadingItemId(null);
+        }
     }
 
-
+    async function handleRemove(itemId) {
+        setLoadingItemId(itemId);
+        try {
+            await removeCartItem(itemId).unwrap();
+        } finally {
+            setLoadingItemId(null);
+        }
+    }
 
     function loadCartItem() {
         return (
@@ -140,15 +126,39 @@ export default function CartPage() {
                                                         </div>
                                                     </td>
                                                     <td className={`${styles.cart_item__quantity} center`}>
-                                                        <div className="quantity">
-                                                            <input className="quantity__input" type="number" name="updates[]" value={item.quantity || 0} min="0" readOnly />
+                                                        <div className="quantity" style={{ margin: '0 auto' }}>
+                                                            <button
+                                                                type="button"
+                                                                className="quantity__button"
+                                                                disabled={loadingItemId === item.id}
+                                                                onClick={() => handleUpdateQty(item.id, (item.quantity || 1) - 1)}
+                                                                aria-label="Decrease quantity"
+                                                                style={{ borderRight: '1px solid var(--color_line)' }}
+                                                            >−</button>
+                                                            <span style={{ flexGrow: 1, textAlign: 'center', fontSize: '1.4rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.quantity || 0}</span>
+                                                            <button
+                                                                type="button"
+                                                                className="quantity__button"
+                                                                disabled={loadingItemId === item.id}
+                                                                onClick={() => handleUpdateQty(item.id, (item.quantity || 1) + 1)}
+                                                                aria-label="Increase quantity"
+                                                                style={{ borderLeft: '1px solid var(--color_line)' }}
+                                                            >+</button>
                                                         </div>
                                                     </td>
                                                     <td className="center cart-item__totals">
                                                         <CurrencyConvert amount={parseFloat(productPrice) * (item.quantity || 0)} />
                                                     </td>
                                                     <td className={`${styles.cart_item__remove} center`}>
-                                                        <SVGTrash />
+                                                        <button
+                                                            type="button"
+                                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                                            disabled={loadingItemId === item.id}
+                                                            onClick={() => handleRemove(item.id)}
+                                                            aria-label="Remove item"
+                                                        >
+                                                            <SVGTrash />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             )
@@ -171,7 +181,7 @@ export default function CartPage() {
                                 <Link href="/" className="button button--secondary">{t("Cart_Continueshopping")}</Link>
                             </div>
                             <div className="col-12 col-sm-6">
-                                <div className="button button--secondary" onClick={handleCheckout}>{t("Cart_checkout")}</div>
+                                <Link href="/checkout" className="button button--primary">{t("Cart_checkout")}</Link>
                             </div>
                         </div>
                     </div>
