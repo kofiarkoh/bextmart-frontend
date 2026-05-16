@@ -1,5 +1,4 @@
 import { apiSlice } from './apiSlice'
-import { clearCart } from './cartSlice'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -11,33 +10,18 @@ export const checkoutApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
-    confirmAddress: builder.mutation({
-      query: (body) => ({
-        url: `${BASE_URL}/checkout/confirm-address`,
-        method: 'POST',
-        body,
-      }),
-    }),
-    getCheckoutSummary: builder.query({
-      query: () => ({
-        url: `${BASE_URL}/checkout/summary`,
-        method: 'GET',
-      }),
-    }),
     processPayment: builder.mutation({
       query: (body) => ({
         url: `${BASE_URL}/checkout/process-payment`,
         method: 'POST',
         body,
       }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled
-          dispatch(clearCart())
-        } catch {
-          // no-op
-        }
-      },
+    }),
+    getPaymentStatus: builder.query({
+      query: (orderId) => ({
+        url: `${BASE_URL}/orders/${orderId}/payment-status`,
+        method: 'GET',
+      }),
     }),
   }),
   overrideExisting: false,
@@ -45,7 +29,6 @@ export const checkoutApi = apiSlice.injectEndpoints({
 
 export const {
   useGetAddressOptionsQuery,
-  useConfirmAddressMutation,
-  useGetCheckoutSummaryQuery,
   useProcessPaymentMutation,
+  useGetPaymentStatusQuery,
 } = checkoutApi

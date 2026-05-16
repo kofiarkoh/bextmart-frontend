@@ -12,7 +12,6 @@ import {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
 } from '../store/checkoutApi'
-import styles from '../public/assets/styles/CartPage.module.css'
 
 const STEP_ADDRESS = 0
 const STEP_REVIEW = 1
@@ -27,7 +26,7 @@ export default function CheckoutPage() {
 
   const { t } = useTranslation()
   const router = useRouter()
-  const authToken = useSelector((state) => state.auth?.token)
+const authToken = useSelector((state) => state.auth?.token)
   const cartItems = useSelector((state) => state.cart.items)
 
   const [step, setStep] = useState(STEP_ADDRESS)
@@ -66,15 +65,25 @@ export default function CheckoutPage() {
   async function handleProcessPayment() {
     setPaymentError(null)
     try {
-      await processPayment({
+      const result = await processPayment({
         payment_method: 'mobile_money',
         city_id: Number(cityId),
         nearby_city: nearbyCity || '',
         delivery_instructions: deliveryInstructions || '',
       }).unwrap()
-      router.push('/checkout-success')
+
+      const paymentUrl =
+        result?.payment_url ||
+        result?.data?.payment_url
+
+      if (!paymentUrl) {
+        setPaymentError('Could not initiate payment. Please try again.')
+        return
+      }
+
+      window.location.href = paymentUrl
     } catch (err) {
-      setPaymentError(err?.data?.message || 'Payment failed. Please try again.')
+      setPaymentError(err?.data?.message || 'Payment initiation failed. Please try again.')
     }
   }
 
@@ -93,10 +102,10 @@ export default function CheckoutPage() {
             <div className="container">
 
               {/* Step indicator */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', margin: '32px auto 40px', maxWidth: 400 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', margin: '32px auto 40px', maxWidth: 500 }}>
                 {STEP_LABELS.map((label, i) => (
                   <React.Fragment key={i}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, minWidth: 110 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, minWidth: 100 }}>
                       <div style={{
                         width: 48, height: 48, borderRadius: '50%',
                         backgroundColor: i <= step ? 'var(--color_primary)' : 'transparent',
@@ -113,8 +122,16 @@ export default function CheckoutPage() {
                         )}
                         {i === 1 && (
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="5" y="2" width="14" height="20" rx="2"/>
-                            <line x1="12" y1="18" x2="12.01" y2="18" strokeWidth="3"/>
+                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                            <rect x="9" y="3" width="6" height="4" rx="1"/>
+                            <line x1="9" y1="12" x2="15" y2="12"/>
+                            <line x1="9" y1="16" x2="13" y2="16"/>
+                          </svg>
+                        )}
+                        {i === 2 && (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"/>
+                            <line x1="2" y1="10" x2="22" y2="10"/>
                           </svg>
                         )}
                       </div>
@@ -312,7 +329,7 @@ export default function CheckoutPage() {
                       onClick={handleProcessPayment}
                       style={{ flex: 1 }}
                     >
-                      {processingPayment ? 'Processing...' : 'Pay with Mobile Money'}
+                      {processingPayment ? 'Redirecting...' : 'Pay with Mobile Money'}
                     </button>
                   </div>
                 </div>
@@ -322,6 +339,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </main>
+
       <Footer />
     </>
   )
