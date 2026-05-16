@@ -1,135 +1,170 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import useTranslation from '../components/ultils/useTranslation'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ProductItemGrid from '../components/ultils/ProductItemGrid'
-import Product_en from "../public/locales/en/en_Product.json";
-import Product_jp from "../public/locales/jp/jp_Product.json";
-import Product_fr from "../public/locales/fr/fr_Product.json";
-import Product_it from "../public/locales/it/it_Product.json";
 import SearchPageSkeleton from '../components/ultils/SearchPageSkeleton'
-import ExtNotification from '../components/ExtNotification'
+import { SVGArrowLeft, SVGArrowRight } from '../public/assets/SVG'
+import { useSearchProductsQuery, useSaveSearchMutation } from '../store/productsApi'
 import styles from '../public/assets/styles/SearchPage.module.css'
 
 export default function SearchPage() {
     if (typeof window !== 'undefined') {
-        document.body.className = "";
-        document.body.classList.add('template-search');
+        document.body.className = ''
+        document.body.classList.add('template-search')
     }
 
-    const router = useRouter();
-    const [searchQuery, setSearchQuery] = useState(null);
-    const [isLoading, setisLoading] = useState(true);
-    const [notify, setnotify] = useState('');
-    const [result, setResult] = useState(null);
-    const { t, locale } = useTranslation();
-    let Productdata;
-    switch (locale) {
-        case 'en':
-            Productdata = Product_en; break;
-        case 'fr':
-            Productdata = Product_fr; break;
-        case 'it':
-            Productdata = Product_it; break;
-        case 'jp':
-            Productdata = Product_jp; break;
-    }
+    const router = useRouter()
+    const { t } = useTranslation()
+    const q = router.query.q || ''
+    const page = Number(router.query.page || 1)
+
+    const { data, isLoading, isError } = useSearchProductsQuery(
+        { q, page },
+        { skip: q.length < 2 }
+    )
+
+    const [saveSearch] = useSaveSearchMutation()
 
     useEffect(() => {
-        const getQuery = router.asPath.substring(10).toLowerCase();
-        if (getQuery.length > 2) {
-            setSearchQuery(getQuery);
-            let remainingresult;
-            let filterName = Productdata.filter((product) => { return product.name.toLowerCase().includes(getQuery) })
-            let filterSKU = Productdata.filter((product) => { return product.SKU.toLowerCase().includes(getQuery) })
-            let filterBrand = Productdata.filter((product) => { return product.Brand.toLowerCase().includes(getQuery) })
-            let filterType = Productdata.filter((product) => { return product.Type.toLowerCase().includes(getQuery) })
-            let filterOption = Productdata.filter((product) => { return product.option.some(o => o.variant.some(v => v.title.toLowerCase().includes(getQuery))) });
-            remainingresult = filterName.concat(filterSKU, filterBrand, filterType, filterOption);
-            let uniqResult = remainingresult.reduce(function (a, b) {
-                if (a.indexOf(b) < 0) a.push(b);
-                return a;
-            }, []);
-            setResult(uniqResult);
-        } else {
-            setnotify(t("Search_atleast_3"));
+        if (q.length >= 2) {
+            saveSearch({ query: q }).catch(() => {})
         }
-        setTimeout(() => {
-            setisLoading(false);
-        }, 1500);
+    }, [q])
 
-    }, [searchQuery, isLoading, notify])
-    useEffect(() => { }, [result]);
+    const pageData = data?.data || {}
+    const items = Array.isArray(pageData.data) ? pageData.data : (Array.isArray(data?.data) ? data.data : [])
+    const currentPage = pageData.current_page || page
+    const lastPage = pageData.last_page || 1
+    const total = pageData.total ?? items.length
 
-    function loadResult() {
-        return (
-            <div className='search-template__results'>
-                <div className='row row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5'>
-                    {
-                        result.map((item, index) => (
-                            <div key={index} className="product-item__content col d-none d-xxl-block d-xl-block d-lg-block d-md-block d-sm-block d-block">
-                                <ProductItemGrid product={item} />
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-        )
+    const pagesToShow = useMemo(() => {
+        const start = Math.max(1, currentPage - 2)
+        const end = Math.min(lastPage, currentPage + 2)
+        const pages = []
+        for (let i = start; i <= end; i++) pages.push(i)
+        return pages
+    }, [currentPage, lastPage])
+
+    const goToPage = (nextPage) => {
+        if (nextPage < 1 || nextPage > lastPage) return
+        router.push({ pathname: '/search', query: { q, page: nextPage } })
     }
 
-    if (result != null) {
+    if (q.length < 2) {
         return (
             <>
-                <Head>
-                    <title>{t("Search_page")}</title>
-                </Head>
+                <Head><title>{t('Search_page')}</title></Head>
                 <Header />
                 <main>
-                    <Breadcrumbs text={searchQuery} />
-                    <div className='search-template'>
-                        <div className='search-template__layout'>
-                            <div className='container'>
-                                <div className={styles.search_content}>
-                                    <p className={styles.search_toptext}>{(result.length === 0) ? t("Search_no_result1") + ' "' + router.asPath.substring(10) + '" ' + t("Search_no_result2")
-                                        : result.length + ' ' + t("Search_result_text") + ' "' + router.asPath.substring(10) + '"'
-                                    }</p>
-                                    {(result.length > 0) ? loadResult() : ''}
+                    <Breadcrumbs text={q} />
+                    <div className="search-template">
+                        <div className="search-template__layout">
+                            <div className="container">
+                                <div className={styles.no_product}>
+                                    <h2>{t('Search_atleast_3')}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </main>
                 <Footer />
-                <ExtNotification />
-            </>
-        )
-    } else {
-        return (
-            <>
-                <Header />
-                <main>
-                    {
-                        isLoading ? <SearchPageSkeleton /> : <>
-                            <div className="search-template">
-                                <div className={`search-template__layout `}>
-                                    <div className="container">
-                                        <div className='product-template__container row'>
-                                            <div className={styles.no_product}>
-                                                <h2>{notify}</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    }
-
-                </main>
-                <Footer />
             </>
         )
     }
+
+    return (
+        <>
+            <Head><title>{t('Search_page')}</title></Head>
+            <Header />
+            <main>
+                <Breadcrumbs text={q} />
+                <div className="search-template">
+                    <div className="search-template__layout">
+                        <div className="container">
+                            {isLoading ? (
+                                <SearchPageSkeleton />
+                            ) : isError ? (
+                                <div className={styles.no_product}>
+                                    <h2>{t('Search_no_result1')} &ldquo;{q}&rdquo;</h2>
+                                </div>
+                            ) : (
+                                <div className={styles.search_content}>
+                                    <p className={styles.search_toptext}>
+                                        {items.length === 0
+                                            ? `${t('Search_no_result1')} "${q}" ${t('Search_no_result2')}`
+                                            : `${total} ${t('Search_result_text')} "${q}"`}
+                                    </p>
+
+                                    {items.length > 0 && (
+                                        <>
+                                            <div className="search-template__results">
+                                                <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5" style={{ gap: '16px', margin: 0 }}>
+                                                    {items.map((item, index) => (
+                                                        <div key={item?.id || index} style={{ padding: 0, minWidth: 0 }}>
+                                                            <ProductItemGrid product={item} />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {lastPage > 1 && (
+                                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginTop: '32px' }}>
+                                                    <button
+                                                        type="button"
+                                                        className="button button--secondary"
+                                                        onClick={() => goToPage(currentPage - 1)}
+                                                        disabled={currentPage <= 1}
+                                                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                                                        aria-label="Previous page"
+                                                    >
+                                                        <SVGArrowLeft />
+                                                    </button>
+                                                    {pagesToShow.map((p) => (
+                                                        <Link
+                                                            key={p}
+                                                            href={{ pathname: '/search', query: { q, page: p } }}
+                                                            className="button button--secondary"
+                                                            style={{
+                                                                minWidth: 40,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                padding: '8px 12px',
+                                                                fontWeight: p === currentPage ? 700 : 400,
+                                                                backgroundColor: p === currentPage ? 'var(--color_primary)' : '',
+                                                                color: p === currentPage ? '#fff' : '',
+                                                                borderColor: p === currentPage ? 'var(--color_primary)' : '',
+                                                            }}
+                                                        >
+                                                            {p}
+                                                        </Link>
+                                                    ))}
+                                                    <button
+                                                        type="button"
+                                                        className="button button--secondary"
+                                                        onClick={() => goToPage(currentPage + 1)}
+                                                        disabled={currentPage >= lastPage}
+                                                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                                                        aria-label="Next page"
+                                                    >
+                                                        <SVGArrowRight />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <Footer />
+        </>
+    )
 }

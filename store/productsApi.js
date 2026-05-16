@@ -21,6 +21,20 @@ export const productsApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    getSuggestions: builder.query({
+      query: (query) => ({
+        url: `${PRODUCTS_BASE_URL}/products/suggestions`,
+        method: 'GET',
+        params: { query },
+      }),
+    }),
+    saveSearch: builder.mutation({
+      query: (body) => ({
+        url: `${PRODUCTS_BASE_URL}/products/searches`,
+        method: 'POST',
+        body,
+      }),
+    }),
     getProduct: builder.query({
       query: (id) => ({
         url: `${PRODUCTS_BASE_URL}/products/${id}`,
@@ -40,4 +54,9 @@ export const productsApi = apiSlice.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useSearchProductsQuery, useGetProductQuery } = productsApi
+export const {
+  useSearchProductsQuery,
+  useGetProductQuery,
+  useGetSuggestionsQuery,
+  useSaveSearchMutation,
+} = productsApi

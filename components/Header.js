@@ -2,6 +2,7 @@ import Link from "next/link";
 import {useState, useEffect, useRef} from "react";
 import Image from "next/image";
 import {useRouter} from "next/router";
+import {useGetSuggestionsQuery} from "../store/productsApi";
 import {useAtom} from "jotai";
 import {useSelector} from "react-redux";
 
@@ -30,6 +31,20 @@ import {useLogoutMutation} from "../store/authApi";
 
 const Header = () => {
 	const {t, locale} = useTranslation();
+	const [searchInput, setSearchInput] = useState('');
+	const [isFocused, setIsFocused] = useState(false);
+	const { data: suggestionsData, isFetching: isSuggestionsFetching } = useGetSuggestionsQuery(
+		searchInput,
+		{ skip: searchInput.length < 2 }
+	);
+	const suggestions = (() => {
+		if (!suggestionsData) return [];
+		if (Array.isArray(suggestionsData?.data?.data)) return suggestionsData.data.data;
+		if (Array.isArray(suggestionsData?.data)) return suggestionsData.data;
+		if (Array.isArray(suggestionsData)) return suggestionsData;
+		return [];
+	})();
+	const showDropdown = isFocused && searchInput.length >= 2;
 	const [currency, setCurrency] = useAtom(storecurrency);
 	const [currencySymbol, setCurrencySymbol] = useAtom(storecurrencySymbol);
 	const [wlcount] = useAtom(wishlistCount);
@@ -217,7 +232,7 @@ const Header = () => {
 										<AllCategories />
 									</div>
 									<div className="main-header__icon">
-										<div className="header__search d-none d-lg-block">
+										<div className="header__search d-none d-lg-block" style={{ position: 'relative' }}>
 											<div className="search-form">
 												<form
 													action="/search"
@@ -229,11 +244,11 @@ const Header = () => {
 														name="q"
 														className="search_box"
 														placeholder={t("search_inner")}
-														defaultValue={
-															router.asPath.includes("/search")
-																? router.asPath.substring(10)
-																: ""
-														}
+														value={searchInput}
+														onChange={(e) => setSearchInput(e.target.value)}
+														onFocus={() => setIsFocused(true)}
+														onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+														autoComplete="off"
 													/>
 													<button
 														className="search_submit"
@@ -243,6 +258,65 @@ const Header = () => {
 													</button>
 												</form>
 											</div>
+											{showDropdown && (
+												<ul style={{
+													position: 'absolute',
+													top: '100%',
+													left: 0,
+													right: 0,
+													background: '#fff',
+													border: '1px solid var(--color_line)',
+													borderRadius: '0 0 6px 6px',
+													boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+													zIndex: 9999,
+													margin: 0,
+													padding: 0,
+													listStyle: 'none',
+													maxHeight: 320,
+													overflowY: 'auto',
+												}}>
+													{isSuggestionsFetching && (
+														<li style={{ padding: '12px 16px', fontSize: 13, color: 'var(--color_body)' }}>
+															Searching...
+														</li>
+													)}
+													{!isSuggestionsFetching && suggestions.length === 0 && (
+														<li style={{ padding: '12px 16px', fontSize: 13, color: 'var(--color_body)' }}>
+															No suggestions found
+														</li>
+													)}
+													{suggestions.map((item, i) => {
+														const label = item.label || item.name || item.query || (typeof item === 'string' ? item : '');
+														return (
+															<li key={item.id || i} style={{ borderBottom: '1px solid var(--color_line)' }}>
+																<button
+																	type="button"
+																	onMouseDown={() => {
+																		setSearchInput(label);
+																		setIsFocused(false);
+																		router.push(`/search?q=${encodeURIComponent(label)}`);
+																	}}
+																	style={{
+																		display: 'flex',
+																		alignItems: 'center',
+																		gap: 10,
+																		padding: '10px 14px',
+																		fontSize: 14,
+																		color: 'var(--color_body)',
+																		background: 'none',
+																		border: 'none',
+																		width: '100%',
+																		textAlign: 'left',
+																		cursor: 'pointer',
+																	}}>
+																	<SVGSearch />
+																	{label}
+																</button>
+															</li>
+														);
+													})}
+												</ul>
+											)}
 										</div>
 										<div className="header__delivery d-none d-lg-block">
 											<div className="header__delivery-text">
