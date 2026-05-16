@@ -10,17 +10,14 @@ import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
 import {
   useGetAddressOptionsQuery,
-  useConfirmAddressMutation,
-  useGetCheckoutSummaryQuery,
   useProcessPaymentMutation,
 } from '../store/checkoutApi'
 import styles from '../public/assets/styles/CartPage.module.css'
 
 const STEP_ADDRESS = 0
-const STEP_SUMMARY = 1
-const STEP_PAYMENT = 2
+const STEP_REVIEW = 1
 
-const STEP_LABELS = ['Delivery Address', 'Order Summary', 'Payment']
+const STEP_LABELS = ['Delivery Address', 'Review & Pay']
 
 export default function CheckoutPage() {
   if (typeof window !== 'undefined') {
@@ -55,48 +52,33 @@ export default function CheckoutPage() {
     ? addressOptionsData.data
     : []
 
-  const [confirmAddress, { isLoading: confirmingAddress }] = useConfirmAddressMutation()
-
-  const { data: summaryData, isLoading: loadingSummary } = useGetCheckoutSummaryQuery(
-    undefined,
-    { skip: step < STEP_SUMMARY || !authToken }
-  )
-
-  const summary = summaryData?.data || {}
-  const summaryItems = Array.isArray(summary?.items) ? summary.items : cartItems
-  const subtotal = summary?.subtotal ?? summary?.cart_total ?? null
-  const shipping = summary?.shipping ?? summary?.shipping_fee ?? summary?.delivery_fee ?? null
-  const total = summary?.total ?? null
-
   const [processPayment, { isLoading: processingPayment }] = useProcessPaymentMutation()
 
-  async function handleConfirmAddress() {
+  function handleContinue() {
     if (!cityId) {
       setAddressError('Please select a delivery city.')
       return
     }
     setAddressError(null)
-    try {
-      await confirmAddress({
-        city_id: Number(cityId),
-        nearby_city: nearbyCity || '',
-        delivery_instructions: deliveryInstructions || '',
-      }).unwrap()
-      setStep(STEP_SUMMARY)
-    } catch (err) {
-      setAddressError(err?.data?.message || 'Could not confirm address. Please try again.')
-    }
+    setStep(STEP_REVIEW)
   }
 
   async function handleProcessPayment() {
     setPaymentError(null)
     try {
-      await processPayment({ payment_method: 'mobile_money' }).unwrap()
+      await processPayment({
+        payment_method: 'mobile_money',
+        city_id: Number(cityId),
+        nearby_city: nearbyCity || '',
+        delivery_instructions: deliveryInstructions || '',
+      }).unwrap()
       router.push('/checkout-success')
     } catch (err) {
       setPaymentError(err?.data?.message || 'Payment failed. Please try again.')
     }
   }
+
+  const selectedCity = cities.find((c) => String(c.id) === String(cityId))
 
   return (
     <>
@@ -111,7 +93,7 @@ export default function CheckoutPage() {
             <div className="container">
 
               {/* Step indicator */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', margin: '32px auto 40px', maxWidth: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', margin: '32px auto 40px', maxWidth: 400 }}>
                 {STEP_LABELS.map((label, i) => (
                   <React.Fragment key={i}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, minWidth: 110 }}>
@@ -130,14 +112,6 @@ export default function CheckoutPage() {
                           </svg>
                         )}
                         {i === 1 && (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                            <rect x="9" y="3" width="6" height="4" rx="1"/>
-                            <line x1="9" y1="12" x2="15" y2="12"/>
-                            <line x1="9" y1="16" x2="13" y2="16"/>
-                          </svg>
-                        )}
-                        {i === 2 && (
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="5" y="2" width="14" height="20" rx="2"/>
                             <line x1="12" y1="18" x2="12.01" y2="18" strokeWidth="3"/>
@@ -236,10 +210,9 @@ export default function CheckoutPage() {
                         <button
                           type="button"
                           className="button button--primary"
-                          disabled={confirmingAddress}
-                          onClick={handleConfirmAddress}
+                          onClick={handleContinue}
                         >
-                          {confirmingAddress ? 'Confirming...' : 'Continue →'}
+                          Continue →
                         </button>
                       </div>
                     </>
@@ -247,96 +220,81 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Step 2: Order Summary */}
-              {step === STEP_SUMMARY && (
+              {/* Step 2: Review & Pay */}
+              {step === STEP_REVIEW && (
                 <div style={{ maxWidth: 640, margin: '0 auto' }}>
-                  <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Order Summary</h2>
+                  <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Review & Pay</h2>
 
-                  {loadingSummary ? (
-                    <p>Loading summary...</p>
-                  ) : (
-                    <>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
-                        <thead>
-                          <tr style={{ borderBottom: '2px solid var(--color_line)' }}>
-                            <th style={{ textAlign: 'left', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Product</th>
-                            <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Qty</th>
-                            <th style={{ textAlign: 'right', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Total</th>
+                  {/* Delivery summary */}
+                  <div style={{
+                    backgroundColor: 'var(--color_content_bg)',
+                    border: '1px solid var(--color_line)',
+                    borderRadius: 6, padding: '16px 20px', marginBottom: 24,
+                  }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10, color: 'var(--color_body)' }}>
+                      Delivery Details
+                    </p>
+                    <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                      <strong>City:</strong> {selectedCity?.name || cityId}
+                    </p>
+                    {nearbyCity && (
+                      <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                        <strong>Nearby:</strong> {nearbyCity}
+                      </p>
+                    )}
+                    {deliveryInstructions && (
+                      <p style={{ fontSize: 14, margin: 0 }}>
+                        <strong>Instructions:</strong> {deliveryInstructions}
+                      </p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setStep(STEP_ADDRESS)}
+                      style={{ background: 'none', border: 'none', color: 'var(--color_primary)', fontSize: 13, cursor: 'pointer', padding: 0, marginTop: 10 }}
+                    >
+                      Edit address
+                    </button>
+                  </div>
+
+                  {/* Order items */}
+                  <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid var(--color_line)' }}>
+                        <th style={{ textAlign: 'left', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Product</th>
+                        <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Qty</th>
+                        <th style={{ textAlign: 'right', padding: '10px 0', fontSize: 13, textTransform: 'uppercase', fontWeight: 600 }}>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cartItems.map((item, i) => {
+                        const product = item.product || item
+                        const price = parseFloat(product?.price || item?.price || 0)
+                        const qty = item?.quantity || 1
+                        return (
+                          <tr key={i} style={{ borderBottom: '1px solid var(--color_line)' }}>
+                            <td style={{ padding: '14px 0', fontSize: 14 }}>{product?.name || 'Product'}</td>
+                            <td style={{ padding: '14px 0', fontSize: 14, textAlign: 'center' }}>{qty}</td>
+                            <td style={{ padding: '14px 0', fontSize: 14, textAlign: 'right' }}>
+                              <CurrencyConvert amount={price * qty} />
+                            </td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          {summaryItems.map((item, i) => {
-                            const product = item.product || item
-                            const price = parseFloat(product?.price || item?.price || 0)
-                            const qty = item?.quantity || 1
-                            return (
-                              <tr key={i} style={{ borderBottom: '1px solid var(--color_line)' }}>
-                                <td style={{ padding: '14px 0', fontSize: 14 }}>{product?.name || 'Product'}</td>
-                                <td style={{ padding: '14px 0', fontSize: 14, textAlign: 'center' }}>{qty}</td>
-                                <td style={{ padding: '14px 0', fontSize: 14, textAlign: 'right' }}>
-                                  <CurrencyConvert amount={price * qty} />
-                                </td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
+                        )
+                      })}
+                    </tbody>
+                  </table>
 
-                      <div style={{ borderTop: '2px solid var(--color_line)', paddingTop: 16, maxWidth: 320, marginLeft: 'auto' }}>
-                        {subtotal !== null && (
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 14 }}>
-                            <span>Subtotal</span>
-                            <span><CurrencyConvert amount={parseFloat(subtotal)} /></span>
-                          </div>
-                        )}
-                        {shipping !== null && (
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, fontSize: 14 }}>
-                            <span>Shipping</span>
-                            <span><CurrencyConvert amount={parseFloat(shipping)} /></span>
-                          </div>
-                        )}
-                        {total !== null && (
-                          <div style={{
-                            display: 'flex', justifyContent: 'space-between',
-                            marginTop: 12, paddingTop: 12,
-                            borderTop: '1px solid var(--color_line)',
-                            fontSize: 18, fontWeight: 600,
-                          }}>
-                            <span>Total</span>
-                            <span><CurrencyConvert amount={parseFloat(total)} /></span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32, gap: 16 }}>
-                        <button type="button" className="button button--secondary" onClick={() => setStep(STEP_ADDRESS)}>
-                          ← Edit Address
-                        </button>
-                        <button type="button" className="button button--primary" onClick={() => setStep(STEP_PAYMENT)}>
-                          Proceed to Payment →
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* Step 3: Payment */}
-              {step === STEP_PAYMENT && (
-                <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
-                  <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Payment</h2>
-                  <p style={{ fontSize: 14, color: 'var(--color_body)', marginBottom: 32 }}>
-                    Complete your order by paying with Mobile Money.
-                  </p>
-
+                  {/* Payment method */}
                   <div style={{
                     border: '2px solid var(--color_primary)', borderRadius: 8,
-                    padding: '28px 24px', marginBottom: 32,
+                    padding: '20px 24px', marginBottom: 28,
+                    display: 'flex', alignItems: 'center', gap: 16,
                     backgroundColor: 'var(--color_content_bg)',
                   }}>
-                    <div style={{ fontSize: 40, marginBottom: 12 }}>📱</div>
-                    <p style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Mobile Money</p>
-                    <p style={{ fontSize: 13, color: 'var(--color_body)', margin: 0 }}>MTN · Vodafone · AirtelTigo</p>
+                    <span style={{ fontSize: 32 }}>📱</span>
+                    <div>
+                      <p style={{ fontWeight: 600, fontSize: 15, margin: '0 0 2px' }}>Mobile Money</p>
+                      <p style={{ fontSize: 13, color: 'var(--color_body)', margin: 0 }}>MTN · Vodafone · AirtelTigo</p>
+                    </div>
                   </div>
 
                   {paymentError && (
@@ -344,7 +302,7 @@ export default function CheckoutPage() {
                   )}
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-                    <button type="button" className="button button--secondary" onClick={() => setStep(STEP_SUMMARY)}>
+                    <button type="button" className="button button--secondary" onClick={() => setStep(STEP_ADDRESS)}>
                       ← Back
                     </button>
                     <button
