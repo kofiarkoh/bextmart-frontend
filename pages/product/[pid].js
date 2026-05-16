@@ -308,15 +308,19 @@ const ProductPage = () => {
                                                     <div className="price price--large">
                                                         {displayPrice(product.price, product.price_compare)}
                                                     </div>
-                                                    <div className={styles.product_rating}>
-                                                        {displayRating(product.stars)}
-                                                        <div className={styles.product_rating_add} onClick={() => { handleScroll(ref_reviewbox.current); }}>
-                                                            <span>{t("Write_Review")}</span>
-                                                        </div>
-                                                    </div>
                                                     <div className={styles.product_earnpoints}>
-                                                        <SVGDiamond />
-                                                        <span className="earnpoints-text">{t("Earn")} {Math.round(product.price / 2)} {t("Reward_Points")}</span>
+                                                        <span className="earnpoints-text" style={{ fontWeight: 500 }}>{t("Quantity")}:</span>
+                                                        <div className="quantity" style={{ width: 'auto', minWidth: 120 }}>
+                                                            <button className="quantity__button no-js-hidden" name="minus" type="button" onClick={(e) => changeQty(true, product.price)}>
+                                                                <span className="visually-hidden">{t("Decrease_quantity")}</span>
+                                                                <SVGMinus />
+                                                            </button>
+                                                            <input onChange={(e) => changeQtyInput(e.target.value, product.price)} className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
+                                                            <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
+                                                                <span className="visually-hidden">{t("Increase_quantity")}</span>
+                                                                <SVGPlus />
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                     {
                                                         product.advanced != undefined ? loadStyles() : ''
@@ -375,22 +379,6 @@ const ProductPage = () => {
                                                                 </div>
                                                             ))
                                                         }
-                                                    </div>
-                                                    <div className="product-form__input product-form__quantity">
-                                                        <label className="form__label">
-                                                            {t("Quantity")}
-                                                        </label>
-                                                        <div className="quantity">
-                                                            <button className="quantity__button no-js-hidden" name="minus" type="button" onClick={(e) => changeQty(true, product.price)}>
-                                                                <span className="visually-hidden">{t("Decrease_quantity")}</span>
-                                                                <SVGMinus />
-                                                            </button>
-                                                            <input onChange={(e) => changeQtyInput(e.target.value, product.price)} className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
-                                                            <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
-                                                                <span className="visually-hidden">{t("Increase_quantity")}</span>
-                                                                <SVGPlus />
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                     <div className='product-template__form'>
                                                         <div className='product-form'>

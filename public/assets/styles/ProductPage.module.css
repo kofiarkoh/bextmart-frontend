@@ -96,14 +96,15 @@
 .product_earnpoints {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 13px;
-    height: 45px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     font-size: 15px;
+    min-height: 56px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
     margin-top: 20px;
     margin-bottom: 20px;
+    padding: 8px 0;
 }
 
 .product_earnpoints svg {
