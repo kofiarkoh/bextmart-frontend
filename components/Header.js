@@ -22,7 +22,7 @@ import AllCategories from "./ultils/AllCategories";
 import HorizontalMenu from "./ultils/HorizontalMenu";
 
 import CurrencyData from "../data/Currency.json";
-import Logo from "../public/assets/images/logo.png";
+import Logo from "../public/assets/images/bexmart_logo_yellow.png";
 import {
 	SVGArrowDown,
 	SVGSearch,
@@ -217,12 +217,18 @@ const Header = () => {
 												priority="true"
 												alt="Shop logo"
 												src={Logo}
+												height={70}
+												width={160}
+												style={{ objectFit: 'contain', height: 80, width: 'auto' }}
 											/>
 											<Image
 												className="header__heading-logo d-block d-lg-none"
 												priority="true"
 												alt="Shop logo"
 												src={Logo}
+												height={70}
+												width={120}
+												style={{ objectFit: 'contain', height: 80, width: 'auto' }}
 											/>
 										</Link>
 									</h1>

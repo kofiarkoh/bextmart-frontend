@@ -821,8 +821,8 @@ body:not(.template-index) .main-header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   margin-left: -10px;
   margin-right: -10px;
   position: relative;
@@ -870,12 +870,14 @@ body:not(.template-index) .main-header {
 
 .header__heading-logo {
   max-width: 100%;
+  max-height:70px;
+  object-fit: contain;
 }
 
 @media screen and (max-width: 991px) {
   .header__heading-logo {
-    max-height: 50px !important;
-    width: 75px;
+    max-height: 48px !important;
+    width: auto;
   }
 }
 
