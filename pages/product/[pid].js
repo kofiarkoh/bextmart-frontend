@@ -294,24 +294,11 @@ const ProductPage = () => {
                         <div className={styles.product_template_layout}>
                             <div className="container">
                                 <div className='product-template__container row'>
-                                    {
-                                        (proView.includes('sidebar') || proView.includes('advanced') || proView.includes('group-images')) ? sidebar() : ''
-                                    }
-                                    <div className={`product-template__content ${(proView.includes('sidebar') || proView.includes('advanced') || proView.includes('group-images')) ? styles.padding_left : ''} ${proView.includes('rightbar') ? styles.padding_right : ''} ${columnView}`}>
+                                    <div className="product-template__content col-12">
                                         <div className="product-template__inner row">
                                             <div className="product-template__media col-12 col-sm-12 col-md-7">
                                                 <StickyBox offsetTop={0} offsetBottom={20}>
-                                                    {
-                                                        (proView.includes('sidebar') || proView.includes('advanced') || proView.includes('group-images') || proView.includes('rightbar'))
-                                                            ?
-                                                            <ProductPageGallery productImg={groupImages} />
-                                                            :
-                                                            (proView.includes('stacked'))
-                                                                ?
-                                                                <ProductPageGalleryStacked productImg={groupImages} type={proView} />
-                                                                :
-                                                                <ProductPageGalleryVertical productImg={groupImages} />
-                                                    }
+                                                    <ProductPageGallery productImg={groupImages} />
 
                                                 </StickyBox>
                                             </div>
@@ -532,9 +519,6 @@ const ProductPage = () => {
                                         </div>
 
                                     </div>
-                                    {
-                                        (proView.includes('rightbar')) ? sidebar() : ''
-                                    }
                                 </div>
                             </div>
                         </div>

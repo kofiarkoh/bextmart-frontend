@@ -10248,30 +10248,38 @@ slider-component {
 
 .carousel-navigation {
   text-align: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   top: 50%;
   position: absolute;
   z-index: 1;
-  box-shadow: none !important;
-  border: 1px solid var(--color_btn_border1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+  border: none;
+  border-radius: 50%;
   background-color: var(--color_btn_bg1);
   color: var(--color_btn_text1);
   cursor: pointer;
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.carousel-navigation:hover {
+  transform: translate(0%, -50%) scale(1.1) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25) !important;
 }
 
 .carousel-navigation.swiper-button-disabled {
   cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .carousel-navigation.swiper-nav-next {
   transform: translate(0%, -50%);
-  right: 0;
+  right: 12px;
 }
 
 .carousel-navigation.swiper-nav-prev {
   transform: translate(0%, -50%);
-  left: 0;
+  left: 12px;
 }
 
 
@@ -10280,8 +10288,8 @@ slider-component {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   fill: currentcolor;
 }
 
