@@ -7948,8 +7948,18 @@ input[type="checkbox"] {
   pointer-events: none;
 }
 
+.quantity__button {
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .quantity__button:hover {
   background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.12);
+}
+
+.quantity__button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 .quantity__input:-webkit-autofill, .quantity__input:-webkit-autofill:hover, .quantity__input:-webkit-autofill:active {
@@ -8011,6 +8021,7 @@ input[type="button"], .button, .shopify-challenge__button, .customer button {
   color: var(--color_btn_text);
   border: 1px solid var(--color_btn_border);
   background-color: var(--color_btn_bg);
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 input[type="button"] *, .button *, .shopify-challenge__button *, .customer button * {
@@ -8022,6 +8033,13 @@ input[type="button"]:hover, .button:hover, .shopify-challenge__button:hover, .cu
   color: var(--color_btn_text1);
   border-color: var(--color_btn_border1);
   background-color: var(--color_btn_bg1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+input[type="button"]:active, .button:active, .shopify-challenge__button:active, .customer button:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 /* Button - hover */
