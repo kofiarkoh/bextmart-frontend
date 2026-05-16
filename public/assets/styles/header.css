@@ -1945,12 +1945,24 @@ header__menu-account>a, header-compare>a, header-wishlist>a, .header__menu-accou
   line-height: 42px;
 }
 
+.main-header__right .search_submit {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: var(--color_primary);
+}
+
+.main-header__right .search_submit:hover {
+  background-color: #f0f0f0;
+  border-color: #f0f0f0;
+}
+
 .main-header__right .search_submit svg {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.25s ease;
+  fill: var(--color_primary);
 }
 
 .main-header__right .search_submit:hover svg {

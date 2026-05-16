@@ -82,9 +82,10 @@ const ProductPage = () => {
     const router = useRouter();
     const { pid } = router.query;
     const productId = router.isReady ? (Array.isArray(pid) ? pid[0] : pid) : null;
-    const { data, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
+    const { data: productResponse, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
+    const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const selectedProduct = useSelector((state) => state.products.selected);
-    const apiProduct = selectedProduct || data?.data || data?.product || data || null;
+    const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
 
 
     const product = useMemo(() => {
@@ -191,25 +192,6 @@ const ProductPage = () => {
                                             ))
                                         }
                                     </ul>
-                                </div>
-                            </div>
-                            <div className={`${styles.sidebar__item} ${styles.sidebar_accordion} accordion collection-sidebar__best ${sidebarProducts ? styles.sidebar_accordion_open : ''}`}>
-                                <h4 className="accordion__title" onClick={() => setSidebarProducts(o => !o)}>
-                                    <span>{t("Sidebar_Products")}</span>
-                                    <SVGArrowDown />
-                                </h4>
-                                <div className={`accordion__content collection-sidebar__best-content ${sidebarProducts ? '' : 'accordionItemCollapsed'}`}>
-                                    <div className="accordion__product row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-1">
-                                        {
-                                            ProductSidebar.map((data, index) => (
-                                                <div className="col product-item__content" key={index}>
-                                                    <div className="product-item__list ">
-                                                        <ProductItemList product={data} />
-                                                    </div>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
                                 </div>
                             </div>
                             <div className={`d-none d-md-block ${styles.sidebar__item} accordion collection-sidebar__banner is-active open`}>
@@ -512,6 +494,36 @@ const ProductPage = () => {
                                             {
                                                 (product.related_product != undefined) ? <ProductPageRelated data={product.related_product} /> : ''
                                             }
+                                            {similarProducts.length > 0 && (
+                                                <div className='product-desciption page-width' style={{ marginTop: 40 }}>
+                                                    <div className="box-divider">
+                                                        <h4 className="box-title">Similar Products</h4>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 20 }}>
+                                                        {similarProducts.slice(0, 6).map((item, index) => (
+                                                            <Link
+                                                                key={item.id || index}
+                                                                href={`/product/${item.id}`}
+                                                                style={{ textDecoration: 'none', width: 160, flexShrink: 0 }}
+                                                            >
+                                                                <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
+                                                                    <img
+                                                                        src={buildImageUrl(item?.photos?.[0])}
+                                                                        alt={item.name}
+                                                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                                                    />
+                                                                </div>
+                                                                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--color_heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                    {item.name}
+                                                                </p>
+                                                                <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 700, color: 'var(--color_primary)' }}>
+                                                                    GHC {item.price}
+                                                                </p>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                             <div ref={ref_reviewbox} className="reviewbox_wrapper">
                                                 {
                                                     (product.review != undefined) ? <ProductPageReview data={product.review} /> : ''
