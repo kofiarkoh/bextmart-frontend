@@ -27,7 +27,7 @@ const SectionProductGrid = (props) => {
                         <div className={`${styles.products_grid_container} ${titlecenter? 'title-position-center': 'title-position-left'}`}>
                             <div className={`${styles.products_grid_boxdivider} box-divider`}>
                                 <h2 className={styles.products_grid_boxtitle}>{t("BEST_OF_THE_MONTH")}</h2>
-                                <div className="viewall"><Link href="/collections">{t("VIEW_ALL")} &gt;&gt;</Link></div>
+                                <div className="viewall"><Link href="/products">{t("VIEW_ALL")} &gt;&gt;</Link></div>
                             </div>
                             <div className={styles.products_grid_content}>
                                 <div className="collection-grid__content">

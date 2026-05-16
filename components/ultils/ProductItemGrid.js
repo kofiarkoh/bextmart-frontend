@@ -1,49 +1,53 @@
 import React from "react";
 import Link from 'next/link';
-import Image from 'next/image'
 import ProductLabels from "./ProductLabels";
 import ProductQuickView from "./ProductQuickView";
 import ProductWishlist from './ProductWishlist'
 import ProductCompare from './ProductCompare'
 import ProductAddtoCart from './ProductAddtoCart'
-import { displayRating, displayPrice, displayInventoryBar, buildImageUrl } from './Tools'
+import CurrencyConvert from './CurrencyConvert'
+import { buildImageUrl } from './Tools'
 import useTranslation from './useTranslation'
 
 const ProductItemGrid = ({ product }) => {
     const { t } = useTranslation();
     const primaryPhoto = product?.photos?.[0]
+
     return (
-        <>
-            <div className="product-item__grid ">
-                <div className="product-item__top">
-                    <Link className='product-item__link product-item__hover_image' href={`/product/${product.id}`}>
-                        <div className='product-item__image'>
-                            <div className='product-item__image'>
-                                <img style={{ width: 182, height: 182, objectFit: "contain" }} src={buildImageUrl(primaryPhoto)} priority="true" alt={product?.name || "product"} width={182} height={182} />
-                            </div>
-                        </div>
-                    </Link>
-                    <ProductLabels product={product} />
-                    <div className="product-item__hover group-button top-right">
-                        <ProductQuickView product={product} directly="1" />
-                        <ProductWishlist product={product} />
-                        <ProductCompare product={product} />                                
+        <div className="product-item__grid product-card">
+            <div className="product-item__top">
+                <Link className="product-item__link" href={`/product/${product.id}`}>
+                    <div className="product-card__image-wrapper">
+                        <img
+                            className="product-card__image"
+                            src={buildImageUrl(primaryPhoto)}
+                            alt={product?.name || "product"}
+                            width={220}
+                            height={220}
+                        />
                     </div>
-                    <ProductAddtoCart product={product} />
+                </Link>
+
+                <ProductLabels product={product} />
+
+                <div className="product-item__hover group-button top-right">
+                    <ProductQuickView product={product} directly="1" />
+                    <ProductWishlist product={product} />
+                    <ProductCompare product={product} />
                 </div>
-                <div className="product-item__bottom" style={{
-                    display: 'block'
-                }}>
-                    <Link href={`/product/${product.id}`} className="product-item__title h5">
-                        {product.name}
-                    </Link>
-                    {displayRating(3.4)}
-                    <div style={{
-                        paddingTop: "10px",
-                    }}>GHC {product.price}</div>
+
+                <ProductAddtoCart product={product} />
+            </div>
+
+            <div className="product-card__info">
+                <Link href={`/product/${product.id}`} className="product-card__name">
+                    {product.name}
+                </Link>
+                <div className="product-card__price">
+                    <CurrencyConvert amount={parseFloat(product.price) || 0} />
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

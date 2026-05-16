@@ -12,7 +12,6 @@ import Store, {
 	storecurrency,
 	storecurrencySymbol,
 } from "./ultils/Store";
-import {languageName} from "./ultils/Tools";
 import LoginDropdown from "./ultils/LoginDropdown";
 import DrawerMobileMenu from "./ultils/DrawerMobileMenu";
 import DrawerMobileSearch from "./ultils/DrawerMobileSearch";
@@ -26,14 +25,11 @@ import Logo from "../public/assets/images/logo.png";
 import {
 	SVGArrowDown,
 	SVGSearch,
-	SVGLocation,
-	SVGPhone,
 } from "../public/assets/SVG";
 import {useLogoutMutation} from "../store/authApi";
 
 const Header = () => {
 	const {t, locale} = useTranslation();
-	const languagename = languageName(locale);
 	const [currency, setCurrency] = useAtom(storecurrency);
 	const [currencySymbol, setCurrencySymbol] = useAtom(storecurrencySymbol);
 	const [wlcount] = useAtom(wishlistCount);
@@ -301,66 +297,6 @@ const Header = () => {
 													href={isLoggedIn ? "/account" : "/account-login"}
 													aria-label={t("My_Account")}>
 													<img src={userAvatar} alt="" width={24} height={24} />
-												</Link>
-											</div>
-										</div>
-										<div className="header__delivery header__delivery_location d-none d-lg-block">
-											<div className="header__delivery-icon">
-												<SVGLocation />
-											</div>
-											<div className="header__delivery-text">
-												<div className="localization-form__content menu__dropdown">
-													<button
-														type="button"
-														className="localization-form__select dropdown-toggle"
-														data-toggle="HeaderCountryList">
-														<span className="text">{t("Select_language")}</span>
-														<span className="bold">{languagename}</span>
-													</button>
-													<ul className="header__menu-location no-bullet dropdown-menu">
-														<li className="header__menu-login-content">
-															<ul
-																id="HeaderCountryList"
-																role="list"
-																className="no-bullet localization-form__list">
-																<li
-																	className={`localization-form__item ${languagename === "English" ? "localization-form__active" : ""}`}>
-																	<Link href="/en" className="localization-form__link">
-																		English
-																	</Link>
-																</li>
-																<li
-																	className={`localization-form__item ${languagename === "Français" ? "localization-form__active" : ""}`}>
-																	<Link href="/fr" className="localization-form__link">
-																		Français
-																	</Link>
-																</li>
-																<li
-																	className={`localization-form__item ${languagename === "Italiana" ? "localization-form__active" : ""}`}>
-																	<Link href="/it" className="localization-form__link">
-																		Italiana
-																	</Link>
-																</li>
-																<li
-																	className={`localization-form__item ${languagename === "日本" ? "localization-form__active" : ""}`}>
-																	<Link href="/jp" className="localization-form__link">
-																		日本
-																	</Link>
-																</li>
-															</ul>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div className="header__delivery d-none d-lg-block">
-											<div className="header__delivery-icon">
-												<SVGPhone />
-											</div>
-											<div className="header__delivery-text">
-												<Link href="tel:19006789">
-													<span className="text">{t("Hotline")}</span>
-													<span className="bold">1900-6789</span>
 												</Link>
 											</div>
 										</div>

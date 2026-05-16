@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import ProductItemGrid from '../components/ultils/ProductItemGrid'
 import useTranslation from '../components/ultils/useTranslation'
+import { SVGArrowLeft, SVGArrowRight } from '../public/assets/SVG'
 import { useSearchProductsQuery } from '../store/productsApi'
 import styles from '../public/assets/styles/Home.module.css'
 
@@ -73,21 +74,46 @@ const ProductsPage = () => {
                 </div>
               </div>
 
-              <div className="pagination" style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '24px' }}>
-                <button type="button" className="button button--secondary" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1}>
-                  {t('Previous')}
+              <div className="pagination" style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center', marginTop: '32px' }}>
+                <button
+                  type="button"
+                  className="button button--secondary"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage <= 1}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  aria-label="Previous page"
+                >
+                  <SVGArrowLeft />
                 </button>
                 {pagesToShow.map((p) => (
                   <Link
                     key={p}
                     href={{ pathname: '/products', query: { page: p } }}
-                    className={`button button--secondary ${p === currentPage ? 'active' : ''}`}
+                    className="button button--secondary"
+                    style={{
+                      minWidth: 40,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px 12px',
+                      fontWeight: p === currentPage ? 700 : 400,
+                      backgroundColor: p === currentPage ? 'var(--color_primary)' : '',
+                      color: p === currentPage ? '#fff' : '',
+                      borderColor: p === currentPage ? 'var(--color_primary)' : '',
+                    }}
                   >
                     {p}
                   </Link>
                 ))}
-                <button type="button" className="button button--secondary" onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= lastPage}>
-                  {t('Next')}
+                <button
+                  type="button"
+                  className="button button--secondary"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage >= lastPage}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  aria-label="Next page"
+                >
+                  <SVGArrowRight />
                 </button>
               </div>
             </div>

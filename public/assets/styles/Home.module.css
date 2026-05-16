@@ -287,14 +287,13 @@
 }
 
 .products_grid_container {
-  background-color: #ffffff;
   border-radius: 4px;
-  border: 1px solid var(--color_line);
 }
 
 .products_grid_boxdivider {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--color_line);
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--color_line);
 }
 
 @media screen and (max-width: 575px) {
@@ -313,15 +312,17 @@
 }
 
 .products_grid_row {
-  margin-left: -1px;
-  margin-right: -1px;
-  margin-top: -1px;
+  margin: 0;
+  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .products_grid_row>div {
   padding: 0;
-  border-right: 1px solid var(--color_product_line);
-  border-top: 1px solid var(--color_product_line);
+  border: none;
+  flex: 1 1 180px;
+  min-width: 0;
 }
 
 /* Slidershow Banner Categories */
