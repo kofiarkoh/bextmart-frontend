@@ -45,12 +45,9 @@ const ProductsPage = () => {
       <main>
         <Breadcrumbs />
         <section className="html-section index-products-grid">
-          <div className={`${styles.products_grid} spaced-section`}>
+          <div className={styles.products_grid}>
             <div className="container">
-              <div className={`${styles.products_grid_container} title-position-left`}>
-                <div className={`${styles.products_grid_boxdivider} box-divider`}>
-                  <h2 className={styles.products_grid_boxtitle}>{t('Products')}</h2>
-                </div>
+              <div className={styles.products_grid_container}>
                 <div className={styles.products_grid_content}>
                   <div className="collection-grid__content">
                     <div className={`${styles.products_grid_row} row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5`}>

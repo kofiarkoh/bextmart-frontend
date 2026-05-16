@@ -255,6 +255,15 @@ const Breadcrumbs = (props) => {
                                     </span>
                                 </>
                             ) : ''}
+                        {
+                            (router.pathname === '/products') ? (
+                                <>
+                                    <span itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem">
+                                        <span itemProp="name">{t("Products")}</span>
+                                        <span itemProp="position" hidden>2</span>
+                                    </span>
+                                </>
+                            ) : ''}
                     </span>
                 </nav>
             </div>
