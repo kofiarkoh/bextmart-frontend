@@ -137,79 +137,7 @@ const Header = () => {
 		<>
 			<header className="layout-header" style={{marginTop: sticky.offset}}>
 				<Store />
-				{/* <div className="top-header d-none d-md-block">
-					<div className="container">
-						<div className="top-header__content row">
-							<div className="top-header__content-left col-12 col-sm-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
-								<div className="welcome-text">{t("Welcome")}</div>
-							</div>
-							<div className="top-header__content-right col-12 col-sm-12 col-md-12 col-lg-8 col-xl-7 col-xxl-7 d-none d-lg-block">
-								<nav className="top-header__menu">
-									<ul className="top-header__menu-content list-menu--inline no-bullet clearfix">
-										<LoginDropdown />
-										<li className="top-header__menu-root header__menu-currencywrap menu__dropdown">
-											<div className="dropdown-toggle top-header__menu-item list-menu__item header-currency">
-												{currencySymbol} {currency}
-												<SVGArrowDown />
-											</div>
-											<ul className="header__menu-login header__menu-currency no-bullet dropdown-menu">
-												<li className="header__menu-login-content">
-													<ul
-														id="HeaderCountryList"
-														role="list"
-														className="no-bullet localization-form__list">
-														{CurrencyData.map((data, index) => (
-															<li
-																className={`localization-form__item ${data.code === currency ? "localization-form__active" : ""}`}
-																key={index}>
-																<span
-																	className="localization-form__link header-currencies"
-																	onClick={() => {
-																		changeCurrency(data.code, data.symbol);
-																	}}>
-																	{" "}
-																	{data.symbol} {data.code}{" "}
-																</span>
-															</li>
-														))}
-													</ul>
-												</li>
-											</ul>
-										</li>
-										<li className="top-header__menu-root header__wishlist">
-											<header-wishlist class="header__icon-wishlist main-header__icon-root header__icon-root">
-												<Link href="/page-wishlist" className="header__icon">
-													{t("Wishlist")} (
-													<span aria-hidden="true" className="header__icon-count-bubble">
-														{wlcount}
-													</span>
-													)
-												</Link>
-											</header-wishlist>
-										</li>
-										<li className="top-header__menu-root header__compare">
-											<header-compare class="header__icon-compare main-header__icon-root header__icon-root">
-												<Link href="/page-compare" className="header__icon">
-													{t("Compare")}(
-													<span aria-hidden="true" className="header__icon-count-bubble">
-														{cmcount}
-													</span>
-													)
-												</Link>
-											</header-compare>
-										</li>
-										<li className="top-header__menu-root header__menu-text2">
-											<Link href="/page-contact">{t("Help")}</Link>
-										</li>
-										<li className="top-header__menu-root header__menu-text2">
-											<Link href="/blog">{t("Blog")}</Link>
-										</li>
-									</ul>
-								</nav>
-							</div>
-						</div>
-					</div>
-				</div> */}
+				
 				<div
 					id="sticky-header"
 					className={`navbar${sticky.isSticky ? " has-sticky" : ""}`}
@@ -370,11 +298,13 @@ const Header = () => {
 															style={{
 																display: 'block', width: '100%', textAlign: 'center',
 																padding: '10px', borderRadius: 6, marginBottom: 10,
-																background: '#f68b1e', color: '#fff',
+																background: 'var(--color_primary)',
 																fontWeight: 600, fontSize: 14, textDecoration: 'none',
 																boxSizing: 'border-box',
 															}}>
-															{isLoggedIn ? 'My Account' : 'Sign In'}
+															<span style={{ color: '#fff', fontWeight: 600 }}>
+																{isLoggedIn ? 'My Account' : 'Sign In'}
+															</span>
 														</Link>
 
 														{/* Register link — guests only */}
