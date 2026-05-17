@@ -1,9 +1,7 @@
 import React from "react";
 import Link from 'next/link';
 import ProductLabels from "./ProductLabels";
-import ProductQuickView from "./ProductQuickView";
 import ProductWishlist from './ProductWishlist'
-import ProductCompare from './ProductCompare'
 import ProductAddtoCart from './ProductAddtoCart'
 import CurrencyConvert from './CurrencyConvert'
 import { buildImageUrl } from './Tools'
@@ -30,11 +28,9 @@ const ProductItemGrid = ({ product }) => {
 
                 <ProductLabels product={product} />
 
-                <div className="product-item__hover group-button top-right">
-                    <ProductQuickView product={product} directly="1" />
+                {/* <div className="product-item__hover group-button top-right">
                     <ProductWishlist product={product} />
-                    <ProductCompare product={product} />
-                </div>
+                </div> */}
 
                 <ProductAddtoCart product={product} />
             </div>
