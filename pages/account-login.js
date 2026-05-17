@@ -30,14 +30,10 @@ export default function LoginPage() {
   const dispatch  = useDispatch()
   const authToken = useSelector((s) => s.auth?.token)
 
-  const [mode, setMode]                 = useState('login')
-  const [email, setEmail]               = useState('')
-  const [password, setPassword]         = useState('')
-  const [showPw, setShowPw]             = useState(false)
-  const [resetEmail, setResetEmail]     = useState('')
-  const [resetSent, setResetSent]       = useState(false)
-  const [resetLoading, setResetLoading] = useState(false)
-  const [error, setError]               = useState(null)
+  const [email, setEmail]   = useState('')
+  const [password, setPassword] = useState('')
+  const [showPw, setShowPw]     = useState(false)
+  const [error, setError]       = useState(null)
 
   const [login, { isLoading: loggingIn }] = useLoginMutation()
 
@@ -46,8 +42,6 @@ export default function LoginPage() {
   }, [authToken, router])
 
   function isEmail(v) { return /\S+@\S+\.\S+/.test(v) }
-
-  function switchMode(m) { setMode(m); setError(null); setResetSent(false) }
 
   async function handleLogin(e) {
     e.preventDefault()
@@ -69,14 +63,6 @@ export default function LoginPage() {
     }
   }
 
-  async function handleReset(e) {
-    e.preventDefault()
-    if (!isEmail(resetEmail)) { setError('Please enter a valid email address.'); return }
-    setError(null)
-    setResetLoading(true)
-    setTimeout(() => { setResetLoading(false); setResetSent(true) }, 1500)
-  }
-
   if (authToken) return null
 
   return (
@@ -88,8 +74,7 @@ export default function LoginPage() {
         <div style={{ width: '100%', maxWidth: 420 }}>
 
           {/* Sign in card */}
-          {mode === 'login' && (
-            <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 6, padding: '36px 36px 28px' }}>
+          <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 6, padding: '36px 36px 28px' }}>
               <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color_heading)', margin: '0 0 24px', textAlign: 'center' }}>
                 Sign in
               </h1>
@@ -120,13 +105,9 @@ export default function LoginPage() {
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                     <label style={{ fontSize: 13, fontWeight: 500, color: '#333' }}>Password</label>
-                    <button
-                      type="button"
-                      onClick={() => switchMode('reset')}
-                      style={{ background: 'none', border: 'none', fontSize: 12, color: 'var(--color_primary)', cursor: 'pointer', padding: 0 }}
-                    >
+                    <Link href="/forgot-password" style={{ fontSize: 12, color: 'var(--color_primary)' }}>
                       Forgot password?
-                    </button>
+                    </Link>
                   </div>
                   <div style={{ position: 'relative' }}>
                     <input
@@ -192,86 +173,7 @@ export default function LoginPage() {
                   </Link>
                 </p>
               </div>
-            </div>
-          )}
-
-          {/* Reset password card */}
-          {mode === 'reset' && (
-            <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 6, padding: '36px 36px 28px' }}>
-              <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color_heading)', margin: '0 0 8px', textAlign: 'center' }}>
-                Reset password
-              </h1>
-              <p style={{ fontSize: 13, color: '#666', margin: '0 0 24px', textAlign: 'center', lineHeight: 1.6 }}>
-                We&apos;ll email you a link to reset your password.
-              </p>
-
-              {resetSent ? (
-                <div style={{
-                  background: '#f0fff4', border: '1px solid #9ae6b4',
-                  color: '#276749', padding: '14px 16px',
-                  borderRadius: 4, fontSize: 14, lineHeight: 1.6, textAlign: 'center', marginBottom: 20,
-                }}>
-                  ✓ Check your email for a reset link.
-                </div>
-              ) : (
-                <form onSubmit={handleReset} noValidate>
-                  <div style={{ marginBottom: 20 }}>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 6 }}>
-                      Email address
-                    </label>
-                    <input
-                      type="email"
-                      value={resetEmail}
-                      onChange={(e) => setResetEmail(e.target.value)}
-                      placeholder="enter your email here"
-                      autoFocus
-                      style={{
-                        width: '100%', height: 44, padding: '0 12px',
-                        border: '1px solid #ccc', borderRadius: 4,
-                        fontSize: 14, outline: 'none', boxSizing: 'border-box',
-                        transition: 'border-color 0.15s',
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = 'var(--color_primary)'}
-                      onBlur={(e)  => e.target.style.borderColor = '#ccc'}
-                    />
-                  </div>
-
-                  {error && (
-                    <p style={{
-                      background: '#fff5f5', border: '1px solid #fed7d7',
-                      color: '#c53030', fontSize: 13, padding: '9px 12px',
-                      borderRadius: 4, margin: '0 0 16px', lineHeight: 1.5,
-                    }}>
-                      {error}
-                    </p>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={resetLoading}
-                    style={{
-                      width: '100%', height: 44, borderRadius: 4, border: 'none',
-                      background: resetLoading ? '#4444aa' : 'var(--color_primary)',
-                      color: '#fff', fontSize: 15, fontWeight: 600,
-                      cursor: resetLoading ? 'wait' : 'pointer',
-                      transition: 'background 0.2s',
-                    }}
-                  >
-                    {resetLoading ? 'Sending…' : 'Send Reset Link'}
-                  </button>
-                </form>
-              )}
-
-              <div style={{ borderTop: '1px solid #eee', marginTop: 24, paddingTop: 20, textAlign: 'center' }}>
-                <button
-                  onClick={() => switchMode('login')}
-                  style={{ background: 'none', border: 'none', fontSize: 13, color: 'var(--color_primary)', cursor: 'pointer', fontWeight: 600 }}
-                >
-                  ← Back to sign in
-                </button>
-              </div>
-            </div>
-          )}
+          </div>
 
         </div>
       </main>
