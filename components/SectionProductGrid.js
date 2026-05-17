@@ -27,7 +27,18 @@ const SectionProductGrid = (props) => {
                         <div className={`${styles.products_grid_container} ${titlecenter? 'title-position-center': 'title-position-left'}`}>
                             <div className={`${styles.products_grid_boxdivider} box-divider`}>
                                 <h2 className={styles.products_grid_boxtitle}>{t("BEST_OF_THE_MONTH")}</h2>
-                                <div className="viewall"><Link href="/products">{t("VIEW_ALL")} &gt;&gt;</Link></div>
+                                <Link href="/products" style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                                    padding: '6px 16px', borderRadius: 20,
+                                    border: '1.5px solid var(--color_primary)',
+                                    color: 'var(--color_primary)',
+                                    fontSize: 13, fontWeight: 600, textDecoration: 'none',
+                                }}>
+                                    {t("VIEW_ALL")}
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="9 18 15 12 9 6"/>
+                                    </svg>
+                                </Link>
                             </div>
                             <div className={styles.products_grid_content}>
                                 <div className="collection-grid__content">
