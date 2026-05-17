@@ -59,6 +59,9 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            source ~/.bashrc || true
+            source ~/.nvm/nvm.sh || true
+            export PATH=$PATH:/usr/local/bin:/usr/bin
             cd /var/www/html/bextmart-front-end
             npm ci --legacy-peer-deps --production
             pm2 restart bextmart-front-end || pm2 start npm --name "bextmart-front-end" -- start
