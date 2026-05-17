@@ -1451,7 +1451,7 @@
 
 @media screen and (max-width: 575px) {
     .modal__layout {
-        background-color: #fff;
+        background-color: rgba(79, 79, 79, 0.9);
     }
 }
 
@@ -1700,6 +1700,7 @@ cart-modal.is-error .cart-modal__title .cart-modal__title-added {
 
 .cart-modal .modal__content {
     max-width: 700px;
+    background-color: #fff !important;
 }
 
 .cart-modal .cart-modal__content-product {

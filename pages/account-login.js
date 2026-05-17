@@ -1,190 +1,282 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
-import { useRouter } from "next/router";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-
-import useTranslation from '../components/ultils/useTranslation'
 import Header from '../components/Header'
-import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import Footer from '../components/Footer'
-import styles from '../public/assets/styles/AccountPage.module.css'
-import { useLoginMutation, useGetMeQuery } from '../store/authApi'
+import { useLoginMutation } from '../store/authApi'
 import { setCredentials } from '../store/authSlice'
 
-export default function AccountPage() {
-    const router = useRouter();
-    const { t } = useTranslation();
-    const ref_email = useRef(null);
-    const ref_email_reset = useRef(null);    
-    const dispatch = useDispatch()
-    const authToken = useSelector((state) => state.auth.token)
-    const [loginSuccess, setLoginSuccess] = useState(false);
-    const [login] = useLoginMutation()
-    useGetMeQuery(undefined, { skip: !authToken })
-    if (typeof window !== 'undefined') {
-        document.body.className = "";
-        document.body.classList.add('template-account-login');
+const Eye = () => (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+  </svg>
+)
+const EyeOff = () => (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+    <line x1="1" y1="1" x2="23" y2="23"/>
+  </svg>
+)
+
+export default function LoginPage() {
+  if (typeof window !== 'undefined') {
+    document.body.className = ''
+    document.body.classList.add('template-account-login')
+  }
+
+  const router    = useRouter()
+  const dispatch  = useDispatch()
+  const authToken = useSelector((s) => s.auth?.token)
+
+  const [mode, setMode]                 = useState('login')
+  const [email, setEmail]               = useState('')
+  const [password, setPassword]         = useState('')
+  const [showPw, setShowPw]             = useState(false)
+  const [resetEmail, setResetEmail]     = useState('')
+  const [resetSent, setResetSent]       = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
+  const [error, setError]               = useState(null)
+
+  const [login, { isLoading: loggingIn }] = useLoginMutation()
+
+  useEffect(() => {
+    if (authToken) router.replace('/account')
+  }, [authToken, router])
+
+  function isEmail(v) { return /\S+@\S+\.\S+/.test(v) }
+
+  function switchMode(m) { setMode(m); setError(null); setResetSent(false) }
+
+  async function handleLogin(e) {
+    e.preventDefault()
+    if (!isEmail(email)) { setError('Please enter a valid email address.'); return }
+    if (!password)       { setError('Please enter your password.'); return }
+    setError(null)
+    try {
+      const res   = await login({ email, password }).unwrap()
+      const token = res?.token || res?.data?.token
+      const user  = res?.user  || res?.data?.user
+      if (token) {
+        localStorage.setItem('auth_token', token)
+        localStorage.setItem('yam-user', JSON.stringify(user))
+        dispatch(setCredentials({ token, user: user || null }))
+      }
+      router.push('/account')
+    } catch (err) {
+      setError(err?.data?.message || 'Invalid email or password.')
     }
-    useEffect(() => {
-        if (authToken) {
-            setLoginSuccess(true);
-            const timer = setInterval(() => {
-                router.push("/account")
-            }, 1000);
-            return () => {
-                clearInterval(timer);
-            };
-        }
-    }, [authToken, router]);
+  }
 
-    const [loginError, setLoginError] = useState(null);
-    const [resetNotify, setResetNotify] = useState(null);
-    const [callReset, setCallReset] = useState(false);
-    const [logindata, setLoginData] = useState({
-        email: "",
-        password: ""
-    });
-    const { email, password } = logindata;
-    const [resetEmail, setResetEmail] = useState('');
-    const [textStatus, setTextStatus] = useState(t("Sign_In"));
-    const [classStatus, setClassStatus] = useState('');
+  async function handleReset(e) {
+    e.preventDefault()
+    if (!isEmail(resetEmail)) { setError('Please enter a valid email address.'); return }
+    setError(null)
+    setResetLoading(true)
+    setTimeout(() => { setResetLoading(false); setResetSent(true) }, 1500)
+  }
 
-    function isValidEmail(email) {
-        return /\S+@\S+\.\S+/.test(email);
-    }
+  if (authToken) return null
 
-    const loginInputChange = e => {
-        setLoginData({ ...logindata, [e.target.name]: e.target.value });
-    }
+  return (
+    <>
+      <Head><title>Sign In — Bextmart</title></Head>
+      <Header />
 
-    async function loginSubmit(e) {
-        e.preventDefault();
-        if (!isValidEmail(logindata.email)) {
-            setLoginError(t("Email_is_invalid"));
-            ref_email.current.focus();
-        } else {
-            setLoginError(null);
-            setTextStatus(t("Checking"));
-            setClassStatus("submit_loading");
-            try {
-                const data = await login({ email: logindata.email, password: logindata.password }).unwrap()
-                setTextStatus(t("Completed"));
-                setClassStatus("submit_complete");
-                //setTimeout(() => {
-                    setClassStatus('');
-                    setLoginSuccess(true);
+      <main style={{ background: '#f5f5f5', minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 16px' }}>
+        <div style={{ width: '100%', maxWidth: 420 }}>
 
-                        localStorage.setItem('yam-user', JSON.stringify(data.data.user));
-                        localStorage.setItem('auth_token', data.data.token);
-                        dispatch(setCredentials({ user: data.data.user, "token": data.data.token }))
+          {/* Sign in card */}
+          {mode === 'login' && (
+            <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 6, padding: '36px 36px 28px' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color_heading)', margin: '0 0 24px', textAlign: 'center' }}>
+                Sign in
+              </h1>
 
-               // }, 500);
-            } catch (error) {
-                setClassStatus('');
-                setTextStatus(t("Sign_In"));
-                const apiMessage = error?.data?.message || error?.data?.detail
-                setLoginError(apiMessage || t("Email_incorrect"));
-            }
-        }
-    }
-
-    const resetInputChange = e => {
-        setResetEmail(e.target.value);
-    }
-
-    function resetSubmit(e) {
-        e.preventDefault();
-        if (!isValidEmail(resetEmail)) {
-            setResetNotify(t("Email_is_invalid"));
-            ref_email_reset.current.focus();
-        } else {
-            setTextStatus(t("Checking"));
-            setClassStatus("submit_loading");
-            setTimeout(() => {
-                setTextStatus(t("Completed"));
-                setClassStatus("submit_complete");
-                setTimeout(() => {
-                    setResetNotify(t("Reset_Success"));                    
-                }, 500);
-            }, 1500);
-        }
-    }
-
-    return (
-        <>
-            <Head>
-                <title>{t("Register_page")}</title>
-            </Head>
-            <Header/>
-            <main>
-                <Breadcrumbs />
-                <div className={styles.customers_layout}>
-                    <div className="container">
-                        <div className="row">
-                            <div className={styles.customers_content}>
-                                <div className={styles.customers_login__layout}>
-                                    <div className="customers-login__content">
-                                        <div id="customers-login" className={`login ${loginSuccess ? 'hidden' : 'show'}`}>
-                                            <div className={`customer ${styles.login_customer} ${callReset ? 'hidden' : 'show'}`}>
-                                                <h2 className={styles.customers_layout_customer_h2}>{t("Login")}</h2>
-                                                <form method="post" className={styles.customer_form} acceptCharset="UTF-8" noValidate="novalidate" onSubmit={(e) => loginSubmit(e)}>
-                                                    <input type="hidden" name="form_type" defaultValue="customer_login" />
-                                                    <input type="hidden" name="utf8" defaultValue="✓" />
-                                                    <div className={`${styles.customer_field} field`}>
-                                                        <input type="email" name="email" className={`${styles.customer_field_input} account-field`} value={email} placeholder={`${t("typing")}:yam@gmail.com`} ref={ref_email} onChange={loginInputChange} />
-                                                        <label className="field__label" htmlFor="email">
-                                                            {`${t("typing")}:yam@gmail.com`}
-                                                        </label>
-                                                    </div>
-                                                    <div className={`${styles.customer_field} field`}>
-                                                        <input type="password" name="password" className={`${styles.customer_field_input} account-field`} value={password} placeholder={`${t("typing")}:123456789`} onChange={loginInputChange} />
-                                                        <label className="field__label" htmlFor="password">
-                                                            {`${t("typing")}:123456789`}
-                                                        </label>
-                                                    </div>
-                                                    <span className='login-errortext'>{loginError}</span>
-                                                    <div className={`${styles.customer_action_bottom} action_bottom`}>
-                                                        <button type="submit" className={`button account-login-submit ${classStatus}`}>{textStatus}</button>
-                                                        <a className={`${styles.customer_action_link} action-link`} onClick={(e) => { e.preventDefault(); setCallReset(current => !current); setTextStatus(t("Sign_In")); }}>{t("Forgot_your_password")}</a>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div id="customers-recover-password" className={`reset ${loginSuccess ? 'hidden' : 'show'}`}>
-                                            <div className={`customer ${styles.login_customer} ${callReset ? 'show' : 'hidden'}`}>
-                                                <h2 className={styles.customers_layout_customer_h2}>{t("Reset_Password")}</h2>
-                                                <p className={styles.customer_note}>{t("Reset_note")}</p>
-                                                <form method="post" className={styles.customer_form} acceptCharset="UTF-8" onSubmit={(e) => resetSubmit(e)}>
-                                                    <input type="hidden" name="form_type" value="recover_customer_password" />
-                                                    <input type="hidden" name="utf8" value="✓" />
-                                                    <div className={`${styles.customer_field} field`}>
-                                                        <input type="email" value={resetEmail} name="email" id="RecoverEmail" className={`${styles.customer_field_input} account-field`} placeholder={t("Email")} ref={ref_email_reset} onChange={resetInputChange} />
-                                                        <label htmlFor="RecoverEmail">
-                                                            {t("Email")}
-                                                        </label>
-                                                    </div>
-                                                    <span className='login-errortext'>{resetNotify}</span>
-                                                    <div className={`${styles.customer_action_bottom} action_bottom`}>
-                                                        <button type="submit" className={`button account-login-submit ${classStatus}`}>{textStatus}</button>
-                                                        <span className={styles.customer_note}>
-                                                            <span className={styles.customer_note_or}>{t("or")} </span>
-                                                            <a className={`${styles.customer_action_link} action-link`} onClick={(e) => { e.preventDefault(); setCallReset(current => !current); setTextStatus(t("Sign_In")); }}>{t("Cancel")}</a>
-                                                        </span>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div className={`${styles.redirect_message} ${loginSuccess ? 'show' : 'hidden'}`}>
-                                            <h2>{t("Logged_in_Notify3")}</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              <form onSubmit={handleLogin} noValidate>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 6 }}>
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="enter your email here"
+                    autoComplete="email"
+                    autoFocus
+                    style={{
+                      width: '100%', height: 44, padding: '0 12px',
+                      border: '1px solid #ccc', borderRadius: 4,
+                      fontSize: 14, outline: 'none', boxSizing: 'border-box',
+                      transition: 'border-color 0.15s',
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--color_primary)'}
+                    onBlur={(e)  => e.target.style.borderColor = '#ccc'}
+                  />
                 </div>
-            </main>
-            <Footer />
-        </>
-    )
+
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: '#333' }}>Password</label>
+                    <button
+                      type="button"
+                      onClick={() => switchMode('reset')}
+                      style={{ background: 'none', border: 'none', fontSize: 12, color: 'var(--color_primary)', cursor: 'pointer', padding: 0 }}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type={showPw ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      autoComplete="current-password"
+                      style={{
+                        width: '100%', height: 44, padding: '0 42px 0 12px',
+                        border: '1px solid #ccc', borderRadius: 4,
+                        fontSize: 14, outline: 'none', boxSizing: 'border-box',
+                        transition: 'border-color 0.15s',
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--color_primary)'}
+                      onBlur={(e)  => e.target.style.borderColor = '#ccc'}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPw((v) => !v)}
+                      tabIndex={-1}
+                      style={{
+                        position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        color: '#888', padding: 0, display: 'flex', alignItems: 'center',
+                      }}
+                    >
+                      {showPw ? <EyeOff /> : <Eye />}
+                    </button>
+                  </div>
+                </div>
+
+                {error && (
+                  <p style={{
+                    background: '#fff5f5', border: '1px solid #fed7d7',
+                    color: '#c53030', fontSize: 13, padding: '9px 12px',
+                    borderRadius: 4, margin: '0 0 16px', lineHeight: 1.5,
+                  }}>
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loggingIn}
+                  style={{
+                    width: '100%', height: 44, borderRadius: 4, border: 'none',
+                    background: loggingIn ? '#4444aa' : 'var(--color_primary)',
+                    color: '#fff', fontSize: 15, fontWeight: 600,
+                    cursor: loggingIn ? 'wait' : 'pointer',
+                    transition: 'background 0.2s', letterSpacing: '0.02em',
+                  }}
+                >
+                  {loggingIn ? 'Signing in…' : 'Sign In'}
+                </button>
+              </form>
+
+              <div style={{ borderTop: '1px solid #eee', marginTop: 24, paddingTop: 20, textAlign: 'center' }}>
+                <p style={{ fontSize: 13, color: '#666', margin: 0 }}>
+                  New customer?{' '}
+                  <Link href="/account-register" style={{ color: 'var(--color_primary)', fontWeight: 600 }}>
+                    Create an account
+                  </Link>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Reset password card */}
+          {mode === 'reset' && (
+            <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 6, padding: '36px 36px 28px' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 600, color: 'var(--color_heading)', margin: '0 0 8px', textAlign: 'center' }}>
+                Reset password
+              </h1>
+              <p style={{ fontSize: 13, color: '#666', margin: '0 0 24px', textAlign: 'center', lineHeight: 1.6 }}>
+                We&apos;ll email you a link to reset your password.
+              </p>
+
+              {resetSent ? (
+                <div style={{
+                  background: '#f0fff4', border: '1px solid #9ae6b4',
+                  color: '#276749', padding: '14px 16px',
+                  borderRadius: 4, fontSize: 14, lineHeight: 1.6, textAlign: 'center', marginBottom: 20,
+                }}>
+                  ✓ Check your email for a reset link.
+                </div>
+              ) : (
+                <form onSubmit={handleReset} noValidate>
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 6 }}>
+                      Email address
+                    </label>
+                    <input
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      placeholder="enter your email here"
+                      autoFocus
+                      style={{
+                        width: '100%', height: 44, padding: '0 12px',
+                        border: '1px solid #ccc', borderRadius: 4,
+                        fontSize: 14, outline: 'none', boxSizing: 'border-box',
+                        transition: 'border-color 0.15s',
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--color_primary)'}
+                      onBlur={(e)  => e.target.style.borderColor = '#ccc'}
+                    />
+                  </div>
+
+                  {error && (
+                    <p style={{
+                      background: '#fff5f5', border: '1px solid #fed7d7',
+                      color: '#c53030', fontSize: 13, padding: '9px 12px',
+                      borderRadius: 4, margin: '0 0 16px', lineHeight: 1.5,
+                    }}>
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={resetLoading}
+                    style={{
+                      width: '100%', height: 44, borderRadius: 4, border: 'none',
+                      background: resetLoading ? '#4444aa' : 'var(--color_primary)',
+                      color: '#fff', fontSize: 15, fontWeight: 600,
+                      cursor: resetLoading ? 'wait' : 'pointer',
+                      transition: 'background 0.2s',
+                    }}
+                  >
+                    {resetLoading ? 'Sending…' : 'Send Reset Link'}
+                  </button>
+                </form>
+              )}
+
+              <div style={{ borderTop: '1px solid #eee', marginTop: 24, paddingTop: 20, textAlign: 'center' }}>
+                <button
+                  onClick={() => switchMode('login')}
+                  style={{ background: 'none', border: 'none', fontSize: 13, color: 'var(--color_primary)', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  ← Back to sign in
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  )
 }
