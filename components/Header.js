@@ -137,7 +137,7 @@ const Header = () => {
 		<>
 			<header className="layout-header" style={{marginTop: sticky.offset}}>
 				<Store />
-				<div className="top-header d-none d-md-block">
+				{/* <div className="top-header d-none d-md-block">
 					<div className="container">
 						<div className="top-header__content row">
 							<div className="top-header__content-left col-12 col-sm-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
@@ -209,7 +209,7 @@ const Header = () => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> */}
 				<div
 					id="sticky-header"
 					className={`navbar${sticky.isSticky ? " has-sticky" : ""}`}
@@ -361,7 +361,7 @@ const Header = () => {
 												</button>
 
 												{/* ── Dropdown panel ── */}
-												<ul className="header__menu-location no-bullet dropdown-menu" style={{ minWidth: 220, padding: 0 }}>
+												<ul className="header__menu-location no-bullet dropdown-menu" style={{ minWidth: 200, padding: 0 }}>
 													<li className="header__menu-login-content" style={{ padding: '16px 16px 12px' }}>
 
 														{/* Sign In button — always shown */}
@@ -370,13 +370,11 @@ const Header = () => {
 															style={{
 																display: 'block', width: '100%', textAlign: 'center',
 																padding: '10px', borderRadius: 6, marginBottom: 10,
-																background: 'var(--color_primary)',
+																background: '#f68b1e', color: '#fff',
 																fontWeight: 600, fontSize: 14, textDecoration: 'none',
 																boxSizing: 'border-box',
 															}}>
-															<span style={{ color: '#fff', fontWeight: 600 }}>
-																{isLoggedIn ? 'My Account' : 'Sign In'}
-															</span>
+															{isLoggedIn ? 'My Account' : 'Sign In'}
 														</Link>
 
 														{/* Register link — guests only */}
@@ -392,22 +390,18 @@ const Header = () => {
 														{/* Divider */}
 														<div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 8px' }} />
 
-														{/* Menu links — only when logged in */}
+														{/* Menu links */}
 														<ul id="HeaderUserMenu" role="list" className="no-bullet" style={{ margin: 0, padding: 0 }}>
-															{isLoggedIn && (
-																<DropdownItem href="/account" icon={
-																	<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-																		<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-																	</svg>
-																} label="My Account" />
-															)}
-															{isLoggedIn && (
-																<DropdownItem href="/account?section=orders" icon={
-																	<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-																		<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-																	</svg>
-																} label="Orders" />
-															)}
+															<DropdownItem href="/account" icon={
+																<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+																	<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+																</svg>
+															} label="My Account" />
+															<DropdownItem href="/account?section=orders" icon={
+																<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+																	<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+																</svg>
+															} label="Orders" />
 															{isLoggedIn && (
 																<li style={{ listStyle: 'none', marginTop: 4 }}>
 																	<button
