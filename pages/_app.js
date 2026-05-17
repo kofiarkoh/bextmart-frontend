@@ -10,6 +10,7 @@ import {ReactNotifications} from "react-notifications-component";
 
 import {setCredentials} from "../store/authSlice";
 import {useEffect} from "react";
+import Head from "next/head";
 
 function MyApp({Component, pageProps}) {
 	useEffect(() => {
@@ -30,6 +31,11 @@ function MyApp({Component, pageProps}) {
 	}, []);
 	return (
 		<Provider store={store}>
+			<Head>
+				<link rel="shortcut icon" href="/favicon.ico" />
+				<link rel="icon" type="image/png" href="/favicon.png" />
+				<link rel="apple-touch-icon" href="/favicon.png" />
+			</Head>
 			<ReactNotifications />
 			<Component {...pageProps} />
 		</Provider>

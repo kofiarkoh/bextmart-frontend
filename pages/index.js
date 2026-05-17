@@ -29,7 +29,7 @@ export default function Home() {
       <Head>
         <title>{t('Index_page')}</title>
         <meta name="description" content={t('Index_page')} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
       <Header />
