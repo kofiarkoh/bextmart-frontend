@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useRegisterMutation } from '../store/authApi'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 
 const Eye = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -93,6 +94,7 @@ export default function RegisterPage() {
     setFieldErrors({})
     try {
       await register(form).unwrap()
+      notifySuccess('Account created! Please verify your email.', 'Welcome')
       router.push('/verify-email')
     } catch (err) {
       const apiErrors = err?.data?.errors || {}
@@ -100,8 +102,11 @@ export default function RegisterPage() {
         const mapped = {}
         Object.entries(apiErrors).forEach(([k, v]) => { mapped[k] = Array.isArray(v) ? v[0] : v })
         setFieldErrors(mapped)
+        notifyError('Please fix the errors in the form.')
       } else {
-        setError(err?.data?.message || 'Registration failed. Please try again.')
+        const msg = err?.data?.message || 'Registration failed. Please try again.'
+        setError(msg)
+        notifyError(msg)
       }
     }
   }

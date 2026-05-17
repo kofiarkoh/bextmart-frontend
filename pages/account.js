@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import { useGetMeQuery, useLogoutMutation, useResendEmailVerificationMutation } from '../store/authApi'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 import { useGetOrdersQuery } from '../store/ordersApi'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -338,7 +339,12 @@ export default function AccountPage() {
   const [resendVerification, { isLoading: sendingVerification }] = useResendEmailVerificationMutation()
 
   async function handleVerifyNow() {
-    try { await resendVerification().unwrap() } catch { /* send anyway, navigate regardless */ }
+    try {
+      await resendVerification().unwrap()
+      notifySuccess('A verification code has been sent to your email.', 'Code Sent')
+    } catch (err) {
+      notifyError(err?.data?.message || 'Could not send verification code.')
+    }
     router.push('/verify-email')
   }
 
@@ -356,6 +362,7 @@ export default function AccountPage() {
 
   async function handleLogout() {
     try { await logout().unwrap() } catch {}
+    notifySuccess('You have been signed out.', 'Signed Out')
     router.push('/')
   }
 

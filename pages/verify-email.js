@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useVerifyEmailMutation, useResendEmailVerificationMutation } from '../store/authApi'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 
 // ─── OTP input ────────────────────────────────────────────────────────────────
 
@@ -93,9 +94,12 @@ export default function VerifyEmailPage() {
     setError(null)
     try {
       await verifyEmail({ otp }).unwrap()
+      notifySuccess('Your email has been verified successfully.', 'Email Verified')
       router.push('/account')
     } catch (err) {
-      setError(err?.data?.message || 'Invalid or expired code. Please try again.')
+      const msg = err?.data?.message || 'Invalid or expired code. Please try again.'
+      setError(msg)
+      notifyError(msg)
     }
   }
 
@@ -106,10 +110,13 @@ export default function VerifyEmailPage() {
     setError(null)
     try {
       await resendEmail().unwrap()
+      notifySuccess('A new verification code has been sent to your email.', 'Code Resent')
       setResendStatus('sent')
       setTimeout(() => setResendStatus(null), 4000)
     } catch (err) {
-      setError(err?.data?.message || 'Could not resend code. Please try again.')
+      const msg = err?.data?.message || 'Could not resend code. Please try again.'
+      setError(msg)
+      notifyError(msg)
       setResendStatus(null)
     }
   }

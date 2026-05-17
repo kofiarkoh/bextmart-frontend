@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useResetPasswordMutation, useForgotPasswordMutation } from '../store/authApi'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 
 // ─── icons ────────────────────────────────────────────────────────────────────
 
@@ -123,10 +124,13 @@ export default function ResetPasswordPage() {
     setError(null)
     try {
       await forgotPassword({ email }).unwrap()
+      notifySuccess('A new code has been sent to your email.', 'Code Resent')
       setResendStatus('sent')
       setTimeout(() => setResendStatus(null), 4000)
     } catch (err) {
-      setError(err?.data?.message || 'Could not resend code. Please try again.')
+      const msg = err?.data?.message || 'Could not resend code. Please try again.'
+      setError(msg)
+      notifyError(msg)
       setResendStatus(null)
     }
   }
@@ -139,9 +143,12 @@ export default function ResetPasswordPage() {
     setError(null)
     try {
       await resetPassword({ email, otp, password, password_confirmation: passwordConf }).unwrap()
+      notifySuccess('Your password has been reset successfully.', 'Password Updated')
       setDone(true)
     } catch (err) {
-      setError(err?.data?.message || 'Invalid or expired code. Please try again.')
+      const msg = err?.data?.message || 'Invalid or expired code. Please try again.'
+      setError(msg)
+      notifyError(msg)
     }
   }
 

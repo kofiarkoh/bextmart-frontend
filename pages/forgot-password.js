@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useForgotPasswordMutation } from '../store/authApi'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 
 const inputStyle = {
   width: '100%', height: 44, padding: '0 12px', boxSizing: 'border-box',
@@ -36,9 +37,12 @@ export default function ForgotPasswordPage() {
     setError(null)
     try {
       await forgotPassword({ email }).unwrap()
+      notifySuccess('A 6-digit code has been sent to your email.', 'Code Sent')
       router.push(`/reset-password?email=${encodeURIComponent(email)}`)
     } catch (err) {
-      setError(err?.data?.message || 'Email not found. Please check and try again.')
+      const msg = err?.data?.message || 'Email not found. Please check and try again.'
+      setError(msg)
+      notifyError(msg)
     }
   }
 

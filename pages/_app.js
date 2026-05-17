@@ -3,8 +3,10 @@ import "../public/assets/styles/globals.css";
 import "../public/assets/styles/header.css";
 import "../public/assets/styles/footer.css";
 import "../public/assets/styles/extension.css";
+import "react-notifications-component/dist/theme.css";
 import {Provider} from "react-redux";
 import {store} from "../store/store";
+import {ReactNotifications} from "react-notifications-component";
 
 import {setCredentials} from "../store/authSlice";
 import {useEffect} from "react";
@@ -28,6 +30,7 @@ function MyApp({Component, pageProps}) {
 	}, []);
 	return (
 		<Provider store={store}>
+			<ReactNotifications />
 			<Component {...pageProps} />
 		</Provider>
 	);

@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useLoginMutation } from '../store/authApi'
 import { setCredentials } from '../store/authSlice'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 
 const Eye = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -45,8 +46,8 @@ export default function LoginPage() {
 
   async function handleLogin(e) {
     e.preventDefault()
-    if (!isEmail(email)) { setError('Please enter a valid email address.'); return }
-    if (!password)       { setError('Please enter your password.'); return }
+    if (!isEmail(email)) { notifyError('Please enter a valid email address.'); return }
+    if (!password)       { notifyError('Please enter your password.'); return }
     setError(null)
     try {
       const res   = await login({ email, password }).unwrap()
@@ -57,8 +58,10 @@ export default function LoginPage() {
         localStorage.setItem('yam-user', JSON.stringify(user))
         dispatch(setCredentials({ token, user: user || null }))
       }
+      notifySuccess('Welcome back!', 'Signed In')
       router.push('/account')
     } catch (err) {
+      notifyError(err?.data?.message || 'Invalid email or password.')
       setError(err?.data?.message || 'Invalid email or password.')
     }
   }

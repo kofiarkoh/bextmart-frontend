@@ -9,6 +9,7 @@ import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
 import { buildImageUrl } from '../components/ultils/Tools'
+import { notifyError, notifySuccess } from '../components/ultils/notify'
 import {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
@@ -81,13 +82,17 @@ const authToken = useSelector((state) => state.auth?.token)
         result?.data?.payment_url
 
       if (!paymentUrl) {
-        setPaymentError('Could not initiate payment. Please try again.')
+        const msg = 'Could not initiate payment. Please try again.'
+        setPaymentError(msg)
+        notifyError(msg, 'Payment Error')
         return
       }
 
       window.location.href = paymentUrl
     } catch (err) {
-      setPaymentError(err?.data?.message || 'Payment initiation failed. Please try again.')
+      const msg = err?.data?.message || 'Payment initiation failed. Please try again.'
+      setPaymentError(msg)
+      notifyError(msg, 'Payment Error')
     }
   }
 

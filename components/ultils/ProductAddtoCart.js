@@ -10,6 +10,7 @@ import useTranslation from './useTranslation'
 import CurrencyConvert from './CurrencyConvert'
 import { useAddToCartMutation } from '../../store/cartApi'
 import { SVGCart, SVGClose } from '../../public/assets/SVG';
+import { notifyError, notifySuccess } from './notify';
 
 const ProductAddtoCart = ({ product }) => {
     const { t } = useTranslation();
@@ -39,9 +40,12 @@ const ProductAddtoCart = ({ product }) => {
         setError(null);
         try {
             await addToCart({ product_id: product.id, quantity: 1 }).unwrap();
+            notifySuccess(`${product.name} added to cart.`, 'Added to Cart')
             setOpen(true);
         } catch (err) {
-            setError(err?.data?.message || t("Add_failure"));
+            const msg = err?.data?.message || t("Add_failure");
+            setError(msg);
+            notifyError(msg, 'Could Not Add to Cart');
         }
     }
 
