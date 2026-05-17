@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
-import { useGetMeQuery, useLogoutMutation } from '../store/authApi'
+import { useGetMeQuery, useLogoutMutation, useResendEmailVerificationMutation } from '../store/authApi'
 import { useGetOrdersQuery } from '../store/ordersApi'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
@@ -335,6 +335,12 @@ export default function AccountPage() {
 
   const { data: meData } = useGetMeQuery(undefined, { skip: !authToken })
   const [logout, { isLoading: loggingOut }] = useLogoutMutation()
+  const [resendVerification, { isLoading: sendingVerification }] = useResendEmailVerificationMutation()
+
+  async function handleVerifyNow() {
+    try { await resendVerification().unwrap() } catch { /* send anyway, navigate regardless */ }
+    router.push('/verify-email')
+  }
 
   const user = meData?.data || meData || authUser || {}
 
@@ -411,16 +417,40 @@ export default function AccountPage() {
             <Link href="/account-edit" style={{ fontSize: 13, color: 'var(--color_primary)', fontWeight: 500 }}>Edit</Link>
           </div>
           <div style={{ padding: '8px 20px 20px' }}>
-            {[
-              { label: 'Full Name', value: name },
-              { label: 'Email',     value: user.email },
-              { label: 'Phone',     value: user.phone || user.phone_number },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: '1px solid var(--color_line)', alignItems: 'center' }}>
-                <span style={{ width: 110, flexShrink: 0, fontSize: 13, color: 'var(--color_body)', fontWeight: 500 }}>{label}</span>
-                <span style={{ fontSize: 14, color: value ? 'var(--color_heading)' : 'var(--color_body)' }}>{value || '—'}</span>
+            {/* Full Name */}
+            <div style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: '1px solid var(--color_line)', alignItems: 'center' }}>
+              <span style={{ width: 110, flexShrink: 0, fontSize: 13, color: 'var(--color_body)', fontWeight: 500 }}>Full Name</span>
+              <span style={{ fontSize: 14, color: 'var(--color_heading)' }}>{name || '—'}</span>
+            </div>
+
+            {/* Email + verification status */}
+            <div style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: '1px solid var(--color_line)', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ width: 110, flexShrink: 0, fontSize: 13, color: 'var(--color_body)', fontWeight: 500 }}>Email</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0, flexWrap: 'wrap', rowGap: 6 }}>
+                <span style={{ fontSize: 14, color: 'var(--color_heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email || '—'}</span>
+                {user.email_verified_at ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 10, background: '#d1fae5', color: '#065f46', fontSize: 11, fontWeight: 600, flexShrink: 0 }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Verified
+                  </span>
+                ) : (
+                  <button
+                    onClick={handleVerifyNow}
+                    disabled={sendingVerification}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 10, background: '#fef3c7', color: '#92400e', fontSize: 11, fontWeight: 600, flexShrink: 0, border: '1px solid #fcd34d', cursor: sendingVerification ? 'wait' : 'pointer' }}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    {sendingVerification ? 'Sending…' : 'Verify now'}
+                  </button>
+                )}
               </div>
-            ))}
+            </div>
+
+            {/* Phone */}
+            <div style={{ display: 'flex', gap: 16, padding: '14px 0', borderBottom: '1px solid var(--color_line)', alignItems: 'center' }}>
+              <span style={{ width: 110, flexShrink: 0, fontSize: 13, color: 'var(--color_body)', fontWeight: 500 }}>Phone</span>
+              <span style={{ fontSize: 14, color: user.phone || user.phone_number ? 'var(--color_heading)' : 'var(--color_body)' }}>{user.phone || user.phone_number || '—'}</span>
+            </div>
           </div>
           {/* Sign out on mobile lives here */}
           {isMobile && (

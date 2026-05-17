@@ -11,6 +11,33 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'POST',
         body,
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          const token = data?.data?.token || data?.token
+          const user  = data?.data?.user  || data?.user
+          if (token) {
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('auth_token', token)
+              localStorage.setItem('yam-user', JSON.stringify(user))
+            }
+            dispatch(setCredentials({ token, user: user || null }))
+          }
+        } catch { /* no-op */ }
+      },
+    }),
+    verifyEmail: builder.mutation({
+      query: (body) => ({
+        url: `${AUTH_BASE_URL}/auth/email/verify`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    resendEmailVerification: builder.mutation({
+      query: () => ({
+        url: `${AUTH_BASE_URL}/auth/email/resend`,
+        method: 'POST',
+      }),
     }),
     login: builder.mutation({
       query: (body) => ({
@@ -88,4 +115,6 @@ export const {
   useGetMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useVerifyEmailMutation,
+  useResendEmailVerificationMutation,
 } = authApi
