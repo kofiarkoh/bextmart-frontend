@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import Link from 'next/link';
+import Image from 'next/image';
 import emailjs from '@emailjs/browser';
 import useTranslation from './ultils/useTranslation'
 import { DataFooter } from './data/DataFooter.js'
 import ScrollToTop from "./ultils/ScrollToTop";
-import { SVGArrowDown, SVGPhone, SVGLocationPin, SVGEnvolope, SVGTwitter, SVGFacebook, SVGInstagram, SVGTikTok, SVGVisa, SVGMastercard, SVGAmericanExpress, SVGPayPal, SVGDinersClub, SVGDiscover } from '../public/assets/SVG';
+import { SVGArrowDown, SVGPhone, SVGLocationPin, SVGEnvolope, SVGTwitter, SVGFacebook, SVGInstagram, SVGTikTok } from '../public/assets/SVG';
 
 const Footer = () => {
     const { t } = useTranslation();
@@ -366,22 +367,22 @@ const Footer = () => {
                                     <div className="footer__payment col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
                                         <ul className="list list-payment" role="list">
                                             <li className="list-payment__item">
-                                                <SVGVisa />
+                                                <Image
+                                                    src="/assets/images/mtn_momo.png"
+                                                    alt="MTN Mobile Money"
+                                                    width={80}
+                                                    height={40}
+                                                    style={{ objectFit: 'contain', width: 80, height: 40 }}
+                                                />
                                             </li>
                                             <li className="list-payment__item">
-                                                <SVGMastercard />
-                                            </li>
-                                            <li className="list-payment__item">
-                                                <SVGAmericanExpress />
-                                            </li>
-                                            <li className="list-payment__item">
-                                                <SVGPayPal />
-                                            </li>
-                                            <li className="list-payment__item">
-                                                <SVGDinersClub />
-                                            </li>
-                                            <li className="list-payment__item">
-                                                <SVGDiscover />
+                                                <Image
+                                                    src="/assets/images/vodafone_cash.jpg"
+                                                    alt="Vodafone Cash"
+                                                    width={80}
+                                                    height={40}
+                                                    style={{ objectFit: 'contain', width: 80, height: 40 }}
+                                                />
                                             </li>
                                         </ul>
                                     </div>

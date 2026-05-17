@@ -231,7 +231,7 @@ module.exports = {
     Shop_Phone: "111-222-3333",
     Shop_Email: "support@kalathemes.freshdesk.com",
     Copy_right: "Copyright © 2022",
-    Shop_info: "You & Me Shop | React Nextjs Template",
+    Shop_info: "Bextmart",
     // Extension
     Cookie_bar_content: "This website uses cookies to ensure you get the best experience on our website.",
     Learn_more: "Learn more",

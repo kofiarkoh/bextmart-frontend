@@ -144,7 +144,7 @@ export const Comingsoon_fr =
     Mins:"Minutes",
     Secs:"Secondes",
     Copy_right:"Copyright © 2022",
-    Shop_info:"You & Me Shop | React Nextjs Template",
+    Shop_info:"Bextmart",
     All_Rights_Reserved:"Tous les droits sont réservés",
     bkg:"/assets/images/bkgcomingsoon.png",
 }

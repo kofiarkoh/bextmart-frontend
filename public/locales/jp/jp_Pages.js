@@ -144,7 +144,7 @@ export const Comingsoon_jp =
     Mins:"時間",
     Secs:"秒",
     Copy_right:"著作権 © 2022",
-    Shop_info:"You & Me Shop | React Nextjs Template",
+    Shop_info:"Bextmart",
     All_Rights_Reserved:"全著作権所有",
     bkg:"/assets/images/bkgcomingsoon.png",
 }
