@@ -2,7 +2,7 @@ import { Store } from 'react-notifications-component'
 
 const base = {
   insert: 'top',
-  container: 'top-right',
+  container: 'top-center',
   animationIn: [],
   animationOut: [],
   dismiss: { duration: 4500, onScreen: false, showIcon: true },
