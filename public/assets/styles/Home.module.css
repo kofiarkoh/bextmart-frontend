@@ -438,6 +438,12 @@
   padding-top: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .slideshow_ontop {
+    display: none;
+  }
+}
+
 .slideshow_ontop_row1,
 .slideshow_ontop_row2 {
   margin-left: -10px;

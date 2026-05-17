@@ -29,6 +29,24 @@ import {
 } from "../public/assets/SVG";
 import {useLogoutMutation} from "../store/authApi";
 
+function DropdownItem({ href, icon, label }) {
+	return (
+		<li style={{ listStyle: 'none' }}>
+			<Link href={href} style={{
+				display: 'flex', alignItems: 'center', gap: 10,
+				padding: '8px 4px', color: '#333', textDecoration: 'none',
+				fontSize: 13, borderRadius: 4, transition: 'background 0.15s',
+			}}
+				onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+				onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+			>
+				<span style={{ color: '#666', flexShrink: 0 }}>{icon}</span>
+				{label}
+			</Link>
+		</li>
+	)
+}
+
 const Header = () => {
 	const {t, locale} = useTranslation();
 	const [searchInput, setSearchInput] = useState('');
@@ -325,59 +343,91 @@ const Header = () => {
 											)}
 										</div>
 										<div className="header__delivery d-none d-lg-block">
-											<div className="header__delivery-text">
-												<div className="localization-form__content menu__dropdown">
-													<button
-														type="button"
-														className="localization-form__select dropdown-toggle"
-														data-toggle="HeaderUserMenu">
-														<span className="text">Hi,</span>
-														<span className="bold">{authUser?.first_name}</span>
-														<SVGArrowDown />
-													</button>
-													<ul className="header__menu-location no-bullet dropdown-menu">
-														<li className="header__menu-login-content">
-															<ul
-																id="HeaderUserMenu"
-																role="list"
-																className="no-bullet localization-form__list">
-																<li className="localization-form__item">
-																	<Link
-																		href={isLoggedIn ? "/account" : "/account-login"}
-																		className="localization-form__link">
-																		<span className="text">
-																			{isLoggedIn ? t("My_Account") : t("Sign_In")}
-																		</span>
-																	</Link>
+											<div className="localization-form__content menu__dropdown">
+												{/* ── Trigger ── */}
+												<button
+													type="button"
+													className="localization-form__select dropdown-toggle"
+													data-toggle="HeaderUserMenu"
+													style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 2px', color: '#fff' }}>
+													<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+														<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+														<circle cx="12" cy="7" r="4"/>
+													</svg>
+													<span style={{ fontSize: 14, fontWeight: 500 }}>
+														{isLoggedIn ? (authUser?.first_name || 'Account') : 'Account'}
+													</span>
+													<SVGArrowDown />
+												</button>
+
+												{/* ── Dropdown panel ── */}
+												<ul className="header__menu-location no-bullet dropdown-menu" style={{ minWidth: 220, padding: 0 }}>
+													<li className="header__menu-login-content" style={{ padding: '16px 16px 12px' }}>
+
+														{/* Sign In button — always shown */}
+														<Link
+															href={isLoggedIn ? "/account" : "/account-login"}
+															style={{
+																display: 'block', width: '100%', textAlign: 'center',
+																padding: '10px', borderRadius: 6, marginBottom: 10,
+																background: 'var(--color_primary)',
+																fontWeight: 600, fontSize: 14, textDecoration: 'none',
+																boxSizing: 'border-box',
+															}}>
+															<span style={{ color: '#fff', fontWeight: 600 }}>
+																{isLoggedIn ? 'My Account' : 'Sign In'}
+															</span>
+														</Link>
+
+														{/* Register link — guests only */}
+														{!isLoggedIn && (
+															<p style={{ textAlign: 'center', fontSize: 12, margin: '0 0 10px', color: '#666', whiteSpace: 'nowrap' }}>
+																New customer?{' '}
+																<Link href="/account-register" style={{ color: 'var(--color_primary)', fontWeight: 600 }}>
+																	Create account
+																</Link>
+															</p>
+														)}
+
+														{/* Divider */}
+														<div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 8px' }} />
+
+														{/* Menu links — only when logged in */}
+														<ul id="HeaderUserMenu" role="list" className="no-bullet" style={{ margin: 0, padding: 0 }}>
+															{isLoggedIn && (
+																<DropdownItem href="/account" icon={
+																	<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+																		<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+																	</svg>
+																} label="My Account" />
+															)}
+															{isLoggedIn && (
+																<DropdownItem href="/account?section=orders" icon={
+																	<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+																		<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+																	</svg>
+																} label="Orders" />
+															)}
+															{isLoggedIn && (
+																<li style={{ listStyle: 'none', marginTop: 4 }}>
+																	<button
+																		onClick={handleLogout}
+																		style={{
+																			display: 'flex', alignItems: 'center', gap: 10,
+																			width: '100%', padding: '8px 4px',
+																			background: 'none', border: 'none', cursor: 'pointer',
+																			fontSize: 13, color: '#dc2626', textAlign: 'left',
+																		}}>
+																		<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+																			<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+																		</svg>
+																		Sign Out
+																	</button>
 																</li>
-																<li
-																	className={`localization-form__item ${isLoggedIn ? "" : "hidden"}`}>
-																	<Link
-																		href="#"
-																		className="localization-form__link"
-																		onClick={handleLogout}>
-																		<span className="text">{t("Logout")}</span>
-																	</Link>
-																</li>
-																<li
-																	className={`localization-form__item ${isLoggedIn ? "hidden" : ""}`}>
-																	<Link
-																		href="/account-register"
-																		className="localization-form__link">
-																		<span className="text">{t("Register")}</span>
-																	</Link>
-																</li>
-															</ul>
-														</li>
-													</ul>
-												</div>
-											</div>
-											<div className="header__delivery-icon">
-												<Link
-													href={isLoggedIn ? "/account" : "/account-login"}
-													aria-label={t("My_Account")}>
-													<img src={userAvatar} alt="" width={24} height={24} />
-												</Link>
+															)}
+														</ul>
+													</li>
+												</ul>
 											</div>
 										</div>
 										<div className="main-header__icon-root header__icon-root header__icon-cart">
