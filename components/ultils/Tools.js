@@ -1,7 +1,7 @@
 import CurrencyConvert from './CurrencyConvert'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
-const ASSET_BASE_URL = "http://127.0.0.1:8000/storage"// API_BASE_URL.replace(/\/api\/?$/, "")
+const ASSET_BASE_URL = process.env.NEXT_PUBLIC_STORAGE_BASE_URL || API_BASE_URL.replace(/\/api\/?$/, "/storage")
 
 export function buildImageUrl(path) {
     if (!path) return "/assets/images/placeholder.png"
