@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import useTranslation from './useTranslation'
 import { useAddToCartMutation } from '../../store/cartApi'
 import { SVGCart } from '../../public/assets/SVG';
 import { notifyError, notifySuccess } from './notify';
 
 const ProductAddtoCart = ({ product }) => {
-    const { t } = useTranslation();
     const router = useRouter();
     const authToken = useSelector((state) => state.auth?.token);
 
@@ -24,13 +22,13 @@ const ProductAddtoCart = ({ product }) => {
             await addToCart({ product_id: product.id, quantity: 1 }).unwrap();
             notifySuccess(`${product.name} added to cart.`, 'Added to Cart')
         } catch (err) {
-            const msg = err?.data?.message || t("Add_failure");
+            const msg = err?.data?.message || 'Could not add to cart.';
             setError(msg);
             notifyError(msg, 'Could Not Add to Cart');
         }
     }
 
-    const buttonLabel = isLoading ? t("Adding_to_Cart") : t("Add_to_Cart");
+    const buttonLabel = isLoading ? 'Adding...' : 'Add to Cart';
     const buttonClass = `product-item__icon${isLoading ? ' cart-loadding' : ''}`;
 
     return (
@@ -41,12 +39,11 @@ const ProductAddtoCart = ({ product }) => {
                     className={buttonClass}
                     onClick={handleAddToCart}
                     disabled={isLoading}
-                    title={t("Add_to_Cart")}
+                    title="Add to Cart"
                 >
                     <SVGCart />
                     <span>{buttonLabel}</span>
                 </button>
-
             </div>
         </div>
     );

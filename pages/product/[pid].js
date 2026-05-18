@@ -66,7 +66,7 @@ const ProductPage = () => {
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(0);
     const [classStatus, setClassStatus] = useState('');
-    const [statusText, setStatusText] = useState(t("Add_to_Cart"));
+    const [statusText, setStatusText] = useState("Add to Cart");
     const [addToCartApi] = useAddToCartMutation();
     const [proView, setProView] = useState('sidebar');
     const [columnView, setColumnView] = useState('col-12 col-md-4-5');
@@ -266,17 +266,17 @@ const ProductPage = () => {
         try {
             console.log('Adding to cart:', { product_id: product.id, quantity: qty }); // Debug log
             setClassStatus('cart-loadding');
-            setStatusText(t("Adding_to_Cart"));
+            setStatusText("Adding...");
             await addToCartApi({ product_id: product.id, quantity: qty }).unwrap();
             setClassStatus('cart-complete');
             setStatusText(t("Added_success"));
             setTimeout(() => {
                 setClassStatus('');
-                setStatusText(t("Add_to_Cart"));
+                setStatusText("Add to Cart");
             }, 500);
         } catch (error) {
             setClassStatus('');
-            setStatusText(t("Add_to_Cart"));
+            setStatusText("Add to Cart");
         }
     }
 
@@ -395,9 +395,7 @@ const ProductPage = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className={styles.product_terms}>
-                                                        {t("Please_read")} <Link href="/page-termofservice" className='product-terms__action'>{t("Terms_conditions")}</Link>
-                                                    </div>
+
                                                     <div className="product-template__details">
                                                         <div className={`product-template__title-area ${styles.details_strong}`}>{t("Details")}</div>
                                                         <div className="product-template__content-area">
@@ -418,7 +416,7 @@ const ProductPage = () => {
                                                         </div>
                                                     </div>
                                                     <div className="product-template__description">
-                                                        <div className={`product-template__title-area ${styles.details_strong}`}>{t("Quick_overview")}</div>
+                                                        <div className={`product-template__title-area ${styles.details_strong}`}>Quick Overview</div>
                                                         <div className="product-template__content-area">
                                                             <div dangerouslySetInnerHTML={{ __html: product.shortdesc || "" }} />
                                                         </div>
@@ -451,9 +449,9 @@ const ProductPage = () => {
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <div className='product-template__safecheckout'>
+                                                    {/* <div className='product-template__safecheckout'>
                                                         <Image src={safecheckout.src} alt='' width={402} height={78} />
-                                                    </div>
+                                                    </div> */}
                                                 </StickyBox>
                                             </div>
                                         </div>
@@ -474,12 +472,12 @@ const ProductPage = () => {
                                                     <div className="box-divider">
                                                         <h4 className="box-title">Similar Products</h4>
                                                     </div>
-                                                    <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 20 }}>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 16, marginTop: 20 }}>
                                                         {similarProducts.slice(0, 6).map((item, index) => (
                                                             <Link
                                                                 key={item.id || index}
                                                                 href={`/product/${item.id}`}
-                                                                style={{ textDecoration: 'none', width: 160, flexShrink: 0 }}
+                                                                style={{ textDecoration: 'none' }}
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
                                                                     <img

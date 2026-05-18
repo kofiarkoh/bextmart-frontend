@@ -31,8 +31,8 @@ const ProductQuickView = ({ product, directly }) => {
     const [option2, setOption2] = useState();
     const { t } = useTranslation();
     const [classStatus, setClassStatus] = useState('');
-    const [statusText, setStatusText] = useState(t("Add_to_Cart"));
-    const [buttonText, setButtonText] = useState(t("Add_to_Cart"));
+    const [statusText, setStatusText] = useState("Add to Cart");
+    const [buttonText, setButtonText] = useState("Add to Cart");
     const [swiper, setSwiper] = useState(null);
     function qwchangeVariant(index, variant) {
         if (index === 0) {
@@ -51,7 +51,7 @@ const ProductQuickView = ({ product, directly }) => {
         setTimeout(() => {
             setOpen(o => !o)
             setClassStatus('');
-            setButtonText(t("Add_to_Cart"));
+            setButtonText("Add to Cart");
         }, 1000);
     }
 
@@ -82,7 +82,7 @@ const ProductQuickView = ({ product, directly }) => {
             data = [...data, productObject];
             localStorage.setItem('yam-shoppingcart', JSON.stringify(data));
             setClassStatus('cart-loadding');
-            setStatusText(t("Adding_to_Cart"));
+            setStatusText("Adding...");
             setTimeout(() => {
                 setClassStatus('cart-complete');
                 setStatusText(t("Added_success"));
@@ -92,7 +92,7 @@ const ProductQuickView = ({ product, directly }) => {
                 setscData(data);
                 setTimeout(() => {
                     setClassStatus('');
-                    setStatusText(t("Add_to_Cart"))
+                    setStatusText("Add to Cart")
                     setopenCart(o => !o);
                     setOpen(o => !o);
                 }, 500);
@@ -108,7 +108,7 @@ const ProductQuickView = ({ product, directly }) => {
             });
             localStorage.setItem('yam-shoppingcart', JSON.stringify(newData));
             setClassStatus('cart-loadding');
-            setStatusText(t("Adding_to_Cart"));
+            setStatusText("Adding...");
             setTimeout(() => {
                 setClassStatus('cart-complete');
                 setStatusText(t("Added_success"));
@@ -117,7 +117,7 @@ const ProductQuickView = ({ product, directly }) => {
                 setscData(newData);
                 setTimeout(() => {
                     setClassStatus('');
-                    setStatusText(t("Add_to_Cart"))
+                    setStatusText("Add to Cart")
                     setopenCart(o => !o);
                     setOpen(o => !o);
                 }, 500);
