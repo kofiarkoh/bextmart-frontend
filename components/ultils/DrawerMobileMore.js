@@ -1,393 +1,203 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image'
-
-import Popup from "reactjs-popup";
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import useTranslation from './useTranslation'
-import { languageName, randomString } from './Tools'
-import { useAtom } from 'jotai'
-import base64 from 'base-64'
-import Account from '../../data/Account.json';
-import { userLoggedData, storecurrency, storecurrencySymbol } from './Store'
-import CurrencyData from '../../data/Currency.json';
-
-import { SVGMore, SVGClose, SVGHeart, SVGRefresh, SVGPhone, SVGLocation } from '../../public/assets/SVG';
+import { SVGMore, SVGClose } from '../../public/assets/SVG';
+import { clearCredentials } from '../../store/authSlice';
+import { notifySuccess } from './notify';
 
 const DrawerMobileMore = () => {
-    const { t, locale } = useTranslation();
-    const languagename = languageName(locale);
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
-    const [firstTab, setfirstTab] = useState(true);
-    const [openModal, setOpenModal] = useState(false);
-    const closeModal = () => setOpenModal(false);
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const authToken = useSelector((state) => state.auth?.token);
+    const user = useSelector((state) => state.auth?.user);
 
-    // Login
-    const [userlogged, setuserlogged] = useAtom(userLoggedData);
-    const [loginError, setLoginError] = useState(null);
-    const [loginSuccess, setLoginSuccess] = useState(false);
-    const [logindata, setLoginData] = useState({
-        email: "",
-        password: ""
-    });
-    const { email, password } = logindata;
-    const ref_email_login = useRef(null);
-    const [textStatus, setTextStatus] = useState(t("Sign_In"));
-    const [classStatus, setClassStatus] = useState('');
-
-    useEffect(() => {
-        if (userlogged.email != undefined || userlogged.email != null) { setLoginSuccess(true) }
-    }, [userlogged]);
-
-    function isValidEmail(email) {
-        return /\S+@\S+\.\S+/.test(email);
+    function getInitials(u) {
+        if (!u) return '?';
+        const first = u.first_name?.[0] || u.name?.[0] || '';
+        const last = u.last_name?.[0] || '';
+        return (first + last).toUpperCase() || '?';
     }
 
-    const loginInputChange = e => {
-        setLoginData({ ...logindata, [e.target.name]: [e.target.value] });
+    function getDisplayName(u) {
+        if (!u) return '';
+        if (u.first_name) return `${u.first_name} ${u.last_name || ''}`.trim();
+        return u.name || u.email || '';
     }
 
-    function loginSubmit(e) {
-        e.preventDefault();
-        if (!isValidEmail(logindata.email)) {
-            setLoginError(t("Email_is_invalid"));
-            ref_email_login.current.focus();
-        } else {
-            setLoginError(null);
-            const findemail = Account.findIndex(a => (a.email === String(logindata.email)));
-            if (findemail >= 0) {
-                const ramdomtext = Account[findemail].randomtext;
-                const encodepass = base64.encode(logindata.password + '' + ramdomtext);
-                const token = base64.encode(logindata.email + '' + ramdomtext + '' + encodepass);
-                const findAccount = Account.findIndex(a => (a.email === String(logindata.email) && a.password === encodepass && a.accessToken === token));
-                if (findAccount >= 0) {
-                    setTextStatus(t("Checking"));
-                    setClassStatus("submit_login_loading");
-                    setTimeout(() => {
-                        setTextStatus(t("Completed"));
-                        setClassStatus("submit_login_complete");
-                        setTimeout(() => {
-                            setLoginSuccess(true);
-                            const accountObject = { "email": Account[findAccount].email, "name": Account[findAccount].firstname, "avatar": Account[findAccount].avatar, "token": token }
-                            localStorage.setItem('yam-user', JSON.stringify(accountObject));
-                            setuserlogged(accountObject);
-                        }, 500);
-                    }, 1500);
-                } else {
-                    setLoginError(t("Email_incorrect"));
-                }
-            } else {
-                setLoginError(t("Email_incorrect"));
-            }
-        }
-    }
-
-    // Register
-    const ref_email_register = useRef(null);
-    const ref_pass_register = useRef(null);
-    const [textRegisterStatus, setTextRegisterStatus] = useState(t("Create_account"));
-    const [classRegisterStatus, setClassRegisterStatus] = useState('');
-    const [registerError, setRegisterError] = useState(null);
-    const [registerdata, setRegisterData] = useState({
-        first_name_box: "",
-        last_name_box: "",
-        register_email_box: "",
-        register_password_box: ""
-    });
-    const { first_name_box, last_name_box, register_email_box, register_password_box } = registerdata;
-
-    const registerInputChange = e => {
-        setRegisterData({ ...registerdata, [e.target.name]: [e.target.value] });
-    }
-
-    function isValidPassword(pass) {
-        return /\S+@\S+\.\S+/.test(pass);
-    }
-
-    function registerSubmit(e) {
-        e.preventDefault();
-        if (isValidEmail(registerdata.register_email_box)) {
-            const findemail = Account.findIndex(a => (a.email === String(registerdata.register_email_box)));
-            if (findemail === -1) {
-                if (String(registerdata.register_password_box).length > 7) {
-                    setTextRegisterStatus(t("Checking"));
-                    setClassRegisterStatus("submit_login_loading");
-                    setTimeout(() => {
-                        setTextRegisterStatus(t("Completed"));
-                        setClassRegisterStatus("submit_login_complete");
-                        setTimeout(() => {
-                            setRegisterError(null);
-                            const ramdomtext = randomString(15);
-                            const encodepass = base64.encode(registerdata.register_password_box + '' + ramdomtext);
-                            const token = base64.encode(registerdata.register_email_box + '' + ramdomtext + '' + encodepass);
-                            const avatar = '/assets/images/avatar.png';
-                            setLoginSuccess(true);
-                            const accountObject = { "email": registerdata.register_email_box, "name": registerdata.first_name_box, "avatar": avatar, "token": token }
-                            localStorage.setItem('yam-user', JSON.stringify(accountObject));
-                            setuserlogged(accountObject);
-                        }, 500);
-                    }, 1500);
-                } else {
-                    setRegisterError(t("Password_at_least_7"));
-                    ref_pass_register.current.focus();
-                }
-            } else {
-                setRegisterError(t("Password_exited"));
-                ref_email_register.current.focus();
-            }
-        } else {
-            setRegisterError(t("Email_is_invalid"));
-            ref_email_register.current.focus();
-        }
-
-    }
-
-    function logout(e) {
-        e.preventDefault();
-        setTextStatus(t("Sign_In"));
-        setClassStatus("");
-        setTextRegisterStatus(t("Create_account"));
-        setClassRegisterStatus("");
-        setLoginSuccess(false);
+    function handleLogout() {
+        dispatch(clearCredentials());
+        localStorage.removeItem('auth_token');
         localStorage.removeItem('yam-user');
+        notifySuccess('Signed out successfully.', 'Goodbye!');
+        setIsOpen(false);
+        router.push('/');
     }
 
-    // Currency 
-    const [currency, setCurrency] = useAtom(storecurrency);
-    const [currencySymbol, setCurrencySymbol] = useAtom(storecurrencySymbol);
-    useEffect(() => {
-        const currencyStored = JSON.parse(localStorage.getItem('yam-currency'));
-        if (currencyStored === null) {
-            const currencyData = {
-                currency: currency,
-                symbol: currencySymbol
-            }
-            localStorage.setItem('yam-currency', JSON.stringify(currencyData));
-        } else {
-            setCurrency(currencyStored.currency);
-            setCurrencySymbol(currencyStored.symbol);
-        }
-    }, [currency, currencySymbol, setCurrency, setCurrencySymbol]);
-    //useEffect(() => { }, [currency, currencySymbol]);
-
-    function changeCurrency(code, symbol) {
-        setCurrency(code);
-        setCurrencySymbol(symbol);
-        const currencyData = {
-            currency: code,
-            symbol: symbol
-        }
-        localStorage.setItem('yam-currency', JSON.stringify(currencyData));
+    const avatarColors = ['#e53935', '#8e24aa', '#1e88e5', '#43a047', '#f4511e', '#00897b'];
+    function avatarColor(name) {
+        let hash = 0;
+        for (let i = 0; i < (name || '').length; i++) hash += name.charCodeAt(i);
+        return avatarColors[hash % avatarColors.length];
     }
 
-    function renderLoginContent() {
-        return (
-            <div className={`account-login`}>
-                <tab-component>
-                    <ul className="nav-tabs__title no-bullet">
-                        <li className={`tabs-title ${firstTab ? 'is-active' : ''}`} onClick={() => setfirstTab(true)}>
-                            {t("Sign_In")}
-                        </li>
-                        <li className={`tabs-title ${firstTab ? '' : 'is-active'}`} onClick={() => setfirstTab(false)}>
-                            {t("Register")}
-                        </li>
-                    </ul>
-                    <div className="nav-tabs__content">
-                        <div className={`tab-content ${firstTab ? 'is-active' : ''}`} id="tab-header-login" data-tabs-panel="">
-                            <form method="post" id="customer_login_boxmobile" acceptCharset="UTF-8" noValidate="novalidate" onSubmit={(e) => loginSubmit(e)}>
-                                <input type="hidden" name="form_type" defaultValue="customer_login" />
-                                <input type="hidden" name="utf8" defaultValue="✓" />
-                                <div className="field">
-                                    <input className="field__input" type="email" name="email" id="LoginFormBox-Email" ref={ref_email_login} value={email} placeholder={`${t("typing")}:yam@gmail.com`} onChange={loginInputChange} />
-                                    <label className="field__label" htmlFor="LoginFormBox-Email">
-                                        {`${t("typing")}:yam@gmail.com`}
-                                    </label>
-                                </div>
-                                <div className="field">
-                                    <input className="field__input" type="password" value={password} name="password" id="LoginFormBox-Password" placeholder={`${t("typing")}:123456789`} onChange={loginInputChange} />
-                                    <label className="field__label" htmlFor="password">
-                                        {`${t("typing")}:123456789`}
-                                    </label>
-                                </div>
-                                <Link href="/account-login" className="account-login-recover">
-                                    {t("Forgot_your_password")}?</Link>
-                                <span className='login-errortext'>{loginError}</span>
-                                <div className="sign-in_create-account">
-                                    <button type="submit" className={`button account-login-submit ${classStatus}`}>{textStatus}</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div className={`tab-content ${firstTab ? '' : 'is-active'}`} id="tab-header-register" data-tabs-panel="">
-                            <form method="post" id="customer_register_box" acceptCharset="UTF-8" noValidate="novalidate" onSubmit={(e) => registerSubmit(e)}>
-                                <input type="hidden" name="form_type" defaultValue="create_customer" />
-                                <input type="hidden" name="utf8" defaultValue="✓" />
-                                <div className="field">
-                                    <input className="field__input" type="text" name="first_name_box" id="first_name_box" value={first_name_box} placeholder={t("First_name")} onChange={registerInputChange} />
-                                    <label className="field__label" htmlFor="first_name_box">
-                                        {t("First_name")}
-                                    </label>
-                                </div>
-                                <div className="field">
-                                    <input className="field__input" type="text" name="last_name_box" value={last_name_box} id="last_name_box" placeholder={t("Last_name")} onChange={registerInputChange} />
-                                    <label className="field__label" htmlFor="last_name_box">
-                                        {t("Last_name")}
-                                    </label>
-                                </div>
-                                <div className="field">
-                                    <input className="field__input" type="email" name="register_email_box" ref={ref_email_register} id="register_email_box" value={register_email_box} placeholder={t("Email")} onChange={registerInputChange} />
-                                    <label className="field__label" htmlFor="register_email_box">
-                                        {t("Email")}
-                                    </label>
-                                </div>
-                                <div className="field">
-                                    <input className="field__input" type="password" name="register_password_box" ref={ref_pass_register} id="register_password_box" value={register_password_box} placeholder={t("Password")} onChange={registerInputChange} />
-                                    <label className="field__label" htmlFor="register_password_box">
-                                        {t("Password")}
-                                    </label>
-                                </div>
-                                <span className='register-errortext'>{registerError}</span>
-                                <div className="action_bottom">
-                                    <button type="submit" className={`button account-login-submit ${classRegisterStatus}`}>
-                                        {textRegisterStatus}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </tab-component>
-            </div>
-        )
-    }
-
-    function renderAccountInfo() {
-        let avatar = "/assets/images/avatar.png";
-        if (userlogged.avatar != "" && userlogged.avatar != undefined) avatar = userlogged.avatar;
-        return (
-            <div className={`account-logged`}>
-                <div className="account-avatar">
-                    <Link href="/account">
-                        <Image src={avatar} alt='' width={100} height={100} />
-                    </Link>
-                </div>
-                <div className='name'>{t("Hi")} {userlogged.firstname}!</div>
-                <div className='account-links'>
-                    <Link href="/account" className="menu-drawer__menu-item list-menu__item link link--text focus-inset">
-                        {t("My_Account")}
-                    </Link>
-                    <Link href="#" className="menu-drawer__menu-item list-menu__item link link--text focus-inset" onClick={(e) => logout(e)}>
-                        {t("Logout")}
-                    </Link>
-                </div>
-            </div>
-        )
-    }
+    const initials = getInitials(user);
+    const displayName = getDisplayName(user);
+    const email = user?.email || '';
 
     return (
         <>
             <div className={`cartdrawer ${isOpen ? 'menu-opening' : ''}`}>
                 <div className="cartsummary header__icon header__icon--account header__icon--summary link focus-inset header-drawer__toggle">
-                    <div className="drawer__toggle-icon" onClick={(e) => { e.preventDefault(); setIsOpen(current => !current); }}>
+                    <div className="drawer__toggle-icon" onClick={() => setIsOpen(v => !v)}>
                         <SVGMore />
                     </div>
                 </div>
                 <div className="header-drawer__inner header-drawer__right">
-                    <div className="header-drawer__overlay" onClick={() => setIsOpen(false)}></div>
-                    <div className="header-drawer_content account-drawer__content">
-                        <div className="header-drawer__title">
-                            <h3 className="drawer--title">{t("More_Information")}</h3>
-                            <button type="button" className="drawer__close-button link link--text focus-inset" onClick={() => setIsOpen(false)}>
+                    <div className="header-drawer__overlay" onClick={() => setIsOpen(false)} />
+                    <div className="header-drawer_content account-drawer__content" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+                        {/* Header */}
+                        <div style={{
+                            background: 'var(--color_primary)',
+                            padding: '16px 20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}>
+                            <span style={{ color: '#fff', fontWeight: 700, fontSize: 16, letterSpacing: 0.3 }}>
+                                {authToken ? 'My Account' : 'Welcome'}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setIsOpen(false)}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#fff', padding: 4, display: 'flex' }}
+                            >
                                 <SVGClose />
                             </button>
                         </div>
-                        <div className="header-drawer__content">
-                            <div className="header-drawer__scroll">
-                                <div className={`account-drawer__tab ${loginSuccess ? 'logged' : 'guess'}`}>
-                                    {
-                                        loginSuccess ? renderAccountInfo() : renderLoginContent()
-                                    }
-                                </div>
-                                <ul className="menu-drawer__wish-compare list-menu" role="list">
-                                    <li className="menu--wish-compare__root">
-                                        <Link href="/page-wishlist" className="menu--wish-compare__item">
-                                            <SVGHeart />
-                                            <span className="menu--wish-compare__title">{t("Wishlist")}</span>
-                                        </Link>
-                                    </li>
-                                    <li className="menu--wish-compare__root">
-                                        <Link href="/page-compare" className="menu--wish-compare__item">
-                                            <SVGRefresh />
-                                            <span className="menu--wish-compare__title">{t("Compare")}</span>
-                                        </Link>
-                                    </li>
-                                    <li className="menu--wish-compare__root">
-                                        <Link href="/page-contact" className="header__menu-text2 menu--wish-compare__item">
-                                            {t("Help")}
-                                        </Link>
-                                    </li>
-                                    <li className="menu--wish-compare__root">
-                                        <Link href="/blog" className="header__menu-text2 menu--wish-compare__item">
-                                            {t("Blog")}
-                                        </Link>
-                                    </li>
-                                </ul>
-                                <ul role="list" className="no-bullet localization-form__list">
-                                    {
-                                        CurrencyData.map((data, index) => (
-                                            <li className={`localization-form__item ${(data.code === currency) ? 'localization-form__active' : ''}`} key={index}>
-                                                <span className={`localization-form__link header-currencies`} onClick={() => { changeCurrency(data.code, data.symbol) }}> {data.symbol} {data.code} </span>
-                                            </li>
-                                        ))
-                                    }
-                                </ul>
-                                <div className="header__delivery-gr">
-                                    <div className="header__delivery">
-                                        <div className="header__delivery-icon">
-                                            <SVGLocation />
+
+                        <div style={{ flex: 1, overflowY: 'auto' }}>
+                            {/* Profile / Auth section */}
+                            {authToken ? (
+                                <div style={{ padding: '24px 20px 16px', borderBottom: '1px solid #f0f0f0' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+                                        <div style={{
+                                            width: 52, height: 52, borderRadius: '50%',
+                                            background: avatarColor(displayName),
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            color: '#fff', fontWeight: 700, fontSize: 20, flexShrink: 0,
+                                        }}>
+                                            {initials}
                                         </div>
-                                        <div className="header__delivery-text">
-                                            <div className="localization-form__content menu__dropdown">
-                                                <button type="button" className="localization-form__select dropdown-toggle" data-toggle="HeaderCountryList" onClick={() => setOpenModal(o => !o)}>
-                                                    <span className="text">{t("Select_language")}</span>
-                                                    <span className="bold" >{languagename}</span>
-                                                </button>
-                                                <Popup open={openModal} closeOnDocumentClick onClose={closeModal}>
-                                                    <div className="modal__layout modal-open mobile-language">
-                                                        <div className="modal__close" onClick={closeModal}></div>
-                                                        <div className="modal__content">
-                                                            <div className="modal__header">
-                                                                <span className="modal__close-icon" onClick={closeModal}><SVGClose /></span>
-                                                            </div>
-                                                            <div className="modal__body">
-                                                                <ul id="HeaderCountryList" role="list" className="no-bullet localization-form__list">
-                                                                    <li className={`localization-form__item ${(languagename === 'English') ? 'localization-form__active' : ''}`}>
-                                                                        <Link className="localization-form__link" href="/en"> English </Link>
-                                                                    </li>
-                                                                    <li className={`localization-form__item ${(languagename === 'Français') ? 'localization-form__active' : ''}`}>
-                                                                        <Link className="localization-form__link" href="/fr"> Français </Link>
-                                                                    </li>
-                                                                    <li className={`localization-form__item ${(languagename === 'Italiana') ? 'localization-form__active' : ''}`}>
-                                                                        <Link className="localization-form__link" href="/it"> Italiana </Link>
-                                                                    </li>
-                                                                    <li className={`localization-form__item ${(languagename === '日本') ? 'localization-form__active' : ''}`}>
-                                                                        <Link className="localization-form__link" href="/jp"> 日本 </Link>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </Popup>
+                                        <div style={{ minWidth: 0 }}>
+                                            <div style={{ fontWeight: 700, fontSize: 15, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                {displayName}
                                             </div>
+                                            {email && (
+                                                <div style={{ fontSize: 12, color: '#777', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {email}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="header__delivery">
-                                        <div className="header__delivery-icon">
-                                            <SVGPhone />
-                                        </div>
-                                        <div className="header__delivery-text">
-                                            <Link href="tel:19006789">
-                                                <span className="text">{t("Hotline")}</span> <span className="bold">1900-6789</span>
-                                            </Link>
-                                        </div>
+                                    <div style={{ display: 'flex', gap: 10 }}>
+                                        <Link href="/account" onClick={() => setIsOpen(false)} style={{
+                                            flex: 1, textAlign: 'center', padding: '9px 0',
+                                            background: 'var(--color_primary)', color: '#fff',
+                                            borderRadius: 6, fontWeight: 600, fontSize: 13, textDecoration: 'none',
+                                        }}>
+                                            My Account
+                                        </Link>
+                                        <button onClick={handleLogout} style={{
+                                            flex: 1, textAlign: 'center', padding: '9px 0',
+                                            background: '#fff', color: '#e53935',
+                                            border: '1.5px solid #e53935',
+                                            borderRadius: 6, fontWeight: 600, fontSize: 13, cursor: 'pointer',
+                                        }}>
+                                            Sign Out
+                                        </button>
                                     </div>
+                                </div>
+                            ) : (
+                                <div style={{ padding: '24px 20px 16px', borderBottom: '1px solid #f0f0f0' }}>
+                                    <p style={{ color: '#555', fontSize: 13, marginBottom: 16, lineHeight: 1.5 }}>
+                                        Sign in to view your orders and manage your account.
+                                    </p>
+                                    <Link href="/account-login" onClick={() => setIsOpen(false)} style={{
+                                        display: 'block', textAlign: 'center', padding: '11px 0',
+                                        background: 'var(--color_primary)', color: '#fff',
+                                        borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: 'none',
+                                        marginBottom: 10,
+                                    }}>
+                                        Sign In
+                                    </Link>
+                                    <Link href="/account-register" onClick={() => setIsOpen(false)} style={{
+                                        display: 'block', textAlign: 'center', padding: '11px 0',
+                                        background: '#fff', color: 'var(--color_primary)',
+                                        border: '1.5px solid var(--color_primary)',
+                                        borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: 'none',
+                                    }}>
+                                        Create Account
+                                    </Link>
+                                </div>
+                            )}
+
+                            {/* Quick Links */}
+                            <div style={{ padding: '8px 0' }}>
+                                {authToken && (
+                                    <Link href="/account?tab=orders" onClick={() => setIsOpen(false)} style={{
+                                        display: 'flex', alignItems: 'center', gap: 12,
+                                        padding: '14px 20px', textDecoration: 'none', color: '#222',
+                                        borderBottom: '1px solid #f5f5f5', fontSize: 14,
+                                    }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                                            <rect x="9" y="3" width="6" height="4" rx="1"/>
+                                        </svg>
+                                        My Orders
+                                    </Link>
+                                )}
+                                <Link href="/products" onClick={() => setIsOpen(false)} style={{
+                                    display: 'flex', alignItems: 'center', gap: 12,
+                                    padding: '14px 20px', textDecoration: 'none', color: '#222',
+                                    borderBottom: '1px solid #f5f5f5', fontSize: 14,
+                                }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/>
+                                        <rect x="2" y="14" width="7" height="7"/><rect x="15" y="14" width="7" height="7"/>
+                                    </svg>
+                                    All Products
+                                </Link>
+                                <Link href="/page-contact" onClick={() => setIsOpen(false)} style={{
+                                    display: 'flex', alignItems: 'center', gap: 12,
+                                    padding: '14px 20px', textDecoration: 'none', color: '#222',
+                                    borderBottom: '1px solid #f5f5f5', fontSize: 14,
+                                }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                    Help & Support
+                                </Link>
+                            </div>
+
+                            {/* Hotline */}
+                            <div style={{
+                                margin: '12px 16px', padding: '14px 16px',
+                                background: '#f8f9fa', borderRadius: 8,
+                                display: 'flex', alignItems: 'center', gap: 12,
+                            }}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color_primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.6 1.32h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/>
+                                </svg>
+                                <div>
+                                    <div style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>Customer Support</div>
+                                    <a href="tel:19006789" style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_primary)', textDecoration: 'none' }}>
+                                        1900-6789
+                                    </a>
                                 </div>
                             </div>
                         </div>

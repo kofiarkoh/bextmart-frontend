@@ -57,7 +57,7 @@ const DrawerMobileSearch = () => {
                     <div className="header-drawer__overlay" onClick={() => setIsOpen(false)}></div>
                     <div className="header-drawer_content search-drawer__content">
                         <div className="header-drawer__title">
-                            <h3 className="drawer--title">{t('Search_our_site')}</h3>
+                            <h3 className="drawer--title">Search Products</h3>
                             <button type="button" className="drawer__close-button link link--text focus-inset" onClick={() => setIsOpen(false)}>
                                 <SVGClose />
                             </button>
