@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {useState, useEffect, useRef} from "react";
-import Image from "next/image";
 import {useRouter} from "next/router";
 import {useGetSuggestionsQuery} from "../store/productsApi";
 import {useAtom} from "jotai";
@@ -22,7 +21,6 @@ import AllCategories from "./ultils/AllCategories";
 import HorizontalMenu from "./ultils/HorizontalMenu";
 
 import CurrencyData from "../data/Currency.json";
-import Logo from "../public/assets/images/bexmart_logo_yellow.png";
 import {
 	SVGArrowDown,
 	SVGSearch,
@@ -158,22 +156,16 @@ const Header = () => {
 										<Link
 											href="/"
 											className="header__heading-link link link--text focus-inset">
-											<Image
+											<img
 												className="header__heading-logo d-none d-lg-block"
-												priority="true"
 												alt="Shop logo"
-												src={Logo}
-												height={70}
-												width={160}
-												style={{ objectFit: 'contain', height: 80, width: 'auto' }}
+												src="/assets/images/bexmart_logo_yellow.png"
+												style={{ objectFit: 'contain', height: 120, width: 'auto' }}
 											/>
-											<Image
+											<img
 												className="header__heading-logo d-block d-lg-none"
-												priority="true"
 												alt="Shop logo"
-												src={Logo}
-												height={70}
-												width={120}
+												src="/assets/images/bexmart_logo_yellow.png"
 												style={{ objectFit: 'contain', height: 80, width: 'auto' }}
 											/>
 										</Link>

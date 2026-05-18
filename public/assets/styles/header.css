@@ -870,14 +870,18 @@ body:not(.template-index) .main-header {
 
 .header__heading-logo {
   max-width: 100%;
-  max-height:70px;
+  max-height: 70px;
   object-fit: contain;
+  transform: scale(1.4);
+  transform-origin: left center;
 }
 
 @media screen and (max-width: 991px) {
   .header__heading-logo {
     max-height: 48px !important;
     width: auto;
+    transform: scale(1.7);
+    transform-origin: center center;
   }
 }
 
