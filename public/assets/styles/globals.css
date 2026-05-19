@@ -8485,7 +8485,7 @@ background-repeat: no-repeat;
 
 .btn--share svg {
   height: 30px;
-  margin-right: 0px;
+  margin-right: 6px;
   margin-top: -2px;
   display: inline-block;
 }
@@ -8503,6 +8503,11 @@ background-repeat: no-repeat;
 .share-facebook {
   background-color: #3b5998;
   background-color: rgb(59, 89, 152);
+  color: #fff !important;
+}
+
+.share-whatsapp {
+  background-color: #25D366;
   color: #fff !important;
 }
 
