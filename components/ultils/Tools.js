@@ -40,20 +40,23 @@ export function displayRating(number) {
 }
 
 export function displayPrice(price, comparePrice) {
+    const onSale = comparePrice && comparePrice > price;
     return (
-        <div className={`price product-item__price ${(comparePrice > price) ? 'price--on-sale' : ''}`}>
+        <div className={`price product-item__price ${onSale ? 'price--on-sale' : ''}`}>
             <dl>
-                <div className="price__sale" styl={{display: 'block'}}>
+                <div style={{ display: 'block' }}>
                     <dd>
                         <span className="price-item price-item--sale">
-                            <span className="money"><CurrencyConvert amount={parseInt(price)} /></span>
+                            <span className="money"><CurrencyConvert amount={parseFloat(price).toFixed(2)} /></span>
                         </span>
                     </dd>
-                    {/* <dd className={`price__compare ${(comparePrice > price) ? 'show' : 'hidden'}`}>
-                        <s className="price-item price-item--regular">
-                            <span className="money"><CurrencyConvert amount={parseInt(comparePrice)} /></span>
-                        </s>
-                    </dd> */}
+                    {onSale && (
+                        <dd>
+                            <s className="price-item price-item--regular">
+                                <span className="money"><CurrencyConvert amount={parseFloat(comparePrice).toFixed(2)} /></span>
+                            </s>
+                        </dd>
+                    )}
                 </div>
             </dl>
         </div>

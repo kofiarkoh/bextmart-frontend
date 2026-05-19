@@ -35,6 +35,7 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
+import { notifyError } from '../../components/ultils/notify'
 
 const ProductPage = () => {
 
@@ -279,6 +280,10 @@ const ProductPage = () => {
 
     async function AddtoCart() {
         if (!product?.id) return;
+        if (product.variants.length > 0 && !selectedVariant) {
+            notifyError('Please select a variant before adding to cart.', 'Select a Variant');
+            return;
+        }
         try {
             setClassStatus('cart-loadding');
             setStatusText("Adding...");
