@@ -63,6 +63,7 @@ const ProductPage = () => {
     
     const [option1, setOption1] = useState(null);
     const [option2, setOption2] = useState(null);
+    const [selectedVariant, setSelectedVariant] = useState(null);
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(0);
     const [classStatus, setClassStatus] = useState('');
@@ -127,6 +128,7 @@ const ProductPage = () => {
             SKU: apiProduct.SKU || apiProduct.sku || '',
             Brand: apiProduct.Brand || apiProduct.brand || '',
             Type: apiProduct.Type || apiProduct.type || '',
+            variants: Array.isArray(apiProduct.variants) ? apiProduct.variants : [],
         };
     }, [apiProduct, productId]);
     
@@ -146,6 +148,21 @@ const ProductPage = () => {
     //         setColumnView('col-12 col-md-12');
     //     }
     // }, [product, qty, proView])
+    function selectVariant(variant) {
+        setSelectedVariant(variant);
+        if (variant && Array.isArray(variant.photos) && variant.photos.length > 0) {
+            setGroupImages([variant.photos[0], ...(product?.photos || [])]);
+        } else if (product?.photos) {
+            setGroupImages(product.photos);
+        }
+    }
+
+    useEffect(() => {
+        if (!product?.variants?.length) return;
+        const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
+        selectVariant(firstAvailable);
+    }, [product?.id]);
+
     const isLoading = isProductLoading;
 
     const { asPath } = useRouter();
@@ -261,13 +278,13 @@ const ProductPage = () => {
     }
 
     async function AddtoCart() {
-        console.log('Adding to cart:', { product_id: product.id, quantity: qty }); // Debug log
         if (!product?.id) return;
         try {
-            console.log('Adding to cart:', { product_id: product.id, quantity: qty }); // Debug log
             setClassStatus('cart-loadding');
             setStatusText("Adding...");
-            await addToCartApi({ product_id: product.id, quantity: qty }).unwrap();
+            const payload = { product_id: product.id, quantity: qty };
+            if (selectedVariant) payload.product_variant_id = selectedVariant.id;
+            await addToCartApi(payload).unwrap();
             setClassStatus('cart-complete');
             setStatusText(t("Added_success"));
             setTimeout(() => {
@@ -306,7 +323,7 @@ const ProductPage = () => {
                                                 <StickyBox offsetTop={30} offsetBottom={20}>
                                                     <h1 className={styles.product_title}>{product.name}</h1>
                                                     <div className="price price--large">
-                                                        {displayPrice(product.price, product.price_compare)}
+                                                        {displayPrice(selectedVariant ? selectedVariant.price : product.price, product.price_compare)}
                                                     </div>
                                                     <div className={styles.product_earnpoints}>
                                                         <span className="earnpoints-text" style={{ fontWeight: 500 }}>{t("Quantity")}:</span>
@@ -325,61 +342,51 @@ const ProductPage = () => {
                                                     {
                                                         product.advanced != undefined ? loadStyles() : ''
                                                     }
-                                                    <div className="variant-selects">
-                                                        {
-                                                            product.option.map((item, indexi) => (
-                                                                <div key={item.handle}>
-                                                                    <fieldset className="js product-form__input" data-type="input">
-                                                                        <legend className="form__label">
-                                                                            <span className="form__label-title">{t(item.title)}: {(indexi === 0) ? t(option1) : t(option2)}</span>
-                                                                        </legend>
-                                                                        <div className={`product-form__item product-form__${item.title.toLowerCase()}`}>
-                                                                            {/* {
-                                                                                item.variant.map((vari, indexj) => (
-                                                                                    <div key={vari.handle}>
-                                                                                        <label className="product-form-value__item product-form__" htmlFor={`option-${item.handle}-variant-${vari.handle}`}>
-                                                                                            <input
-                                                                                                type="radio"
-                                                                                                name={`group-${item.handle}`}
-                                                                                                value={vari.title}
-                                                                                                id={`option-${item.handle}-variant-${vari.handle}`}
-                                                                                                onChange={() => changeVariant(indexi, vari.title, item.handle, indexj)}
-                                                                                            />
-                                                                                            {(item.handle == 'color') ? <>
-                                                                                                <span title={vari.title} className={`color-${vari.title.toLowerCase()} ${(option1 === vari.title) ? 'checked' : ''} ${(option2 === vari.title) ? 'checked' : ''}`} style={{ backgroundColor: vari.handle }}>{t(vari.title)}</span>
-                                                                                            </> : <>
-                                                                                                <span title={vari.title} className={`color-${vari.title.toLowerCase()} ${(option1 === vari.title) ? 'checked' : ''} ${(option2 === vari.title) ? 'checked' : ''}`}>{t(vari.title.replace(' ', ''))}</span>
-                                                                                            </>}
-
-                                                                                        </label>
-                                                                                    </div>
-                                                                                ))
-                                                                            } */}
-                                                                        </div>
-                                                                    </fieldset>
-                                                                    {
-                                                                        (item.sizechart != undefined) ? <div className='product-template__sizechart'>
-                                                                            <span className='product-sizechart__title' onClick={() => setOpen(o => !o)}>{t("Size_chart")}</span>
-                                                                            <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-                                                                                <div className="modal__layout modal-open sizechart-popup">
-                                                                                    <div className="modal__close" onClick={closeModal}></div>
-                                                                                    <div className="modal__content">
-                                                                                        <div className="modal__header">
-                                                                                            <span className="modal__close-icon" onClick={closeModal}><SVGClose /></span>
-                                                                                        </div>
-                                                                                        <div className="modal__body">
-                                                                                            <Image src={sizechart.src} alt="" width={655} height={867} />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </Popup>
-                                                                        </div>
-                                                                            : ''
-                                                                    }
-                                                                </div>
-                                                            ))
-                                                        }
-                                                    </div>
+                                                    {product.variants.length > 0 && (
+                                                        <div style={{ marginBottom: 16 }}>
+                                                            <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 10 }}>
+                                                                Variant:
+                                                                {selectedVariant && (
+                                                                    <span style={{ marginLeft: 6, color: 'var(--color_primary)', fontWeight: 700 }}>
+                                                                        {selectedVariant.sku}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                                {product.variants.map((variant) => {
+                                                                    const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
+                                                                    const isSelected = selectedVariant?.id === variant.id;
+                                                                    return (
+                                                                        <button
+                                                                            key={variant.id}
+                                                                            type="button"
+                                                                            disabled={outOfStock}
+                                                                            onClick={() => selectVariant(isSelected ? null : variant)}
+                                                                            style={{
+                                                                                padding: '7px 14px',
+                                                                                borderRadius: 6,
+                                                                                border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
+                                                                                background: isSelected ? 'var(--color_primary)' : '#fff',
+                                                                                color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                fontSize: 13,
+                                                                                fontWeight: isSelected ? 700 : 400,
+                                                                                cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                opacity: outOfStock ? 0.5 : 1,
+                                                                                position: 'relative',
+                                                                            }}
+                                                                        >
+                                                                            {variant.sku}
+                                                                            {outOfStock && (
+                                                                                <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                    Out of stock
+                                                                                </span>
+                                                                            )}
+                                                                        </button>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                     <div className='product-template__form'>
                                                         <div className='product-form'>
                                                             <div className='product-form__buttons'>
