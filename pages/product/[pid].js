@@ -126,10 +126,10 @@ const ProductPage = () => {
             related_product: apiProduct.related_product,
             review: apiProduct.review,
             layout: apiProduct.layout,
-            SKU: apiProduct.SKU || apiProduct.sku || '',
-            Brand: apiProduct.Brand || apiProduct.brand || '',
-            Type: apiProduct.Type || apiProduct.type || '',
             variants: Array.isArray(apiProduct.variants) ? apiProduct.variants : [],
+            attributes: apiProduct.attributes && typeof apiProduct.attributes === 'object' && !Array.isArray(apiProduct.attributes)
+                ? apiProduct.attributes
+                : {},
         };
     }, [apiProduct, productId]);
     
@@ -396,37 +396,40 @@ const ProductPage = () => {
                                                         <div className='product-form'>
                                                             <div className='product-form__buttons'>
                                                                 <div className='product-form__buttons-group row'>
-                                                                    <div className="col-12 col-sm-6">
+                                                                    <div className="col-12">
                                                                         <button type="submit" name="add" className={`product-form__submit button button--full-width button--primary ${classStatus}`} onClick={AddtoCart}>{statusText}
                                                                         </button>
-                                                                    </div>
-                                                                    <div className="col-12 col-sm-6">
-                                                                        <ProductWishlist product={product} isDetail={true} />
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="product-template__details">
-                                                        <div className={`product-template__title-area ${styles.details_strong}`}>{t("Details")}</div>
-                                                        <div className="product-template__content-area">
-                                                            <ul>
-                                                                <li id="sku-template--14471996047434__main" className="product-template__sku">
-                                                                    <span className="product-template__info-title">{t("SKU")}: </span>
-                                                                    <span className="product-template__info-text">{product.SKU}</span>
-                                                                </li>
-                                                                <li className="product-template__vendor">
-                                                                    <span className="product-template__info-title">{t("Brand")}: </span>
-                                                                    <span className="product-template__info-text">{product.Brand}</span>
-                                                                </li>
-                                                                <li className="product-template__type">
-                                                                    <span className="product-template__info-title">{t("Type")}: </span>
-                                                                    <span className="product-template__info-text">{product.Type}</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+                                                    {product.photos.length > 0 && (() => {
+                                                        const variantAttrs = selectedVariant?.attributes && typeof selectedVariant.attributes === 'object' && !Array.isArray(selectedVariant.attributes) ? selectedVariant.attributes : null;
+                                                        const attrs = variantAttrs || product.attributes;
+                                                        const entries = Object.entries(attrs).filter(([, v]) => v !== null && v !== '');
+                                                        if (!entries.length) return null;
+                                                        return (
+                                                            <div className="product-template__details">
+                                                                <div className={`product-template__title-area ${styles.details_strong}`}>Details</div>
+                                                                <div className="product-template__content-area">
+                                                                    <ul>
+                                                                        {entries.map(([key, value]) => (
+                                                                            <li key={key} className="product-template__sku">
+                                                                                <span className="product-template__info-title" style={{ textTransform: 'capitalize' }}>
+                                                                                    {key.replace(/_/g, ' ')}:{' '}
+                                                                                </span>
+                                                                                <span className="product-template__info-text">
+                                                                                    {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                                                                                </span>
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })()}
                                                     <div className="product-template__description">
                                                         <div className={`product-template__title-area ${styles.details_strong}`}>Quick Overview</div>
                                                         <div className="product-template__content-area">
