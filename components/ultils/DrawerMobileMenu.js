@@ -48,8 +48,8 @@ const DrawerMobileMenu = () => {
                                     <SVGClose />
                                 </button>
                             </div>
-                            <div className="menu-drawer__navigation-container">
-                                <div className="component-scrollbar">
+                            <div className="menu-drawer__navigation-container" style={{ flex: 'none' }}>
+                                <div className="component-scrollbar" style={{ position: 'relative', height: 'auto', overflow: 'visible' }}>
                                     <nav className="menu-drawer__navigation">
                                         <toggle-component>
                                             <ul className="menu-drawer__menu list-menu" role="list">
@@ -61,129 +61,16 @@ const DrawerMobileMenu = () => {
                                                 <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(1) ? 'open' : ''}`} data-toggle="1">
                                                     <Link href={TextMenu.find((m) => m.id === 2).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 2).url)? 'header__menu-active':'' }`} onClick={(e) => { e.preventDefault(); if (currenttoggle === 1) setcurrenttoggle(0); else setcurrenttoggle(1); }}>
                                                         {TextMenu.find((m) => m.id === 2).text}
-                                                        <SVGArrowDown />
+
                                                     </Link>
-                                                    <ul className={`header__mega toggle__content ${checkToggle(1) ? 'show' : 'hide'}`} role="list">
-                                                        <MenuSub sub={TextMenuCol1} />
-                                                        <li className="header__mega-root col-12">
-                                                            <div className="header__mega-product">
-                                                                <div className="header__mega-product-grid">
-                                                                    {
-                                                                        Productdata.map((item) => (
-                                                                            <div className="product-item__list" key={item.id}>
-                                                                                <ProductItemList product={item} />
-                                                                            </div>
-                                                                        ))
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
+                                                   
                                                 </li>
-                                                <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(2) ? 'open' : ''}`} data-toggle="2">
-                                                    <Link href={TextMenu.find((m) => m.id === 3).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 3).url)? 'header__menu-active':'' }`} aria-current="page" onClick={(e) => { e.preventDefault(); if (currenttoggle === 2) setcurrenttoggle(0); else setcurrenttoggle(2); }}>
-                                                        {TextMenu.find((m) => m.id === 3).text}
-                                                        <SVGArrowDown />
-                                                    </Link>
-                                                    <ul className={`header__mega toggle__content ${checkToggle(2) ? 'show' : 'hide'}`} role="list">
-                                                        <MenuSub sub={TextMenuCol2} />
-                                                        <li className="header__mega-root col-3">
-                                                            <div className="header__mega-html">
-                                                                <Link href="/collections" className="col-image">
-                                                                    <Image alt={TextMenu.find((m) => m.id === 3).text} src={MenuBanner} width={400} height={350} />
-                                                                </Link>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(3) ? 'open' : ''}`} data-toggle="3">
-                                                    <Link href={TextMenu.find((m) => m.id === 4).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 4).url)? 'header__menu-active':'' }`} aria-current="page" onClick={(e) => { e.preventDefault(); if (currenttoggle === 3) setcurrenttoggle(0); else setcurrenttoggle(3); }}>
-                                                        {TextMenu.find((m) => m.id === 4).text}
-                                                        <SVGArrowDown />
-                                                    </Link>
-                                                    <ul className={`header__mega toggle__content ${checkToggle(3) ? 'show' : 'hide'}`} role="list">
-                                                        <MenuSub sub={TextMenuCol3} />
-                                                        <li className="header__mega-root col-3">
-                                                            <div className="header__mega-html">
-                                                                <div className="dis_table">
-                                                                    <div className="dis_tablecell menu-custom-text">
-                                                                        <div className="col-caption">
-                                                                            <span className="title">
-                                                                            {t("Megamenu_text1")}
-                                                                            </span>
-                                                                            <span className="content">
-                                                                            {t("Megamenu_text2")}</span>
-                                                                        </div>
-                                                                        <Link href="/collections" className="button _btn">
-                                                                        {t("Megamenu_text3")}
-                                                                        </Link>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(4) ? 'open' : ''}`} data-toggle="4">
-                                                    <Link href={TextMenu.find((m) => m.id === 5).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 5).url)? 'header__menu-active':'' }`} aria-current="page" onClick={(e) => { e.preventDefault(); if (currenttoggle === 4) setcurrenttoggle(0); else setcurrenttoggle(4); }}>
-                                                        {TextMenu.find((m) => m.id === 5).text}
-                                                        <SVGArrowDown />
-                                                    </Link>
-                                                    <ul className={`header__mega toggle__content ${checkToggle(4) ? 'show' : 'hide'}`} role="list">
-                                                        <MenuSub sub={TextMenuCol4} />
-                                                        {
-                                                            Blogdata.map((item) => (
-                                                                <li className="header__mega-root col-3" key={item.id}>
-                                                                    <div className="header__mega-article">
-                                                                        <div className="article-item__grid">
-                                                                            <div className="article-item__left effect effect-">
-                                                                                <Link href={item.url}  className="article-item__link effect-parent">
-                                                                                    <Image src={`${item.image}`} alt={item.title} width={300} height={177} />
-                                                                                </Link>
-                                                                            </div>
-                                                                            <div className="article-item__right">
-                                                                                <Link href={item.url}  className="article-item__title h3">
-                                                                                    {item.title}
-                                                                                </Link>
-                                                                                <ul className="article-item__info no-bullet">
-                                                                                    <li className="article-item__author"> {t("Blog_By")} <span className="article-item__author-user">{item.author}</span>
-                                                                                    </li>
-                                                                                    <li className="article-item__date"> {item.createat} </li>
-                                                                                </ul>
-                                                                                <div className="blog-description">
-                                                                                    <p> {item.desc} </p>
-                                                                                </div>
-                                                                                <div className="blog-readmore">
-                                                                                    <Link href={item.url} >{t("Blog_Read_more")}</Link>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            ))
-                                                        }
-                                                    </ul>
-                                                </li>
+                                               
                                                 <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(5) ? 'open' : ''}`} data-toggle="5">
                                                     <Link href={TextMenu.find((m) => m.id === 6).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 6).url)? 'header__menu-active':'' }`} aria-current="page" onClick={(e) => { e.preventDefault(); if (currenttoggle === 5) setcurrenttoggle(0); else setcurrenttoggle(5); }}>
                                                         {TextMenu.find((m) => m.id === 6).text}
-                                                        <SVGArrowDown />
                                                     </Link>
-                                                    <ul className={`header__mega toggle__content ${checkToggle(5) ? 'show' : 'hide'}`} role="list">
-                                                        {TextMenuCol5.map((links, index) => {
-                                                            return (
-                                                                <li
-                                                                    key={index}
-                                                                    className="header__menu-root"
-                                                                >
-                                                                    <Link href={links.url} className='header__menu-item list-menu__item'>
-                                                                        {links.name}
-                                                                    </Link>
-                                                                </li>
-                                                            );
-                                                        })}
-                                                        <li className="header__menu-root  ">
-                                                        </li>
-                                                    </ul>
+                                                    
                                                 </li>
                                             </ul>
                                         </toggle-component>
@@ -193,7 +80,7 @@ const DrawerMobileMenu = () => {
                             <div className="header-drawer__title">
                                 <h3 className="drawer--title">{t("All_Categories")}</h3>
                             </div>
-                            <div className="menu-drawer__navigation-container">
+                            <div className="menu-drawer__navigation-container" style={{ flex: 1, minHeight: 0 }}>
                                 <div className="component-scrollbar">
                                     <div className="mobile-header__allcollections">
                                         <nav className="menu-drawer__navigation">
