@@ -35,6 +35,13 @@ export const productsApi = apiSlice.injectEndpoints({
         body,
       }),
     }),
+    getCategories: builder.query({
+      query: () => ({
+        url: `${PRODUCTS_BASE_URL}/homepage/categories`,
+        method: 'GET',
+        params: { per_page: 10 },
+      }),
+    }),
     getProduct: builder.query({
       query: (id) => ({
         url: `${PRODUCTS_BASE_URL}/products/${id}`,
@@ -56,6 +63,7 @@ export const productsApi = apiSlice.injectEndpoints({
 
 export const {
   useSearchProductsQuery,
+  useGetCategoriesQuery,
   useGetProductQuery,
   useGetSuggestionsQuery,
   useSaveSearchMutation,

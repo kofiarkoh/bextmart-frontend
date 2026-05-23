@@ -15,8 +15,12 @@ const ProductsPage = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const page = Number(router.query.page || 1)
+  const category = router.query.category || undefined
 
-  const { data, isLoading, isError } = useSearchProductsQuery({ page })
+  const { data, isLoading, isError } = useSearchProductsQuery(
+    category ? { page, category } : { page },
+    { skip: !router.isReady }
+  )
 
   const pageData = data?.data || {}
   const items = Array.isArray(pageData.data) ? pageData.data : []
@@ -33,13 +37,15 @@ const ProductsPage = () => {
 
   const goToPage = (nextPage) => {
     if (nextPage < 1 || nextPage > lastPage) return
-    router.push({ pathname: '/products', query: { page: nextPage } })
+    const query = { page: nextPage }
+    if (category) query.category = category
+    router.push({ pathname: '/products', query })
   }
 
   return (
     <>
       <Head>
-        <title>{t('Products')}</title>
+        <title>{category ? `${category} — Products` : t('Products')}</title>
       </Head>
       <Header />
       <main>
@@ -48,6 +54,16 @@ const ProductsPage = () => {
           <div className={styles.products_grid}>
             <div className="container">
               <div className={styles.products_grid_container}>
+                {category && (
+                  <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, margin: 0, textTransform: 'capitalize' }}>
+                      {category.replace(/-/g, ' ')}
+                    </h2>
+                    <Link href="/products" style={{ fontSize: 13, color: '#888' }}>
+                      Clear filter ×
+                    </Link>
+                  </div>
+                )}
                 <div className={styles.products_grid_content}>
                   <div className="collection-grid__content">
                     <div className={`${styles.products_grid_row} row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5`}>
@@ -59,6 +75,11 @@ const ProductsPage = () => {
                       {!isLoading && isError && (
                         <div className="col">
                           <div className="product-item__content">Failed to load products.</div>
+                        </div>
+                      )}
+                      {!isLoading && !isError && items.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '60px 20px', width: '100%' }}>
+                          <p style={{ fontSize: 16, color: '#888' }}>No products found for this search. Please try again...</p>
                         </div>
                       )}
                       {!isLoading && !isError && items.map((item, index) => (
@@ -85,7 +106,7 @@ const ProductsPage = () => {
                 {pagesToShow.map((p) => (
                   <Link
                     key={p}
-                    href={{ pathname: '/products', query: { page: p } }}
+                    href={{ pathname: '/products', query: category ? { page: p, category } : { page: p } }}
                     className="button button--secondary"
                     style={{
                       minWidth: 40,

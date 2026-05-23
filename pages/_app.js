@@ -35,6 +35,7 @@ function MyApp({Component, pageProps}) {
 				<link rel="shortcut icon" href="/favicon.ico" />
 				<link rel="icon" type="image/png" href="/favicon.png" />
 				<link rel="apple-touch-icon" href="/favicon.png" />
+				<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
 			</Head>
 			<ReactNotifications />
 			<Component {...pageProps} />
