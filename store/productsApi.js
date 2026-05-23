@@ -39,7 +39,7 @@ export const productsApi = apiSlice.injectEndpoints({
       query: () => ({
         url: `${PRODUCTS_BASE_URL}/homepage/categories`,
         method: 'GET',
-        params: { per_page: 10 },
+        params: { per_page: 100 },
       }),
     }),
     getProduct: builder.query({
