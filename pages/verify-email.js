@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useVerifyEmailMutation, useResendEmailVerificationMutation } from '../store/authApi'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
+import Button from '../components/ultils/Button'
 
 // ─── OTP input ────────────────────────────────────────────────────────────────
 
@@ -184,21 +185,7 @@ export default function VerifyEmailPage() {
                 </p>
               )}
 
-              <button
-                type="submit"
-                disabled={verifying || otp.length < 6}
-                style={{
-                  width: '100%', height: 44, borderRadius: 8, border: 'none',
-                  background: verifying ? '#4444aa' : otp.length < 6 ? '#d1d5db' : 'var(--color_primary)',
-                  fontSize: 15, fontWeight: 600,
-                  cursor: verifying || otp.length < 6 ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <span style={{ color: otp.length < 6 && !verifying ? '#9ca3af' : '#fff' }}>
-                  {verifying ? 'Verifying…' : 'Verify Email'}
-                </span>
-              </button>
+              <Button type="submit" loading={verifying} disabled={otp.length < 6} label="Verify Email" size="full" />
             </form>
 
             <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>

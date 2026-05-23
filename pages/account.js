@@ -43,14 +43,16 @@ function StatusBadge({ status }) {
     failed:      ['#fee2e2', '#991b1b'],
     cancelled:   ['#fee2e2', '#991b1b'],
   }
+  const labels = { pending: 'Pending Payment', unpaid: 'Pending Payment' }
   const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
+  const label = labels[status?.toLowerCase()] || status || '—'
   return (
     <span style={{
       display: 'inline-block', padding: '3px 10px', borderRadius: 12,
       fontSize: 12, fontWeight: 500, background: bg, color,
       textTransform: 'capitalize', whiteSpace: 'nowrap',
     }}>
-      {status || '—'}
+      {label}
     </span>
   )
 }

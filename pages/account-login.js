@@ -8,6 +8,7 @@ import Footer from '../components/Footer'
 import { useLoginMutation } from '../store/authApi'
 import { setCredentials } from '../store/authSlice'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
+import Button from '../components/ultils/Button'
 
 const Eye = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -153,19 +154,7 @@ export default function LoginPage() {
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={loggingIn}
-                  style={{
-                    width: '100%', height: 44, borderRadius: 4, border: 'none',
-                    background: loggingIn ? '#4444aa' : 'var(--color_primary)',
-                    color: '#fff', fontSize: 15, fontWeight: 600,
-                    cursor: loggingIn ? 'wait' : 'pointer',
-                    transition: 'background 0.2s', letterSpacing: '0.02em',
-                  }}
-                >
-                  {loggingIn ? 'Signing in…' : 'Sign In'}
-                </button>
+                <Button type="submit" loading={loggingIn} label="Sign In" size="full" />
               </form>
 
               <div style={{ borderTop: '1px solid #eee', marginTop: 24, paddingTop: 20, textAlign: 'center' }}>

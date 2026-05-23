@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useForgotPasswordMutation } from '../store/authApi'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
+import Button from '../components/ultils/Button'
 
 const inputStyle = {
   width: '100%', height: 44, padding: '0 12px', boxSizing: 'border-box',
@@ -96,18 +97,7 @@ export default function ForgotPasswordPage() {
                 </p>
               )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                style={{
-                  width: '100%', height: 44, borderRadius: 8, border: 'none',
-                  background: isLoading ? '#4444aa' : 'var(--color_primary)',
-                  color: '#fff', fontSize: 15, fontWeight: 600,
-                  cursor: isLoading ? 'wait' : 'pointer', transition: 'background 0.2s',
-                }}
-              >
-                {isLoading ? 'Sending code…' : 'Send Reset Code'}
-              </button>
+              <Button type="submit" loading={isLoading} label="Send Reset Code" size="full" />
             </form>
 
             <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 20, borderTop: '1px solid #f3f4f6' }}>

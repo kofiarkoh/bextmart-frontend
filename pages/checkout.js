@@ -10,6 +10,7 @@ import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
 import { buildImageUrl } from '../components/ultils/Tools'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
+import Button from '../components/ultils/Button'
 import {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
@@ -233,13 +234,7 @@ const authToken = useSelector((state) => state.auth?.token)
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
                         <Link href="/cart" className="button button--secondary">← Back to Cart</Link>
-                        <button
-                          type="button"
-                          className="button button--primary"
-                          onClick={handleContinue}
-                        >
-                          Continue →
-                        </button>
+                        <Button type="button" label="Continue →" onClick={handleContinue} />
                       </div>
                     </>
                   )}
@@ -380,18 +375,14 @@ const authToken = useSelector((state) => state.auth?.token)
                   )}
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-                    <button type="button" className="button button--secondary" onClick={() => setStep(STEP_ADDRESS)}>
-                      ← Back
-                    </button>
-                    <button
+                    <Button type="button" label="← Back" variant="secondary" onClick={() => setStep(STEP_ADDRESS)} />
+                    <Button
                       type="button"
-                      className="button button--primary"
-                      disabled={processingPayment}
+                      label="Pay with Mobile Money"
+                      loading={processingPayment}
                       onClick={handleProcessPayment}
                       style={{ flex: 1 }}
-                    >
-                      {processingPayment ? 'Redirecting...' : 'Pay with Mobile Money'}
-                    </button>
+                    />
                   </div>
                 </div>
               )}

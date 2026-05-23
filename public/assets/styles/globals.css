@@ -11722,3 +11722,7 @@ product-filters-component.is-loading:before {
 .template-account-order{
   background-color: #fff;
 }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

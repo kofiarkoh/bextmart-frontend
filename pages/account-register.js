@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useRegisterMutation } from '../store/authApi'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
+import Button from '../components/ultils/Button'
 
 const Eye = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -188,18 +189,7 @@ export default function RegisterPage() {
                 </p>
               )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                style={{
-                  width: '100%', height: 44, borderRadius: 8, border: 'none',
-                  background: isLoading ? '#4444aa' : 'var(--color_primary)',
-                  fontSize: 15, fontWeight: 600,
-                  cursor: isLoading ? 'wait' : 'pointer', transition: 'background 0.2s',
-                }}
-              >
-                <span style={{ color: '#fff' }}>{isLoading ? 'Creating account…' : 'Create Account'}</span>
-              </button>
+              <Button type="submit" loading={isLoading} label="Create Account" size="full" />
 
               <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 14, lineHeight: 1.6 }}>
                 By creating an account you agree to our{' '}

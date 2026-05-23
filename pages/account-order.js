@@ -485,10 +485,12 @@ function StatusPill({ status }) {
     processing: ['#dbeafe', '#1e40af'], shipped:    ['#dbeafe', '#1e40af'],
     failed:     ['#fee2e2', '#991b1b'], cancelled:  ['#fee2e2', '#991b1b'],
   }
+  const labels = { pending: 'Pending Payment', unpaid: 'Pending Payment' }
   const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
+  const label = labels[status?.toLowerCase()] || status || '—'
   return (
     <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 10, fontSize: 11, fontWeight: 600, background: bg, color, textTransform: 'capitalize' }}>
-      {status || '—'}
+      {label}
     </span>
   )
 }

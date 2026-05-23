@@ -35,7 +35,8 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
-import { notifyError } from '../../components/ultils/notify'
+import { notifyError, notifySuccess } from '../../components/ultils/notify'
+import Button from '../../components/ultils/Button'
 
 const ProductPage = () => {
 
@@ -286,19 +287,15 @@ const ProductPage = () => {
         }
         try {
             setClassStatus('cart-loadding');
-            setStatusText("Adding...");
             const payload = { product_id: product.id, quantity: qty };
             if (selectedVariant) payload.product_variant_id = selectedVariant.id;
             await addToCartApi(payload).unwrap();
-            setClassStatus('cart-complete');
-            setStatusText(t("Added_success"));
-            setTimeout(() => {
-                setClassStatus('');
-                setStatusText("Add to Cart");
-            }, 500);
+            setClassStatus('');
+            notifySuccess(`${product.name} added to cart.`, 'Added to Cart');
         } catch (error) {
             setClassStatus('');
-            setStatusText("Add to Cart");
+            const msg = error?.data?.message || 'Could not add to cart.';
+            notifyError(msg, 'Could Not Add to Cart');
         }
     }
 
@@ -397,8 +394,13 @@ const ProductPage = () => {
                                                             <div className='product-form__buttons'>
                                                                 <div className='product-form__buttons-group row'>
                                                                     <div className="col-12">
-                                                                        <button type="submit" name="add" className={`product-form__submit button button--full-width button--primary ${classStatus}`} onClick={AddtoCart}>{statusText}
-                                                                        </button>
+                                                                        <Button
+                                                                            label="Add to Cart"
+                                                                            loading={classStatus === 'cart-loadding'}
+                                                                            onClick={AddtoCart}
+                                                                            size="full"
+                                                                            type="submit"
+                                                                        />
                                                                     </div>
                                                                 </div>
                                                             </div>
