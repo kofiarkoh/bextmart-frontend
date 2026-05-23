@@ -225,31 +225,136 @@ export const ShippingPolicy_en =
 
 export const TermsOfService_en =
 {
-    heading:"Terms of service",
-    content:`<h3>These Terms and Conditions May Change</h3>
-    <p>We reserve the right to update or modify these terms and conditions at any time without prior notice. &nbsp;Your use of shop.company.com and shop.beetlebug.com.sg following any such change constitutes your agreement to follow and be bound by the terms and conditions as changed. For this reason, we encourage you to review these terms and conditions whenever you use this website.</p>
-    <h3>Limitations of Liability</h3>
-    <p>The Company Pte Ltd shall not assume any responsibility, and shall not be liable for, any damages to, or viruses that may infect, your computer, telecommunication equipment, or other property caused by or arising from your access to, use of, or browsing this website or your downloading of any materials, from this website. IN NO EVENT WILL THE COMPANY PRIVATE LIMITED NOR THEIR RESPECTIVE OFFICERS, DIRECTORS, EMPLOYEES, SHAREHOLDERS, AFFILIATES, AGENTS, SUCCESSORS, ASSIGNS, RETAIL PARTNERS NOR ANY PARTY INVOLVED IN THE CREATION, PRODUCTION OR TRANSMISSION OF THIS WEB SITE BE LIABLE TO ANY PARTY FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL DAMAGES (INCLUDING, WITHOUT LIMITATION, THOSE RESULTING FROM LOST PROFITS, LOST DATA OR BUSINESS INTERRUPTION) ARISING OUT OF THE USE, INABILITY TO USE, OR THE RESULTS OF USE OF THIS WEB SITE, ANY WEB SITES LINKED TO THIS WEB SITE, OR THE MATERIALS, INFORMATION OR SERVICES CONTAINED AT ANY OR ALL SUCH SITES, WHETHER BASED ON WARRANTY, CONTRACT, TORT OR ANY OTHER LEGAL THEORY AND WHETHER OR NOT ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE FOREGOING LIMITATIONS OF LIABILITY DO NOT APPLY TO THE EXTENT PROHIBITED BY LAW. PLEASE REFER TO YOUR LOCAL LAWS FOR ANY SUCH PROHIBITIONS.</p>
-    <p>IN THE EVENT OF ANY PROBLEM WITH THIS WEBSITE OR ANY CONTENT, YOU AGREE THAT YOUR SOLE REMEDY IS TO CEASE USING THIS WEBSITE. IN THE EVENT OF ANY PROBLEM WITH THE PRODUCTS OR SERVICES THAT YOU HAVE PURCHASED ON OR THROUGH THIS WEB SITE, YOU AGREE THAT YOUR REMEDY, IF ANY, IS FROM THE MANUFACTURER OF SUCH PRODUCTS OR SUPPLIER OF SUCH SERVICES, IN ACCORDANCE WITH SUCH MANUFACTURER’S OR SUPPLIER’S WARRANTY, OR TO SEEK A RETURN AND REFUND FOR SUCH PRODUCT OR SERVICES IN ACCORDANCE WITH THE RETURNS AND REFUNDS POLICIES POSTED ON THIS WEB SITE. This site may include inaccuracies, mistakes or typographical errors. CharlesKeith.com does not warrant that the content will be uninterrupted or error free.</p>
-    <h3>Copyright and Trademark</h3>
-    <p>Unless otherwise indicated, material on this website, including but not limited to texts, images, illustrations, software, audio clips, video clips, animation files, is subject to the copyright and trademark rights of The Company Private Limited. Consequently, the material on this website may not be copied, reproduced, modified, posted, transmitted, distributed, in whole or in part in any form whatsoever, without the prior written consent of The Company Private Limited. All rights reserved.</p>
-    <h3>Products, Content and Specifications</h3>
-    <p>All features, content, specifications, products and prices of products and services described or depicted on this website are subject to change at any time without notice. &nbsp;Certain weights, measures and similar descriptions are approximate and are provided for convenience purposes only. &nbsp;We make all reasonable efforts to accurately display the attributes of our products, including the applicable colors; however, the actual color you see will depend on your computer system and we cannot guarantee that your computer will accurately display such colors. &nbsp;The inclusion of any products or services in this website at a particular time does not imply or warrant that these products or services will be available at any time. &nbsp;It is your responsibility to ascertain and obey all applicable local, state and international laws in regard to the possession, use and sale of any item purchased from this website. By placing an order, you represent that the products ordered will be used only in a lawful manner.</p>
-    <h3>Shipping Limitations</h3>
-    <p>When an order is placed, it will be shipped to an address designated by the purchaser as long as that shipping address is compliant with the shipping restrictions contained on this website. &nbsp;All purchases from this website are made pursuant to a shipment contract. &nbsp;As a result, risk of loss and title for items purchased from this website pass to you upon delivery of the items to the carrier. &nbsp;You are responsible for filing any claims with carriers for damaged and/or lost shipments.</p>
-    <h3>Duties and Taxes</h3>
-    <p>You are responsible for duties and taxes outside Singapore. All items entering a foreign country are subject to customs inspection and assessment of the duties and taxes in accordance with that country’s national laws.</p>
-    <h3>Your Account</h3>
-    <p>You are responsible for maintaining the confidentiality of your account and password information, and you agree to accept responsibility for all activities that occur under your account and password. &nbsp;This website and The Company Pte Ltd reserves the right to refuse service, terminate accounts remove or edit content or cancel orders.</p>
-    <p>By placing an order, you warrant that you are over 18 years of age, and that you are providing shop.company.com or shop.beetlebug.com.sg with accurate, truthful information and that you have the authority to place the order.</p>
-    <h3>Exchange and Refund Policy (Singapore Outlets Only)</h3>
-    <p>New, unused full-price merchandise purchased at store retail store may be exchange at any boutique with an original receipt within 7 days of purchase. After 7 days, the merchandise may not be exchanged.</p>
-    <p>We offer a no-refund policy on all merchandises, however, for merchandise qualifying for an exchange, item may be exchange for store credits which may be used at our Singapore outlets only.</p>
-    <p>Merchandise on sale may not be exchanged or returned. All merchandise must be returned in sellable condition, otherwise, an exchange would not be allowed.</p>
-    <p>We reserve the right to reject any form of exchange without the original receipt.</p>
-    <h3>Exchange and Refund Policy (Online Shop)</h3>
-    <p>Electronice Communications</p>
-    <p>When you visit this website and/or send email to us, you consent to receive electronic communications from us. You agree that all agreements, notices, disclosures and other communications that we sent you electronically satisfy any legal requirement that such communications be in writing</p>
-    <p>Exclusions of Warranties</p>
-    <p>The Company Private Limited makes no representative or warranty regarding the good working order or condition of this website, its suitability for use, or that its use will be uninterrupted or error-free. All information or material provided in this website to you â€œas isâ€ and without warranties of any kind, expressed or implied, including without limitation, warranties or conditions of merchantability, fitness, quality, durability or suitability for any particular purpose, or non-infringement.</p>`
+    heading:"Terms and Conditions of Sale",
+    content:`<p style="color:#888; margin-bottom:24px">Effective Date: May 23, 2026</p>
+    <p>Welcome to Bextmart. By accessing or using our website, mobile application, or any of our services, you agree to be legally bound by these Terms and Conditions. Please read them carefully before making any purchase or using our platform. If you do not agree with any part of these terms, you should not use our services.</p>
+
+    <h3>1. Acceptance of Terms</h3>
+    <p>By creating an account, browsing our website, or placing an order on Bextmart, you confirm that you:</p>
+    <ul>
+        <li>Are at least 18 years of age, or have the consent of a parent or legal guardian;</li>
+        <li>Have read, understood, and agreed to be bound by these Terms and Conditions;</li>
+        <li>Agree to comply with all applicable local, national, and international laws and regulations.</li>
+    </ul>
+    <p>Bextmart reserves the right to update or modify these Terms at any time without prior notice. Continued use of our platform following any changes constitutes your acceptance of the revised Terms.</p>
+
+    <h3>2. Account Registration</h3>
+    <h4>2.1 Creating an Account</h4>
+    <p>To access certain features of our platform, you may be required to create an account. You agree to:</p>
+    <ul>
+        <li>Provide accurate, current, and complete information during registration;</li>
+        <li>Maintain and promptly update your account information;</li>
+        <li>Keep your password confidential and not share it with any third party;</li>
+        <li>Notify us immediately of any unauthorized use of your account.</li>
+    </ul>
+    <h4>2.2 Account Responsibility</h4>
+    <p>You are solely responsible for all activity that occurs under your account. Bextmart shall not be liable for any loss or damage arising from your failure to protect your account credentials.</p>
+
+    <h3>3. Products and Pricing</h3>
+    <h4>3.1 Product Descriptions</h4>
+    <p>We strive to ensure that all product descriptions, images, and specifications listed on Bextmart are accurate and up to date. However, we do not warrant that all product information is error-free, complete, or current. Bextmart reserves the right to correct any errors or inaccuracies and to change or update information at any time without prior notice.</p>
+    <h4>3.2 Pricing</h4>
+    <p>All prices displayed on our platform are in the applicable local currency and are subject to change without notice. Prices do not include applicable taxes, shipping, or handling fees unless otherwise stated at checkout. In the event of a pricing error, Bextmart reserves the right to cancel any orders placed at the incorrect price and will notify affected customers promptly.</p>
+    <h4>3.3 Product Availability</h4>
+    <p>All products are subject to availability. Bextmart reserves the right to limit the quantity of any product purchased per person or per order, and to discontinue any product at any time.</p>
+
+    <h3>4. Orders and Payment</h3>
+    <h4>4.1 Placing an Order</h4>
+    <p>When you place an order on Bextmart, you are making an offer to purchase the selected products. Your order is confirmed only after you receive an order confirmation email from us. We reserve the right to refuse or cancel any order at our sole discretion, including but not limited to situations involving suspected fraud, pricing errors, or product unavailability.</p>
+    <h4>4.2 Payment Methods</h4>
+    <p>Bextmart accepts the following payment methods:</p>
+    <ul>
+        <li>Credit and debit cards (Visa, Mastercard, American Express);</li>
+        <li>Bank transfers and direct deposits;</li>
+        <li>Mobile money and digital wallets (where available);</li>
+        <li>Any other payment methods displayed at checkout.</li>
+    </ul>
+    <p>All payments must be made in full before your order is processed and dispatched. By providing your payment information, you confirm that you are authorized to use the selected payment method.</p>
+    <h4>4.3 Payment Security</h4>
+    <p>Bextmart uses industry-standard encryption and secure payment gateways to protect your financial information. We do not store your full card details on our servers.</p>
+
+    <h3>5. Shipping and Delivery</h3>
+    <h4>5.1 Delivery Areas</h4>
+    <p>Bextmart delivers to a wide range of locations. Delivery availability and timelines vary by location. Specific delivery zones and estimated delivery times will be displayed during checkout.</p>
+    <h4>5.2 Delivery Timelines</h4>
+    <p>Estimated delivery times are provided as a guide only and are not guaranteed. Bextmart shall not be held liable for delays caused by circumstances beyond our control, including but not limited to weather conditions, customs clearance, or carrier disruptions.</p>
+    <h4>5.3 Delivery Charges</h4>
+    <p>Shipping and handling fees are calculated based on your location, the size and weight of your order, and the shipping method selected. All applicable charges will be displayed clearly at checkout before you confirm your order.</p>
+    <h4>5.4 Risk of Loss</h4>
+    <p>Title and risk of loss for all products pass to you upon delivery to the shipping address provided during checkout. Bextmart is not responsible for items lost or damaged after delivery.</p>
+
+    <h3>6. Returns and Refunds</h3>
+    <h4>6.1 Return Eligibility</h4>
+    <p>You may return most items purchased on Bextmart within 14 days of delivery, provided that:</p>
+    <ul>
+        <li>The item is in its original, unused condition with all original packaging, labels, and accessories;</li>
+        <li>You have proof of purchase (order confirmation or receipt);</li>
+        <li>The item is not listed as a non-returnable product (see Section 6.3 below).</li>
+    </ul>
+    <h4>6.2 Return Process</h4>
+    <p>To initiate a return, please contact our customer support team within the eligible return window. We will provide you with instructions on how to return your item. Return shipping costs are the responsibility of the customer unless the return is due to a defect or an error on our part.</p>
+    <h4>6.3 Non-Returnable Items</h4>
+    <p>The following items cannot be returned or refunded:</p>
+    <ul>
+        <li>Perishable goods (food, flowers, etc.);</li>
+        <li>Downloadable software or digital products;</li>
+        <li>Personal care and hygiene products once opened;</li>
+        <li>Customized or personalized items;</li>
+        <li>Hazardous materials or products prohibited by law.</li>
+    </ul>
+    <h4>6.4 Refunds</h4>
+    <p>Once your return is received and inspected, we will notify you of the approval or rejection of your refund. Approved refunds will be processed within 7 to 14 business days to your original payment method. Bextmart reserves the right to refuse a refund if the returned item does not meet the return eligibility criteria.</p>
+
+    <h3>7. Intellectual Property</h3>
+    <p>All content on the Bextmart platform, including but not limited to text, graphics, logos, images, audio clips, software, and data compilations, is the property of Bextmart or its content suppliers and is protected by applicable intellectual property laws. You may not reproduce, distribute, modify, display, or create derivative works of any content on our platform without our prior written permission.</p>
+
+    <h3>8. User Conduct</h3>
+    <p>By using Bextmart, you agree not to:</p>
+    <ul>
+        <li>Use the platform for any unlawful or fraudulent purpose;</li>
+        <li>Post or transmit any harmful, offensive, defamatory, or misleading content;</li>
+        <li>Attempt to gain unauthorized access to any part of our platform or systems;</li>
+        <li>Interfere with or disrupt the integrity or performance of our services;</li>
+        <li>Use automated tools (bots, scrapers) to access or collect data from our platform without permission;</li>
+        <li>Impersonate any person or entity or misrepresent your affiliation with any person or entity.</li>
+    </ul>
+    <p>Bextmart reserves the right to suspend or terminate your account for violation of these conduct rules.</p>
+
+    <h3>9. Privacy Policy</h3>
+    <p>Your use of Bextmart is also governed by our Privacy Policy, which is incorporated into these Terms and Conditions by reference. By using our platform, you consent to the collection, use, and sharing of your information as described in our Privacy Policy. We are committed to protecting your personal data and will handle it in accordance with applicable data protection laws.</p>
+
+    <h3>10. Limitation of Liability</h3>
+    <p>To the fullest extent permitted by law, Bextmart, its directors, employees, agents, and affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, goodwill, or other intangible losses, arising from:</p>
+    <ul>
+        <li>Your use of or inability to use our platform or services;</li>
+        <li>Any errors, inaccuracies, or omissions in product information;</li>
+        <li>Unauthorized access to or alteration of your data;</li>
+        <li>Any third-party conduct on our platform.</li>
+    </ul>
+    <p>Our total liability to you for any claim arising out of or relating to these Terms shall not exceed the total amount paid by you for the specific product or service giving rise to the claim.</p>
+
+    <h3>11. Disclaimer of Warranties</h3>
+    <p>Bextmart provides its platform and services on an "as is" and "as available" basis without any warranties of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that our platform will be uninterrupted, error-free, or free of viruses or other harmful components.</p>
+
+    <h3>12. Third-Party Links and Services</h3>
+    <p>Our platform may contain links to third-party websites or services. These links are provided for your convenience only. Bextmart does not endorse, control, or assume any responsibility for the content, privacy practices, or services of any third-party websites. We encourage you to review the terms and privacy policies of any third-party sites you visit.</p>
+
+    <h3>13. Governing Law and Dispute Resolution</h3>
+    <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of the applicable jurisdiction in which Bextmart operates, without regard to its conflict of law provisions.</p>
+    <p>Any disputes arising out of or in connection with these Terms shall first be attempted to be resolved through good-faith negotiation. If a resolution cannot be reached within 30 days, either party may pursue legal remedies available under applicable law.</p>
+
+    <h3>14. Indemnification</h3>
+    <p>You agree to indemnify, defend, and hold harmless Bextmart and its officers, directors, employees, agents, and affiliates from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in any way connected with your access to or use of our platform, your violation of these Terms, or your infringement of any third-party rights.</p>
+
+    <h3>15. Changes to These Terms</h3>
+    <p>Bextmart reserves the right to modify these Terms and Conditions at any time. We will notify users of material changes by posting a notice on our platform or by sending an email to the address associated with your account. Your continued use of our platform after the effective date of any changes constitutes your acceptance of the updated Terms.</p>
+
+    <h3>16. Contact Us</h3>
+    <p>If you have any questions, concerns, or complaints regarding these Terms and Conditions, please contact us:</p>
+    <p><strong>Bextmart Customer Support</strong><br/>Email: <a href="mailto:support@bextmart.com">support@bextmart.com</a><br/>Website: <a href="https://www.bextmart.com">www.bextmart.com</a></p>
+
+    <hr style="margin: 32px 0; border-color: #eee;" />
+    <p style="color:#888; font-size:13px">These Terms and Conditions were last updated on May 23, 2026. By using Bextmart, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
+    <p style="color:#888; font-size:13px">&copy; 2026 Bextmart. All rights reserved.</p>
+`
 }
