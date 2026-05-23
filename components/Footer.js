@@ -100,11 +100,11 @@ const Footer = () => {
                             <div className="container">
                                 <div className="footer-main__content">
                                     <div className="bottom-footer__top">
-                                        <div data-accordion-parent="true" className="row">
+                                        <div data-accordion-parent="true" className="row justify-content-lg-center">
                                             <div className="footer__linklist col-12 col-sm-12 col-md-12 col-lg-6 col-xl-3 col-xxl-3">
                                                 <div className={`footer__linklist-accordion accordion d-block d-lg-none ${checkToggle(1) ? 'open' : ''}`}>
                                                     <h4 className="accordion__title" onClick={(e) => { e.preventDefault(); if (currenttoggle === 1) setcurrenttoggle(0); else setcurrenttoggle(1); }}>
-                                                        <span>{t("OUR_COLLECTIONS")}</span>
+                                                        <span>Links</span>
                                                         <SVGArrowDown />
                                                     </h4>
                                                     <div className={`footer-block__details-content accordion__content ${checkToggle(1) ? 'show' : 'accordionItemCollapsed'}`}>
@@ -117,21 +117,13 @@ const Footer = () => {
                                                                 )
                                                             })}
                                                         </ul>
-                                                        <ul className="list-unstyled column-2">
-                                                            {FooterLink2Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
+                                                    
                                                     </div>
                                                 </div>
                                                 <div className="footer__linklist-menu d-none d-lg-block">
-                                                    <h2 className="footer-block__heading">{t("OUR_COLLECTIONS")}</h2>
-                                                    <div className="footer-block__details-content-desktop row">
-                                                        <ul className="footer-block__details-content list-unstyled  col-12 col-sm-6 ">
+                                                    <h2 className="footer-block__heading">Links</h2>
+                                                    <div className="footer-block__details-content-desktop">
+                                                        <ul className="footer-block__details-content list-unstyled">
                                                             {FooterLink1Data.map((links, index) => {
                                                                 return (
                                                                     <li key={index} >
@@ -140,120 +132,12 @@ const Footer = () => {
                                                                 )
                                                             })}
                                                         </ul>
-                                                        <ul className="footer-block__details-content list-unstyled col-12 col-sm-6">
-                                                            {FooterLink2Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
+                                                    
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="footer__linklist col-12 col-sm-12 col-md-12 col-lg-6 col-xl-3 col-xxl-3">
-                                                <div className={`footer__linklist-accordion accordion d-block d-lg-none ${checkToggle(2) ? 'open' : ''}`}>
-                                                    <h4 className="accordion__title" onClick={(e) => { e.preventDefault(); if (currenttoggle === 2) setcurrenttoggle(0); else setcurrenttoggle(2); }}>
-                                                        <span>{t("CUSTOMER_SERVICES")}</span>
-                                                        <SVGArrowDown />
-                                                    </h4>
-                                                    <div className={`footer-block__details-content accordion__content ${checkToggle(2) ? 'show' : 'accordionItemCollapsed'}`}>
-                                                        <ul className="list-unstyled column-1">
-                                                            {FooterLink3Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                        <ul className="list-unstyled column-2">
-                                                            {FooterLink4Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div className="footer__linklist-menu d-none d-lg-block">
-                                                    <h2 className="footer-block__heading">{t("CUSTOMER_SERVICES")}</h2>
-                                                    <div className="footer-block__details-content-desktop row">
-                                                        <ul className="footer-block__details-content list-unstyled  col-12 col-sm-6 ">
-                                                            {FooterLink3Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                        <ul className="footer-block__details-content list-unstyled col-12 col-sm-6">
-                                                            {FooterLink4Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="footer__linklist col-12 col-sm-12 col-md-12 col-lg-6 col-xl-3 col-xxl-3">
-                                                <div className={`footer__linklist-accordion accordion d-block d-lg-none ${checkToggle(3) ? 'open' : ''}`}>
-                                                    <h4 className="accordion__title" onClick={(e) => { e.preventDefault(); if (currenttoggle === 3) setcurrenttoggle(0); else setcurrenttoggle(3); }}>
-                                                        <span>{t("INFORMATION")}</span>
-                                                        <SVGArrowDown />
-                                                    </h4>
-                                                    <div className={`footer-block__details-content accordion__content ${checkToggle(3) ? 'show' : 'accordionItemCollapsed'}`}>
-                                                        <ul className="list-unstyled column-1">
-                                                            {FooterLink5Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                        <ul className="list-unstyled column-2">
-                                                            {FooterLink6Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div className="footer__linklist-menu d-none d-lg-block">
-                                                    <h2 className="footer-block__heading">{t("INFORMATION")}</h2>
-                                                    <div className="footer-block__details-content-desktop row">
-                                                        <ul className="footer-block__details-content list-unstyled  col-12 col-sm-6 ">
-                                                            {FooterLink5Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                        <ul className="footer-block__details-content list-unstyled col-12 col-sm-6">
-                                                            {FooterLink6Data.map((links, index) => {
-                                                                return (
-                                                                    <li key={index} >
-                                                                        <Link className="link link--text list-menu__item list-menu__item--link" href={links.url}>{links.text}</Link>
-                                                                    </li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           
+
                                             <div className="footer__information col-12 col-sm-12 col-md-12 col-lg-6 col-xl-3 col-xxl-3">
                                                 <div className={`footer__linklist-accordion accordion d-block d-lg-none ${checkToggle(4) ? 'open' : ''}`}>
                                                     <h4 className="accordion__title" onClick={(e) => { e.preventDefault(); if (currenttoggle === 4) setcurrenttoggle(0); else setcurrenttoggle(4); }}>
@@ -305,20 +189,21 @@ const Footer = () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                            
                                                 <div className="footer__newsletter_social d-none d-lg-block">
                                                     <h2 className="footer-block__heading">{t("SHOP_NAME")}</h2><div className="footer-block__details-content">
                                                         <div className="footer__list-info">
                                                             <div className="footer__list-info-item location-area">
                                                                 <SVGLocationPin />
-                                                                <div className="content">{t("Location")}</div>
+                                                                <div className="content">0460 Maame Afia Dubia Rd<br />Nsawam, E/R<br />EG-373-2159</div>
                                                             </div>
                                                             <div className="footer__list-info-item phone-area">
                                                                 <SVGPhone />
-                                                                <div className="content">{t("Shop_Phone")}</div>
+                                                                <div className="content">+233243662283</div>
                                                             </div>
                                                             <div className="footer__list-info-item email-area">
                                                                 <SVGEnvolope />
-                                                                <div className="content">{t("Shop_Email")}</div>
+                                                                <div className="content">support@bextmart.com</div>
                                                             </div>
                                                         </div>
                                                         <div className="footer__list-social">

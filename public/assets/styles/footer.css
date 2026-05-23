@@ -838,6 +838,22 @@ footer .list-payment__item {
 
 .subscribe-notify{
     color: red;
-    margin-top: 5px;    
+    margin-top: 5px;
     display: block;
+}
+
+@media screen and (min-width: 992px) {
+    .bottom-footer__top .row {
+        justify-content: center;
+    }
+    .footer-bottom__content.row {
+        justify-content: center;
+        text-align: center;
+    }
+    .footer-bottom__content .footer__payment .list-payment {
+        justify-content: center;
+    }
+    .footer-newsletter-wrapper .row {
+        justify-content: center;
+    }
 }

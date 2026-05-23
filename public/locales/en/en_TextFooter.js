@@ -9,20 +9,20 @@ export const FooterLink1_en = [
         "text": "About Us",
         "url": "/page-about"
     },
-    {
-        "id": 3,
-        "text": "Login",
-        "url": "/account-login"
-    },
-    {
-        "id": 4,
-        "text": "Register",
-        "url": "/account-register"
-    },
+    // {
+    //     "id": 3,
+    //     "text": "Login",
+    //     "url": "/account-login"
+    // },
+    // {
+    //     "id": 4,
+    //     "text": "Register",
+    //     "url": "/account-register"
+    // },
     {
         "id": 5,
-        "text": "Wish list",
-        "url": "/page-wishlist"
+        "text": "Terms & Conditions",
+        "url": "/page-termsofservice"
     }
 ]
 

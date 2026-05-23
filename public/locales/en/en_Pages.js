@@ -59,13 +59,13 @@ export const Contact_en =
 {
     Heading: "Contact detail",
     Address: "ADDRESS",
-    Address_Text: "1800 Abbot Kinney Blvd. Unit D & E Venice",
+    Address_Text: "0460 Maame Afia Dubia Rd, Nsawam, E/R, EG-373-2159",
     Phone: "PHONE",
-    Phone_Text1: "Mobile: (+88) - 1990 - 6886",
-    Phone_Text2: "Hotline: 1800 - 1102",
+    Phone_Text1: "Mobile: +233243662283",
+
     Email: "EMAIL",
-    Email_Text1: "kalathemes@gmail.com",
-    Email_Text2: "support@kalathemes.freshdesk.com",
+    Email_Text1: "support@bextmart.com",
+
     More: "GET IN TOUCH WITH US",
     More_Desc: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur erit qui inea",
     Form_Name: "Name",

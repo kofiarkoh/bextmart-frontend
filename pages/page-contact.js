@@ -142,7 +142,7 @@ export default function ContactPage() {
                         </div>
                     </div>
                 </div>
-                <div className="contact-form__layout">
+                {/* <div className="contact-form__layout">
                     <div className="container">
                         <div className={styles.contact_form__container}>
                             <div className="contact-template__title">
@@ -193,11 +193,11 @@ export default function ContactPage() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='spaced-section '>
                     <div className={`${styles.map_container_fluid} container_fluid`}>
                         <div className="map__container row">
-                            <iframe className={styles.map_iframe} src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6044.969830807474!2d-73.993056!3d40.7513582!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzEyLjQiTiA3M8KwNTgnNTQuNyJX!5e0!3m2!1svi!2s!4v1600333050767!5m2!1svi!2s" width="1920" height="450" frameBorder="0" allowFullScreen=""></iframe>
+                            <iframe  className={styles.map_iframe} src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d284.12163096563904!2d-0.3625100588055679!3d5.8657900309416675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNcKwNTEnNTUuNyJOIDDCsDIxJzQ1LjEiVw!5e0!3m2!1sen!2sus!4v1779560544878!5m2!1sen!2sus" width="1920" height="600" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
                 </div>
