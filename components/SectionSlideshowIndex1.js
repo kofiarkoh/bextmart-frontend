@@ -12,6 +12,8 @@ import 'swiper/css';
 import {DataIndexSlideshow} from './data/DataIndexSlideshow';
 import { SVGArrowLeft, SVGArrowRight } from '../public/assets/SVG';
 import styles from '../public/assets/styles/Home.module.css'
+import { useGetBannersQuery } from '../store/productsApi';
+import { buildImageUrl } from './ultils/Tools';
 
 SwiperCore.use([Navigation, Pagination, Autoplay]);
 
@@ -61,6 +63,9 @@ const SectionSlideshowIndex1 = () => {
     };
 
     const { t, locale } = useTranslation();
+    const { data: bannersData } = useGetBannersQuery();
+    const banners = bannersData?.data?.filter(b => b.status === 'published') || [];
+    const fallbackSlides = DataIndexSlideshow();
 
     return (
         <>
@@ -71,50 +76,29 @@ const SectionSlideshowIndex1 = () => {
                             <div className={styles.slideshow_component}>
                                 <div className={`${styles.slideshow_container} slideshow-template`}>
                                     <Swiper {...carouselOptions} className={`${styles.slideshow_container_swiper_container} swiper-container`}>
-                                        <SwiperSlide className={styles.slideshow_container_swiper_slide}>
-                                            <>
-                                                <Link href={DataIndexSlideshow().slideshow1_link} className={styles.slideshow_slide_link}></Link>
+                                        {banners.length > 0 ? banners.map((banner) => (
+                                            <SwiperSlide key={banner.id} className={styles.slideshow_container_swiper_slide}>
                                                 <div className={styles.slideshow_slide_background}>
-                                                    <div className={styles.slideshow_slide__background} style={{ "height": "0", "backgroundImage": "url("+DataIndexSlideshow().slideshow1+")", "paddingBottom": "31.25%" }}></div>
+                                                    <div
+                                                        className={styles.slideshow_slide__background}
+                                                        style={{ height: 0, backgroundImage: `url(${buildImageUrl(banner.file)})`, paddingBottom: '31.25%' }}
+                                                    />
                                                 </div>
-                                                <div className={`${styles.slideshow_slide_caption} ${styles.slideshow_slide_caption1 } index-slideshow-caption-image`} >
-                                                    <Image src={DataIndexSlideshow().slideshow1_caption} alt="" width={436} height={352} />
-                                                </div>
-                                            </>
-                                        </SwiperSlide>
-                                        <SwiperSlide>
+                                            </SwiperSlide>
+                                        )) : (
                                             <>
-                                                <Link href={DataIndexSlideshow().slideshow2_link} className={styles.slideshow_slide_link}></Link>
-                                                <div className={styles.slideshow_slide_background}>
-                                                    <div className={styles.slideshow_slide__background} style={{ "height": "0", "backgroundImage": "url("+DataIndexSlideshow().slideshow2+")", "paddingBottom": "31.25%" }}></div>
-                                                </div>
-                                                <div className={`${styles.slideshow_slide_caption} ${styles.slideshow_slide_caption2 } index-slideshow-caption-image`}>
-                                                    <Image src={DataIndexSlideshow().slideshow2_caption} alt="" width={773} height={559} />
-                                                </div>
+                                                <SwiperSlide className={styles.slideshow_container_swiper_slide}>
+                                                    <div className={styles.slideshow_slide_background}>
+                                                        <div className={styles.slideshow_slide__background} style={{ height: 0, backgroundImage: `url(${fallbackSlides.slideshow1})`, paddingBottom: '31.25%' }} />
+                                                    </div>
+                                                </SwiperSlide>
+                                                <SwiperSlide>
+                                                    <div className={styles.slideshow_slide_background}>
+                                                        <div className={styles.slideshow_slide__background} style={{ height: 0, backgroundImage: `url(${fallbackSlides.slideshow2})`, paddingBottom: '31.25%' }} />
+                                                    </div>
+                                                </SwiperSlide>
                                             </>
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <>
-                                                <Link href={DataIndexSlideshow().slideshow3_link} className={styles.slideshow_slide_link}></Link>
-                                                <div className={styles.slideshow_slide_background}>
-                                                    <div className={styles.slideshow_slide__background} style={{ "height": "0", "backgroundImage": "url("+DataIndexSlideshow().slideshow3+")", "paddingBottom": "31.25%" }}></div>
-                                                </div>
-                                                <div className={`${styles.slideshow_slide_caption} ${styles.slideshow_slide_caption3 } index-slideshow-caption-image`}>
-                                                    <Image src={DataIndexSlideshow().slideshow3_caption} alt="" width={413} height={377} />
-                                                </div>
-                                            </>
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <>
-                                                <Link href={DataIndexSlideshow().slideshow4_link} className={styles.slideshow_slide_link}></Link>
-                                                <div className={styles.slideshow_slide_background}>
-                                                    <div className={styles.slideshow_slide__background} style={{ "height": "0", "backgroundImage": "url("+DataIndexSlideshow().slideshow4+")", "paddingBottom": "31.25%" }}></div>
-                                                </div>
-                                                <div className={`${styles.slideshow_slide_caption} ${styles.slideshow_slide_caption4 } index-slideshow-caption-image`}>
-                                                    <Image src={DataIndexSlideshow().slideshow4_caption} alt="" width={355} height={375} />
-                                                </div>
-                                            </>
-                                        </SwiperSlide>
+                                        )}
                                     </Swiper>
                                     <div className="index-slideshow-pagination"></div>
                                     <div className="carousel-navigation tops-carousel-nav-prev swiper-nav-prev"><SVGArrowLeft /></div>
@@ -137,14 +121,14 @@ const SectionSlideshowIndex1 = () => {
                                     <div className="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 col-xxl-2">
                                         <div className={styles.slideshow_ontop_row1_rbanners}>
                                             <div className="slideshow-ontop-rbanner  slideshow-ontop-rbanner-1 effect-shine effect">
-                                                <Link href={DataIndexSlideshow().img1_link} className="effect-parent">
-                                                    <Image src={DataIndexSlideshow().img1} alt="" width={250} height={225} />
+                                                <Link href={fallbackSlides.img1_link} className="effect-parent">
+                                                    <Image src={fallbackSlides.img1} alt="" width={250} height={225} />
                                                     <div className={styles.bbanner_caption}>{t("GROCERY_SHOP")}<br /><span className={styles.bbanner_caption_span}>{t("NEW")}!</span></div>
                                                 </Link>
                                             </div>
                                             <div className="slideshow-ontop-rbanner  slideshow-ontop-rbanner-2 effect-shine effect">
-                                                <Link href={DataIndexSlideshow().img2_link} className="effect-parent">
-                                                    <Image src={DataIndexSlideshow().img2} alt="" width={250} height={225} />
+                                                <Link href={fallbackSlides.img2_link} className="effect-parent">
+                                                    <Image src={fallbackSlides.img2} alt="" width={250} height={225} />
                                                     <div className={styles.bbanner_caption}>{t("TV_VIDEO")}<br /><span className={styles.bbanner_caption_span}>{t("SALE")}</span></div>
                                                 </Link>
                                             </div>
@@ -153,28 +137,28 @@ const SectionSlideshowIndex1 = () => {
                                 </div>
                                 <div className={`${styles.slideshow_ontop_row2 } row`}>
                                     <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-1 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-                                        <Link href={DataIndexSlideshow().img3_link} className={`${styles.need_right} effect-parent`}>
-                                            <Image src={DataIndexSlideshow().img3} alt="" width={308} height={140}/>
+                                        <Link href={fallbackSlides.img3_link} className={`${styles.need_right} effect-parent`}>
+                                            <Image src={fallbackSlides.img3} alt="" width={308} height={140}/>
                                             <div className={styles.bbanner_caption}>{t("BEAUTY_MAKEUP_FROM")}<br /><span className={styles.bbanner_caption_span}>$59</span></div>
                                         </Link>
                                     </div>
                                     <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-2 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
 
-                                        <Link href={DataIndexSlideshow().img4_link} className="effect-parent">
-                                            <Image src={DataIndexSlideshow().img4} alt="" width={308} height={140} />
+                                        <Link href={fallbackSlides.img4_link} className="effect-parent">
+                                            <Image src={fallbackSlides.img4} alt="" width={308} height={140} />
                                             <div className={styles.bbanner_caption}>{t("GROCERY_FOOD_UNDER")}<br /><span className={styles.bbanner_caption_span}>$15</span></div>
                                         </Link>
                                     </div>
                                     <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-3 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
 
-                                        <Link href={DataIndexSlideshow().img5_link} className={`${styles.need_right} effect-parent`}>
-                                            <Image src={DataIndexSlideshow().img5} alt="" width={308} height={140} />
+                                        <Link href={fallbackSlides.img5_link} className={`${styles.need_right} effect-parent`}>
+                                            <Image src={fallbackSlides.img5} alt="" width={308} height={140} />
                                             <div className={styles.bbanner_caption}>{t("CAMPING_GEAR_SALE")}<br /><span className={styles.bbanner_caption_span}>50% {t("OFF")}</span></div>
                                         </Link>
                                     </div>
                                     <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-4 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-                                        <Link href={DataIndexSlideshow().img6_link} className="effect-parent">
-                                            <Image src={DataIndexSlideshow().img6} alt="" width={308} height={140} />
+                                        <Link href={fallbackSlides.img6_link} className="effect-parent">
+                                            <Image src={fallbackSlides.img6} alt="" width={308} height={140} />
                                             <div className={styles.bbanner_caption}>{t("WATCHES_BUY1GET1")}<br /><span className={styles.bbanner_caption_span}>{t("FREE")}</span></div>
                                         </Link>
                                     </div>
