@@ -71,7 +71,6 @@ export default function Home() {
         <SectionProductGrid />
       </main>
       <Footer />
-      <ExtNewsletterPopup />
       <ExtCookiesBar />
       <ExtNotification />
     </div>
