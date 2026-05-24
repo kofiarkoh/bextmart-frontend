@@ -47,6 +47,12 @@ const authToken = useSelector((state) => state.auth?.token)
     setTokenChecked(true)
   }, [router])
 
+  useEffect(() => {
+    if (Array.isArray(cartItems) && cartItems.length === 0) {
+      router.replace('/')
+    }
+  }, [cartItems, router])
+
   const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery(
     undefined,
     { skip: !authToken }
