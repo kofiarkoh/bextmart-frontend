@@ -66,6 +66,7 @@ const ProductPage = () => {
     const [option1, setOption1] = useState(null);
     const [option2, setOption2] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
+    const [selectedOptions, setSelectedOptions] = useState({});
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(0);
     const [classStatus, setClassStatus] = useState('');
@@ -152,12 +153,28 @@ const ProductPage = () => {
     // }, [product, qty, proView])
     function selectVariant(variant) {
         setSelectedVariant(variant);
+        if (variant?.options && Array.isArray(variant.options) && variant.options.length > 0) {
+            const optionTypes = variant.options.reduce((acc, o) => {
+                if (!acc[o.type]) acc[o.type] = [];
+                acc[o.type].push(o);
+                return acc;
+            }, {});
+            const defaultOpts = {};
+            Object.entries(optionTypes).forEach(([type, entries]) => {
+                const firstAvailable = entries.find(e => parseInt(e.quantity || '0') > 0) || entries[0];
+                if (firstAvailable) defaultOpts[type] = firstAvailable.value;
+            });
+            setSelectedOptions(defaultOpts);
+        } else {
+            setSelectedOptions({});
+        }
         if (variant && Array.isArray(variant.photos) && variant.photos.length > 0) {
             setGroupImages([variant.photos[0], ...(product?.photos || [])]);
         } else if (product?.photos) {
             setGroupImages(product.photos);
         }
     }
+
 
     useEffect(() => {
         if (!product?.variants?.length) return;
@@ -289,6 +306,11 @@ const ProductPage = () => {
             setClassStatus('cart-loadding');
             const payload = { product_id: product.id, quantity: qty };
             if (selectedVariant) payload.product_variant_id = selectedVariant.id;
+            const optionEntries = Object.entries(selectedOptions);
+            if (optionEntries.length > 0) {
+                const [type, value] = optionEntries[0];
+                payload.variant_option = { type, value };
+            }
             await addToCartApi(payload).unwrap();
             setClassStatus('');
             notifySuccess(`${product.name} added to cart.`, 'Added to Cart');
@@ -346,47 +368,109 @@ const ProductPage = () => {
                                                     }
                                                     {product.variants.length > 0 && (
                                                         <div style={{ marginBottom: 16 }}>
-                                                            <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 10 }}>
-                                                                Variant:
-                                                                {selectedVariant && (
-                                                                    <span style={{ marginLeft: 6, color: 'var(--color_primary)', fontWeight: 700 }}>
-                                                                        {selectedVariant.sku}
-                                                                    </span>
-                                                                )}
+                                                            {/* Step 1 — pick a variant */}
+                                                            <div style={{ marginBottom: 14 }}>
+                                                                <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 8 }}>
+                                                                    Variant:
+                                                                    {selectedVariant && (
+                                                                        <span style={{ marginLeft: 6, color: 'var(--color_primary)', fontWeight: 700 }}>
+                                                                            {selectedVariant.sku}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                                    {product.variants.map((variant) => {
+                                                                        const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
+                                                                        const isSelected = selectedVariant?.id === variant.id;
+                                                                        return (
+                                                                            <button
+                                                                                key={variant.id}
+                                                                                type="button"
+                                                                                disabled={outOfStock}
+                                                                                onClick={() => selectVariant(variant)}
+                                                                                style={{
+                                                                                    padding: '6px 14px',
+                                                                                    borderRadius: 6,
+                                                                                    border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
+                                                                                    background: isSelected ? 'var(--color_primary)' : '#fff',
+                                                                                    color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                    fontSize: 13,
+                                                                                    fontWeight: isSelected ? 700 : 400,
+                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                    opacity: outOfStock ? 0.5 : 1,
+                                                                                }}
+                                                                            >
+                                                                                {variant.sku}
+                                                                                {outOfStock && (
+                                                                                    <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                        Out of stock
+                                                                                    </span>
+                                                                                )}
+                                                                            </button>
+                                                                        );
+                                                                    })}
+                                                                </div>
                                                             </div>
-                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                                                                {product.variants.map((variant) => {
-                                                                    const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
-                                                                    const isSelected = selectedVariant?.id === variant.id;
+
+                                                            {/* Step 2 — pick sub-options of the selected variant */}
+                                                            {selectedVariant && Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0 && (() => {
+                                                                const optionTypes = selectedVariant.options.reduce((acc, o) => {
+                                                                    if (!acc[o.type]) acc[o.type] = [];
+                                                                    if (!acc[o.type].includes(o.value)) acc[o.type].push(o.value);
+                                                                    return acc;
+                                                                }, {});
+                                                                return Object.entries(optionTypes).map(([type, values]) => {
+                                                                    const selectedVal = selectedOptions[type];
                                                                     return (
-                                                                        <button
-                                                                            key={variant.id}
-                                                                            type="button"
-                                                                            disabled={outOfStock}
-                                                                            onClick={() => selectVariant(isSelected ? null : variant)}
-                                                                            style={{
-                                                                                padding: '7px 14px',
-                                                                                borderRadius: 6,
-                                                                                border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
-                                                                                background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
-                                                                                fontSize: 13,
-                                                                                fontWeight: isSelected ? 700 : 400,
-                                                                                cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                opacity: outOfStock ? 0.5 : 1,
-                                                                                position: 'relative',
-                                                                            }}
-                                                                        >
-                                                                            {variant.sku}
-                                                                            {outOfStock && (
-                                                                                <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
-                                                                                    Out of stock
-                                                                                </span>
-                                                                            )}
-                                                                        </button>
+                                                                        <div key={type} style={{ marginBottom: 14 }}>
+                                                                            <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 8, textTransform: 'capitalize' }}>
+                                                                                {type}:
+                                                                                {selectedVal && (
+                                                                                    <span style={{ marginLeft: 6, color: 'var(--color_primary)', fontWeight: 700 }}>
+                                                                                        {selectedVal}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                                                {values.map((value) => {
+                                                                                    const optionEntry = selectedVariant.options.find(o => o.type === type && o.value === value);
+                                                                                    const optionQty = optionEntry ? parseInt(optionEntry.quantity || '0') : 0;
+                                                                                    const outOfStock = optionQty <= 0;
+                                                                                    const isSelected = selectedVal === value;
+                                                                                    return (
+                                                                                        <button
+                                                                                            key={value}
+                                                                                            type="button"
+                                                                                            disabled={outOfStock}
+                                                                                            onClick={() => {
+                                                                                                setSelectedOptions(prev => ({ ...prev, [type]: value }));
+                                                                                            }}
+                                                                                            style={{
+                                                                                                padding: '6px 14px',
+                                                                                                borderRadius: 6,
+                                                                                                border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
+                                                                                                background: isSelected ? 'var(--color_primary)' : '#fff',
+                                                                                                color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                                fontSize: 13,
+                                                                                                fontWeight: isSelected ? 700 : 400,
+                                                                                                cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                                opacity: outOfStock ? 0.5 : 1,
+                                                                                            }}
+                                                                                        >
+                                                                                            {value}
+                                                                                            {outOfStock && (
+                                                                                                <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                                    Out of stock
+                                                                                                </span>
+                                                                                            )}
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
+                                                                            </div>
+                                                                        </div>
                                                                     );
-                                                                })}
-                                                            </div>
+                                                                });
+                                                            })()}
                                                         </div>
                                                     )}
                                                     <div className='product-template__form'>

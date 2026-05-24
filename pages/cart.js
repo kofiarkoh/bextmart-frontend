@@ -104,18 +104,26 @@ export default function CartPage() {
                                                     <td className={styles.cart_item__details}>
                                                         <Link className={`${styles.cart_item__name} break`} href={`/product/${productId}`}>{productName}</Link>
                                                         <dl>
-                                                            {
-                                                                (Array.isArray(item.options) && item.options.length > 0)
-                                                                    ?
-                                                                    item.options.map((option, index) => (
-                                                                        <div className={styles.product_option} key={index}>
-                                                                            <dt>{t(option.option)}:</dt>
-                                                                            <dd>{t(option.variant)}</dd>
-                                                                        </div>
-                                                                    ))
-                                                                    :
-                                                                    ''
-                                                            }
+                                                            {(() => {
+                                                                const variant = item.variant || item.product_variant;
+                                                                const variantOption = item.variant_option;
+                                                                return (
+                                                                    <>
+                                                                        {variant?.sku && (
+                                                                            <div className={styles.product_option}>
+                                                                                <dt>Variant:</dt>
+                                                                                <dd>{variant.sku}</dd>
+                                                                            </div>
+                                                                        )}
+                                                                        {variantOption?.type && variantOption?.value && (
+                                                                            <div className={styles.product_option} style={{ textTransform: 'capitalize' }}>
+                                                                                <dt>{variantOption.type}:</dt>
+                                                                                <dd>{variantOption.value}</dd>
+                                                                            </div>
+                                                                        )}
+                                                                    </>
+                                                                );
+                                                            })()}
                                                         </dl>
                                                     </td>
                                                     <td className="center cart-item__prices">
