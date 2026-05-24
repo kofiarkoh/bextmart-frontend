@@ -33,6 +33,7 @@ const authToken = useSelector((state) => state.auth?.token)
   const cartItems = useSelector((state) => state.cart.items)
 
   const [step, setStep] = useState(STEP_ADDRESS)
+  const [regionId, setRegionId] = useState('')
   const [cityId, setCityId] = useState('')
   const [nearbyCity, setNearbyCity] = useState('')
   const [deliveryInstructions, setDeliveryInstructions] = useState('')
@@ -51,15 +52,17 @@ const authToken = useSelector((state) => state.auth?.token)
     { skip: !authToken }
   )
 
-  const cities = Array.isArray(addressOptionsData?.data?.cities)
-    ? addressOptionsData.data.cities
-    : Array.isArray(addressOptionsData?.data)
-    ? addressOptionsData.data
-    : []
+  const regions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : []
+  const selectedRegion = regions.find((r) => String(r.id) === String(regionId))
+  const cities = selectedRegion?.cities || []
 
   const [processPayment, { isLoading: processingPayment }] = useProcessPaymentMutation()
 
   function handleContinue() {
+    if (!regionId) {
+      setAddressError('Please select a region.')
+      return
+    }
     if (!cityId) {
       setAddressError('Please select a delivery city.')
       return
@@ -97,7 +100,7 @@ const authToken = useSelector((state) => state.auth?.token)
     }
   }
 
-  const selectedCity = cities.find((c) => String(c.id) === String(cityId))
+  const selectedCity = cities.find((c) => String(c.id) === String(cityId)) || null
 
   return (
     <>
@@ -173,25 +176,59 @@ const authToken = useSelector((state) => state.auth?.token)
                     <p>Loading delivery options...</p>
                   ) : (
                     <>
+                      {/* Region */}
                       <div style={{ marginBottom: 20 }}>
                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
-                          Delivery City <span style={{ color: 'red' }}>*</span>
+                          Region <span style={{ color: 'red' }}>*</span>
                         </label>
                         <select
-                          value={cityId}
-                          onChange={(e) => setCityId(e.target.value)}
+                          value={regionId}
+                          onChange={(e) => { setRegionId(e.target.value); setCityId(''); }}
                           style={{
                             width: '100%', padding: '10px 12px',
                             border: '1px solid var(--color_line)', borderRadius: 4,
                             fontSize: 14, backgroundColor: '#fff', appearance: 'auto',
                           }}
                         >
-                          <option value="">Select a city</option>
-                          {cities.map((city) => (
-                            <option key={city.id} value={city.id}>{city.name}</option>
+                          <option value="">Select a region</option>
+                          {regions.map((region) => (
+                            <option key={region.id} value={region.id}>{region.name}</option>
                           ))}
                         </select>
                       </div>
+
+                      {/* City — only shown once a region is chosen */}
+                      {regionId && (
+                        <div style={{ marginBottom: 20 }}>
+                          <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
+                            City <span style={{ color: 'red' }}>*</span>
+                          </label>
+                          <select
+                            value={cityId}
+                            onChange={(e) => setCityId(e.target.value)}
+                            style={{
+                              width: '100%', padding: '10px 12px',
+                              border: '1px solid var(--color_line)', borderRadius: 4,
+                              fontSize: 14, backgroundColor: '#fff', appearance: 'auto',
+                            }}
+                          >
+                            <option value="">Select a city</option>
+                            {cities.map((city) => (
+                              <option key={city.id} value={city.id}>
+                                {city.name} — GHC {city.delivery_fee} delivery
+                              </option>
+                            ))}
+                          </select>
+                          {cityId && (() => {
+                            const city = cities.find((c) => String(c.id) === String(cityId));
+                            return city ? (
+                              <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 6 }}>
+                                Delivery fee: <strong>GHC {city.delivery_fee}</strong>
+                              </p>
+                            ) : null;
+                          })()}
+                        </div>
+                      )}
 
                       <div style={{ marginBottom: 20 }}>
                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
@@ -255,9 +292,19 @@ const authToken = useSelector((state) => state.auth?.token)
                     <p style={{ fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 10, color: 'var(--color_body)' }}>
                       Delivery Details
                     </p>
+                    {selectedRegion && (
+                      <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                        <strong>Region:</strong> {selectedRegion.name}
+                      </p>
+                    )}
                     <p style={{ fontSize: 14, margin: '0 0 4px' }}>
                       <strong>City:</strong> {selectedCity?.name || cityId}
                     </p>
+                    {selectedCity?.delivery_fee != null && (
+                      <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                        <strong>Delivery fee:</strong> GHC {selectedCity.delivery_fee}
+                      </p>
+                    )}
                     {nearbyCity && (
                       <p style={{ fontSize: 14, margin: '0 0 4px' }}>
                         <strong>Nearby:</strong> {nearbyCity}
@@ -329,17 +376,34 @@ const authToken = useSelector((state) => state.auth?.token)
                       )
                     })}
 
-                    {/* Cart total row */}
-                    <div style={{ padding: '14px 16px', background: '#f9fafb', borderTop: '2px solid var(--color_line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>Total</span>
-                      <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--color_primary)' }}>
-                        <CurrencyConvert amount={cartItems.reduce((sum, item) => {
-                          const product = item.product || item
-                          const price = parseFloat(product?.price || item?.price || 0)
-                          return sum + price * (item?.quantity || 1)
-                        }, 0)} />
-                      </span>
-                    </div>
+                    {/* Totals breakdown */}
+                    {(() => {
+                      const subtotal = cartItems.reduce((sum, item) => {
+                        const product = item.product || item
+                        const price = parseFloat(product?.price || item?.price || 0)
+                        return sum + price * (item?.quantity || 1)
+                      }, 0)
+                      const deliveryFee = parseFloat(selectedCity?.delivery_fee || 0)
+                      const grandTotal = subtotal + deliveryFee
+                      return (
+                        <div style={{ background: '#f9fafb', borderTop: '2px solid var(--color_line)' }}>
+                          <div style={{ padding: '12px 16px 4px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)' }}>
+                            <span>Subtotal</span>
+                            <span><CurrencyConvert amount={subtotal} /></span>
+                          </div>
+                          <div style={{ padding: '4px 16px 12px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)', borderBottom: '1px solid var(--color_line)' }}>
+                            <span>Delivery fee ({selectedCity?.name})</span>
+                            <span><CurrencyConvert amount={deliveryFee} /></span>
+                          </div>
+                          <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>Total</span>
+                            <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--color_primary)' }}>
+                              <CurrencyConvert amount={grandTotal} />
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   {/* Payment method */}
