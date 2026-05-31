@@ -342,11 +342,13 @@ const authToken = useSelector((state) => state.auth?.token)
                     </div>
 
                     {cartItems.map((item, i) => {
-                      const product  = item.product || item
-                      const name     = product?.name || 'Product'
-                      const price    = parseFloat(product?.price || item?.price || 0)
-                      const qty      = item?.quantity || 1
-                      const imgSrc   = buildImageUrl(product?.photos?.[0] ?? null)
+                      const product       = item.product || item
+                      const variant       = item.variant || item.product_variant
+                      const variantOption = item.variant_option
+                      const name          = product?.name || 'Product'
+                      const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
+                      const qty           = item?.quantity || 1
+                      const imgSrc        = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
                       return (
                         <div key={i} style={{
                           display: 'flex', alignItems: 'center', gap: 12,
@@ -385,8 +387,10 @@ const authToken = useSelector((state) => state.auth?.token)
                     {/* Totals breakdown */}
                     {(() => {
                       const subtotal = cartItems.reduce((sum, item) => {
-                        const product = item.product || item
-                        const price = parseFloat(product?.price || item?.price || 0)
+                        const variant       = item.variant || item.product_variant
+                        const variantOption = item.variant_option
+                        const product       = item.product || item
+                        const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
                         return sum + price * (item?.quantity || 1)
                       }, 0)
                       const deliveryFee = parseFloat(selectedCity?.delivery_fee || 0)

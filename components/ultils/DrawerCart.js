@@ -22,7 +22,9 @@ const DrawerCart = () => {
         : 0;
     const scTotal = Array.isArray(cartItems)
         ? cartItems.reduce((sum, item) => {
-            const price = parseFloat(item?.product?.price || item?.price || 0);
+            const variant = item?.variant || item?.product_variant;
+            const variantOption = item?.variant_option;
+            const price = parseFloat(variantOption?.price ?? variant?.price ?? item?.product?.price ?? item?.price ?? 0);
             const qty = item?.quantity || 0;
             return sum + (price * qty);
         }, 0)

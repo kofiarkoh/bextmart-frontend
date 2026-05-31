@@ -305,11 +305,14 @@ const ProductPage = () => {
         try {
             setClassStatus('cart-loadding');
             const payload = { product_id: product.id, quantity: qty };
-            if (selectedVariant) payload.product_variant_id = selectedVariant.id;
-            const optionEntries = Object.entries(selectedOptions);
-            if (optionEntries.length > 0) {
-                const [type, value] = optionEntries[0];
-                payload.variant_option = { type, value };
+            if (selectedVariant) {
+                payload.product_variant_id = selectedVariant.id;
+                if (selectedVariant.options?.length > 0) {
+                    const selectedOption = selectedVariant.options.find(
+                        o => selectedOptions[o.type] === o.value
+                    );
+                    if (selectedOption?.id) payload.variant_option_id = selectedOption.id;
+                }
             }
             await addToCartApi(payload).unwrap();
             setClassStatus('');
@@ -347,7 +350,13 @@ const ProductPage = () => {
                                                 <StickyBox offsetTop={30} offsetBottom={20}>
                                                     <h1 className={styles.product_title}>{product.name}</h1>
                                                     <div className="price price--large">
-                                                        {displayPrice(selectedVariant ? selectedVariant.price : product.price, product.price_compare)}
+                                                        {(() => {
+                                                            const activeOption = selectedVariant?.options?.find(
+                                                                o => selectedOptions[o.type] === o.value && o.price != null
+                                                            );
+                                                            const activePrice = activeOption?.price ?? selectedVariant?.price ?? product.price;
+                                                            return displayPrice(activePrice, product.price_compare);
+                                                        })()}
                                                     </div>
                                                     <div className={styles.product_earnpoints}>
                                                         <span className="earnpoints-text" style={{ fontWeight: 500 }}>{t("Quantity")}:</span>
@@ -378,10 +387,34 @@ const ProductPage = () => {
                                                                         </span>
                                                                     )}
                                                                 </div>
-                                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                                                                     {product.variants.map((variant) => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
+                                                                        const hasColor = !!variant.color_code;
+                                                                        if (hasColor) {
+                                                                            return (
+                                                                                <button
+                                                                                    key={variant.id}
+                                                                                    type="button"
+                                                                                    title={variant.sku}
+                                                                                    disabled={outOfStock}
+                                                                                    onClick={() => selectVariant(variant)}
+                                                                                    style={{
+                                                                                        width: 32,
+                                                                                        height: 32,
+                                                                                        borderRadius: '50%',
+                                                                                        background: variant.color_code,
+                                                                                        border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
+                                                                                        boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
+                                                                                        padding: 0,
+                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        flexShrink: 0,
+                                                                                    }}
+                                                                                />
+                                                                            );
+                                                                        }
                                                                         return (
                                                                             <button
                                                                                 key={variant.id}
@@ -431,12 +464,36 @@ const ProductPage = () => {
                                                                                     </span>
                                                                                 )}
                                                                             </div>
-                                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                                                                                 {values.map((value) => {
                                                                                     const optionEntry = selectedVariant.options.find(o => o.type === type && o.value === value);
                                                                                     const optionQty = optionEntry ? parseInt(optionEntry.quantity || '0') : 0;
                                                                                     const outOfStock = optionQty <= 0;
                                                                                     const isSelected = selectedVal === value;
+                                                                                    const hasColor = !!optionEntry?.color_code;
+                                                                                    if (hasColor) {
+                                                                                        return (
+                                                                                            <button
+                                                                                                key={value}
+                                                                                                type="button"
+                                                                                                title={value}
+                                                                                                disabled={outOfStock}
+                                                                                                onClick={() => setSelectedOptions(prev => ({ ...prev, [type]: value }))}
+                                                                                                style={{
+                                                                                                    width: 32,
+                                                                                                    height: 32,
+                                                                                                    borderRadius: '50%',
+                                                                                                    background: optionEntry.color_code,
+                                                                                                    border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
+                                                                                                    boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
+                                                                                                    padding: 0,
+                                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                                    opacity: outOfStock ? 0.4 : 1,
+                                                                                                    flexShrink: 0,
+                                                                                                }}
+                                                                                            />
+                                                                                        );
+                                                                                    }
                                                                                     return (
                                                                                         <button
                                                                                             key={value}

@@ -40,7 +40,9 @@ export default function CartPage() {
     const scTotal = useMemo(
         () => (Array.isArray(cartItems)
             ? cartItems.reduce((sum, item) => {
-                const price = parseFloat(item?.product?.price || item?.price || 0);
+                const variant = item?.variant || item?.product_variant;
+                const variantOption = item?.variant_option;
+                const price = parseFloat(variantOption?.price ?? variant?.price ?? item?.product?.price ?? item?.price ?? 0);
                 const qty = item?.quantity || 0;
                 return sum + (price * qty);
             }, 0)
@@ -94,8 +96,11 @@ export default function CartPage() {
                                             const product = item.product || {};
                                             const productId = product.id || item.product_id;
                                             const productName = product.name || t("Product");
-                                            const productImage = buildImageUrl(product?.photos?.[0]);
-                                            const productPrice = product.price || item.price || 0;
+                                            const variant = item.variant || item.product_variant || null;
+                                            const variantOption = item.variant_option || null;
+                                            const variantImage = variant?.photos?.[0];
+                                            const productImage = buildImageUrl(variantImage || product?.photos?.[0]);
+                                            const unitPrice = parseFloat(variantOption?.price ?? variant?.price ?? product.price ?? item.price ?? 0);
                                             return (
                                                 <tr key={index} className={styles.cart_item} id={`CartItem-${index}`}>
                                                     <td className={styles.cart_item__media}>
@@ -104,32 +109,42 @@ export default function CartPage() {
                                                     <td className={styles.cart_item__details}>
                                                         <Link className={`${styles.cart_item__name} break`} href={`/product/${productId}`}>{productName}</Link>
                                                         <dl>
-                                                            {(() => {
-                                                                const variant = item.variant || item.product_variant;
-                                                                const variantOption = item.variant_option;
-                                                                return (
-                                                                    <>
-                                                                        {variant?.sku && (
-                                                                            <div className={styles.product_option}>
-                                                                                <dt>Variant:</dt>
-                                                                                <dd>{variant.sku}</dd>
-                                                                            </div>
+                                                            {variant && (
+                                                                <div className={styles.product_option} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                    <dt style={{ flexShrink: 0 }}>Variant:</dt>
+                                                                    <dd style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                        {variant.color_code && (
+                                                                            <span style={{
+                                                                                display: 'inline-block', width: 14, height: 14,
+                                                                                borderRadius: '50%', background: variant.color_code,
+                                                                                border: '1px solid #ddd', flexShrink: 0,
+                                                                            }} />
                                                                         )}
-                                                                        {variantOption?.type && variantOption?.value && (
-                                                                            <div className={styles.product_option} style={{ textTransform: 'capitalize' }}>
-                                                                                <dt>{variantOption.type}:</dt>
-                                                                                <dd>{variantOption.value}</dd>
-                                                                            </div>
+                                                                        {variant.sku}
+                                                                    </dd>
+                                                                </div>
+                                                            )}
+                                                            {variantOption?.type && variantOption?.value && (
+                                                                <div className={styles.product_option} style={{ display: 'flex', alignItems: 'center', gap: 6, textTransform: 'capitalize' }}>
+                                                                    <dt style={{ flexShrink: 0 }}>{variantOption.type}:</dt>
+                                                                    <dd style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                        {variantOption.color_code && (
+                                                                            <span style={{
+                                                                                display: 'inline-block', width: 14, height: 14,
+                                                                                borderRadius: '50%', background: variantOption.color_code,
+                                                                                border: '1px solid #ddd', flexShrink: 0,
+                                                                            }} />
                                                                         )}
-                                                                    </>
-                                                                );
-                                                            })()}
+                                                                        {variantOption.value}
+                                                                    </dd>
+                                                                </div>
+                                                            )}
                                                         </dl>
                                                     </td>
                                                     <td className="center cart-item__prices">
                                                         <div className="cart-item__price-wrapper medium-up">
                                                             <span className="price">
-                                                                <span className="money"><CurrencyConvert amount={parseFloat(productPrice)} /></span>
+                                                                <span className="money"><CurrencyConvert amount={unitPrice} /></span>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -155,7 +170,7 @@ export default function CartPage() {
                                                         </div>
                                                     </td>
                                                     <td className="center cart-item__totals">
-                                                        <CurrencyConvert amount={parseFloat(productPrice) * (item.quantity || 0)} />
+                                                        <CurrencyConvert amount={unitPrice * (item.quantity || 0)} />
                                                     </td>
                                                     <td className={`${styles.cart_item__remove} center`}>
                                                         <button
