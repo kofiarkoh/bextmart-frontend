@@ -16,8 +16,14 @@ export const ordersApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    retryPayment: builder.mutation({
+      query: (orderNumber) => ({
+        url: `${BASE_URL}/orders/${orderNumber}/retry-payment`,
+        method: 'POST',
+      }),
+    }),
   }),
   overrideExisting: false,
 })
 
-export const { useGetOrdersQuery, useGetOrderQuery } = ordersApi
+export const { useGetOrdersQuery, useGetOrderQuery, useRetryPaymentMutation } = ordersApi

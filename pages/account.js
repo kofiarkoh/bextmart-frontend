@@ -8,7 +8,7 @@ import Footer from '../components/Footer'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import { useGetMeQuery, useLogoutMutation, useResendEmailVerificationMutation } from '../store/authApi'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
-import { useGetOrdersQuery } from '../store/ordersApi'
+import { useGetOrdersQuery, useRetryPaymentMutation } from '../store/ordersApi'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -84,6 +84,54 @@ const BagIcon = () => (
   </svg>
 )
 
+function RetryButton({ orderNumber }) {
+  const [retryPayment, { isLoading }] = useRetryPaymentMutation()
+  const [retrying, setRetrying] = React.useState(false)
+
+  async function handleRetry(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    setRetrying(true)
+    try {
+      const result = await retryPayment(orderNumber).unwrap()
+      const url = result?.payment_url || result?.data?.payment_url
+      if (url) window.location.href = url
+    } catch (err) {
+      const msg = err?.data?.message || 'Could not initiate payment. Please try again.'
+      notifyError(msg, 'Payment Error')
+    } finally {
+      setRetrying(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleRetry}
+      disabled={isLoading || retrying}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        width: '100%', padding: '10px 16px',
+        background: 'var(--color_primary)', color: '#fff',
+        fontSize: 13, fontWeight: 600,
+        borderRadius: '0 0 10px 10px',
+        border: '1px solid var(--color_primary)', borderTop: 'none',
+        cursor: isLoading || retrying ? 'not-allowed' : 'pointer',
+        opacity: isLoading || retrying ? 0.7 : 1,
+        transition: 'opacity 0.15s',
+      }}
+    >
+      {retrying ? (
+        <span style={{ width: 13, height: 13, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} />
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      )}
+      {retrying ? 'Processing…' : 'Retry Payment'}
+    </button>
+  )
+}
+
 function OrdersTable({ orders, loading }) {
   if (loading) {
     return (
@@ -126,63 +174,65 @@ function OrdersTable({ orders, loading }) {
 
   return (
     <div style={{ padding: '12px 16px 16px' }}>
-      {orders.map((order) => (
-        <Link
-          key={order.id}
-          href={`/account-order?order=${order.order_number}`}
-          style={{ textDecoration: 'none', display: 'block' }}
-        >
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 14,
-            padding: '14px 16px', borderRadius: 10, marginBottom: 8,
-            border: '1px solid var(--color_line)',
-            background: '#fff', transition: 'box-shadow 0.15s, border-color 0.15s',
-            cursor: 'pointer',
-          }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)'
-              e.currentTarget.style.borderColor = 'var(--color_primary)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = 'none'
-              e.currentTarget.style.borderColor = 'var(--color_line)'
-            }}
-          >
-            {/* Icon */}
-            <div style={{
-              width: 42, height: 42, borderRadius: 10, flexShrink: 0,
-              background: 'rgba(0,0,128,0.06)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: 'var(--color_primary)',
-            }}>
-              <BagIcon />
-            </div>
-
-            {/* Order info */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
-                <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_heading)' }}>
-                  #{order.order_number}
-                </span>
-                <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_heading)', whiteSpace: 'nowrap' }}>
-                  <CurrencyConvert amount={parseFloat(order.total_price || 0)} />
-                </span>
+      {orders.map((order) => {
+        const orderStatus = order.status?.toLowerCase()
+        const txStatus = order.transaction?.status?.toLowerCase()
+        const canRetry = (orderStatus === 'pending' || orderStatus === 'processing')
+          && txStatus !== 'success'
+        return (
+          <div key={order.id} style={{ marginBottom: 8 }}>
+            <Link
+              href={`/account-order?order=${order.order_number}`}
+              style={{ textDecoration: 'none', display: 'block' }}
+            >
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '14px 16px',
+                borderRadius: canRetry ? '10px 10px 0 0' : 10,
+                border: '1px solid var(--color_line)',
+                borderBottom: canRetry ? '1px solid #f0f0f0' : '1px solid var(--color_line)',
+                background: '#fff', transition: 'box-shadow 0.15s',
+                cursor: 'pointer',
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)'
+                  e.currentTarget.style.borderColor = 'var(--color_primary)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.borderColor = 'var(--color_line)'
+                }}
+              >
+                <div style={{
+                  width: 42, height: 42, borderRadius: 10, flexShrink: 0,
+                  background: 'rgba(0,0,128,0.06)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--color_primary)',
+                }}>
+                  <BagIcon />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_heading)' }}>
+                      #{order.order_number}
+                    </span>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_heading)', whiteSpace: 'nowrap' }}>
+                      <CurrencyConvert amount={parseFloat(order.total_price || 0)} />
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                    <span style={{ fontSize: 12, color: 'var(--color_body)' }}>{formatDate(order.created_at)}</span>
+                    <StatusBadge status={order.status} />
+                  </div>
+                </div>
+                <div style={{ color: '#d1d5db', flexShrink: 0 }}><ChevronRight /></div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
-                  {formatDate(order.created_at)}
-                </span>
-                <StatusBadge status={order.status} />
-              </div>
-            </div>
+            </Link>
 
-            {/* Arrow */}
-            <div style={{ color: '#d1d5db', flexShrink: 0 }}>
-              <ChevronRight />
-            </div>
+            {canRetry && <RetryButton orderNumber={order.order_number} />}
           </div>
-        </Link>
-      ))}
+        )
+      })}
 
       <style jsx global>{`
         @keyframes pulse {
