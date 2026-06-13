@@ -1,4 +1,4 @@
-name: Push WorkFlow
+name: Push WorkFlow to Production
 
 on:
   push:
