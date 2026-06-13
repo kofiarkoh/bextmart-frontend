@@ -64,7 +64,9 @@ const SectionSlideshowIndex1 = () => {
 
     const { t, locale } = useTranslation();
     const { data: bannersData } = useGetBannersQuery();
-    const banners = bannersData?.data?.filter(b => b.status === 'published') || [];
+    const published = bannersData?.data?.filter(b => b.status === 'published') || [];
+    const sliderBanners = published.filter(b => b.type === 'slider');
+    const overlayBanners = published.filter(b => b.type === 'overlay');
     const fallbackSlides = DataIndexSlideshow();
 
     return (
@@ -76,7 +78,7 @@ const SectionSlideshowIndex1 = () => {
                             <div className={styles.slideshow_component}>
                                 <div className={`${styles.slideshow_container} slideshow-template`}>
                                     <Swiper {...carouselOptions} className={`${styles.slideshow_container_swiper_container} swiper-container`}>
-                                        {banners.length > 0 ? banners.map((banner) => (
+                                        {sliderBanners.length > 0 ? sliderBanners.map((banner) => (
                                             <SwiperSlide key={banner.id} className={styles.slideshow_container_swiper_slide}>
                                                 <div className={styles.slideshow_slide_background}>
                                                     <div
@@ -120,47 +122,33 @@ const SectionSlideshowIndex1 = () => {
                                     </div>
                                     <div className="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 col-xxl-2">
                                         <div className={styles.slideshow_ontop_row1_rbanners}>
-                                            <div className="slideshow-ontop-rbanner  slideshow-ontop-rbanner-1 effect-shine effect">
-                                                <Link href={fallbackSlides.img1_link} className="effect-parent">
-                                                    <Image src={fallbackSlides.img1} alt="" width={250} height={225} />
-                                                    <div className={styles.bbanner_caption}>{t("GROCERY_SHOP")}<br /><span className={styles.bbanner_caption_span}>{t("NEW")}!</span></div>
-                                                </Link>
-                                            </div>
-                                            <div className="slideshow-ontop-rbanner  slideshow-ontop-rbanner-2 effect-shine effect">
-                                                <Link href={fallbackSlides.img2_link} className="effect-parent">
-                                                    <Image src={fallbackSlides.img2} alt="" width={250} height={225} />
-                                                    <div className={styles.bbanner_caption}>{t("TV_VIDEO")}<br /><span className={styles.bbanner_caption_span}>{t("SALE")}</span></div>
-                                                </Link>
-                                            </div>
+                                            {overlayBanners.length > 0 ? overlayBanners.slice(0, 2).map((banner, i) => {
+                                                const href = banner.category?.slug ? `/products?category=${banner.category.slug}` : null;
+                                                const img = <img src={buildImageUrl(banner.file)} alt={banner.category?.name || ''} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
+                                                return (
+                                                    <div key={banner.id} className={`slideshow-ontop-rbanner slideshow-ontop-rbanner-${i + 1} effect-shine effect`}>
+                                                        {href ? (
+                                                            <Link href={href} className="effect-parent">{img}</Link>
+                                                        ) : (
+                                                            <div className="effect-parent">{img}</div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            }) : (
+                                                <>
+                                                    <div className="slideshow-ontop-rbanner slideshow-ontop-rbanner-1 effect-shine effect">
+                                                        <Link href={fallbackSlides.img1_link} className="effect-parent">
+                                                            <Image src={fallbackSlides.img1} alt="" width={250} height={225} />
+                                                        </Link>
+                                                    </div>
+                                                    <div className="slideshow-ontop-rbanner slideshow-ontop-rbanner-2 effect-shine effect">
+                                                        <Link href={fallbackSlides.img2_link} className="effect-parent">
+                                                            <Image src={fallbackSlides.img2} alt="" width={250} height={225} />
+                                                        </Link>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
-                                    </div>
-                                </div>
-                                <div className={`${styles.slideshow_ontop_row2 } row`}>
-                                    <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-1 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-                                        <Link href={fallbackSlides.img3_link} className={`${styles.need_right} effect-parent`}>
-                                            <Image src={fallbackSlides.img3} alt="" width={308} height={140}/>
-                                            <div className={styles.bbanner_caption}>{t("BEAUTY_MAKEUP_FROM")}<br /><span className={styles.bbanner_caption_span}>$59</span></div>
-                                        </Link>
-                                    </div>
-                                    <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-2 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-
-                                        <Link href={fallbackSlides.img4_link} className="effect-parent">
-                                            <Image src={fallbackSlides.img4} alt="" width={308} height={140} />
-                                            <div className={styles.bbanner_caption}>{t("GROCERY_FOOD_UNDER")}<br /><span className={styles.bbanner_caption_span}>$15</span></div>
-                                        </Link>
-                                    </div>
-                                    <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-3 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-
-                                        <Link href={fallbackSlides.img5_link} className={`${styles.need_right} effect-parent`}>
-                                            <Image src={fallbackSlides.img5} alt="" width={308} height={140} />
-                                            <div className={styles.bbanner_caption}>{t("CAMPING_GEAR_SALE")}<br /><span className={styles.bbanner_caption_span}>50% {t("OFF")}</span></div>
-                                        </Link>
-                                    </div>
-                                    <div className="slideshow-ontop-bbanner slideshow-ontop-bbanner-4 effect-shine effect col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 col-xxl-3">
-                                        <Link href={fallbackSlides.img6_link} className="effect-parent">
-                                            <Image src={fallbackSlides.img6} alt="" width={308} height={140} />
-                                            <div className={styles.bbanner_caption}>{t("WATCHES_BUY1GET1")}<br /><span className={styles.bbanner_caption_span}>{t("FREE")}</span></div>
-                                        </Link>
                                     </div>
                                 </div>
                             </div>

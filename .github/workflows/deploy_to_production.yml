@@ -1,0 +1,69 @@
+name: Push WorkFlow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-production:
+    name: Build & Deploy to Production Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependenciess
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          NEXT_PUBLIC_STORAGE_BASE_URL: ${{ secrets.NEXT_PUBLIC_STORAGE_BASE_URL }}
+
+      - name: Upload build to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /var/www/html/prod/bextmart-front-end
+
+      - name: Rsync build files to server
+        uses: burnett01/rsync-deployments@5.1
+        with:
+          switches: -avzr --delete
+          path: ./
+          remote_path: /var/www/html/prod/bextmart-front-end
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Restart app on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            source ~/.bashrc || true
+            source ~/.nvm/nvm.sh || true
+            export PATH=$PATH:/usr/local/bin:/usr/bin
+            cd /var/www/html/prod/bextmart-front-end
+            npm ci --legacy-peer-deps --production
+            pm2 restart bextmart-frontend-production || pm2 start npm --name "bextmart-frontend-production" -- start
+            pm2 save
