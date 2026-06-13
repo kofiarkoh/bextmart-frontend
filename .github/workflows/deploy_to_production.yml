@@ -9,6 +9,7 @@ jobs:
   deploy-production:
     name: Build & Deploy to Production Server
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout
