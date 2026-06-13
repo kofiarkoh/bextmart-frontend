@@ -65,5 +65,5 @@ jobs:
             export PATH=$PATH:/usr/local/bin:/usr/bin
             cd /var/www/html/prod/bextmart-frontend
             npm ci --legacy-peer-deps --production
-            pm2 restart bextmart-frontend-production || pm2 start npm --name "bextmart-frontend-production" -- start
+            pm2 restart bextmart-frontend-production || pm2 start npm --name "bextmart-frontend-production" -- start -- --port 3001
             pm2 save
