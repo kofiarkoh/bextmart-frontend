@@ -38,14 +38,14 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            mkdir -p /var/www/html/prod/bextmart-front-end
+            mkdir -p /var/www/html/prod/bextmart-frontend
 
       - name: Rsync build files to server
         uses: burnett01/rsync-deployments@5.1
         with:
           switches: -avzr --delete
           path: ./
-          remote_path: /var/www/html/prod/bextmart-front-end
+          remote_path: /var/www/html/prod/bextmart-frontend
           remote_host: ${{ secrets.SSH_HOST }}
           remote_port: ${{ secrets.SSH_PORT }}
           remote_user: ${{ secrets.SSH_USERNAME }}
@@ -63,7 +63,7 @@ jobs:
             source ~/.bashrc || true
             source ~/.nvm/nvm.sh || true
             export PATH=$PATH:/usr/local/bin:/usr/bin
-            cd /var/www/html/prod/bextmart-front-end
+            cd /var/www/html/prod/bextmart-frontend
             npm ci --legacy-peer-deps --production
             pm2 restart bextmart-frontend-production || pm2 start npm --name "bextmart-frontend-production" -- start
             pm2 save
