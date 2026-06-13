@@ -12,7 +12,7 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes: ['Me', 'Cart'],
+  tagTypes: ['Me', 'Cart', 'Addresses'],
   endpoints: (builder) => ({
     // Add endpoints here. Example:
     // getProducts: builder.query({

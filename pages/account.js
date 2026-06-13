@@ -9,6 +9,7 @@ import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import { useGetMeQuery, useLogoutMutation, useResendEmailVerificationMutation } from '../store/authApi'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
 import { useGetOrdersQuery, useRetryPaymentMutation } from '../store/ordersApi'
+import AddressBook from '../components/account/AddressBook'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -308,6 +309,13 @@ const IconEdit = () => (
   </svg>
 )
 
+const IconMapPin = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+)
+
 const IconLogout = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -318,12 +326,13 @@ const IconLogout = () => (
 
 // ─── nav config ───────────────────────────────────────────────────────────────
 
-const SECTION = { OVERVIEW: 'overview', ORDERS: 'orders', DETAILS: 'details' }
+const SECTION = { OVERVIEW: 'overview', ORDERS: 'orders', ADDRESSES: 'addresses', DETAILS: 'details' }
 
 const NAV_ITEMS = [
-  { key: SECTION.OVERVIEW, label: 'Overview',        icon: <IconHome /> },
-  { key: SECTION.ORDERS,   label: 'My Orders',       icon: <IconBag /> },
-  { key: SECTION.DETAILS,  label: 'Account Details', icon: <IconUser /> },
+  { key: SECTION.OVERVIEW,  label: 'Overview',        icon: <IconHome /> },
+  { key: SECTION.ORDERS,    label: 'My Orders',       icon: <IconBag /> },
+  { key: SECTION.ADDRESSES, label: 'Addresses',       icon: <IconMapPin /> },
+  { key: SECTION.DETAILS,   label: 'Account Details', icon: <IconUser /> },
 ]
 
 function NavBtn({ item, active, onClick }) {
@@ -466,6 +475,17 @@ export default function AccountPage() {
           </div>
           <OrdersTable orders={pagedOrders} loading={loadingPaged || fetchingPaged} />
           <Pagination current={currentPage} last={lastPage} onChange={(p) => setOrdersPage(p)} />
+        </div>
+      )}
+
+      {section === SECTION.ADDRESSES && (
+        <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--color_line)' }}>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>My Addresses</h3>
+          </div>
+          <div style={{ padding: 20 }}>
+            <AddressBook skip={!authToken} />
+          </div>
         </div>
       )}
 

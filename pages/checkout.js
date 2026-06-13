@@ -11,6 +11,7 @@ import useTranslation from '../components/ultils/useTranslation'
 import { buildImageUrl } from '../components/ultils/Tools'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
 import Button from '../components/ultils/Button'
+import AddressBook from '../components/account/AddressBook'
 import {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
@@ -33,6 +34,7 @@ const authToken = useSelector((state) => state.auth?.token)
   const cartItems = useSelector((state) => state.cart.items)
 
   const [step, setStep] = useState(STEP_ADDRESS)
+  const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [regionId, setRegionId] = useState('')
   const [cityId, setCityId] = useState('')
   const [nearbyCity, setNearbyCity] = useState('')
@@ -61,6 +63,20 @@ const authToken = useSelector((state) => state.auth?.token)
   const regions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : []
   const selectedRegion = regions.find((r) => String(r.id) === String(regionId))
   const cities = selectedRegion?.cities || []
+
+  function handleSelectAddress(addr) {
+    setSelectedAddressId(addr.id)
+
+    const matchedRegion = regions.find((r) => r.name?.toLowerCase() === addr.region?.toLowerCase())
+    if (matchedRegion) {
+      setRegionId(String(matchedRegion.id))
+      const matchedCity = (matchedRegion.cities || []).find((c) => c.name?.toLowerCase() === addr.city?.toLowerCase())
+      setCityId(matchedCity ? String(matchedCity.id) : '')
+    }
+
+    if (addr.additional_info) setNearbyCity(addr.additional_info)
+    setAddressError(null)
+  }
 
   const [processPayment, { isLoading: processingPayment }] = useProcessPaymentMutation()
 
@@ -182,6 +198,25 @@ const authToken = useSelector((state) => state.auth?.token)
                     <p>Loading delivery options...</p>
                   ) : (
                     <>
+                      {/* Saved addresses */}
+                      <div style={{ marginBottom: 24 }}>
+                        <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--color_heading)' }}>
+                          Choose a saved address
+                        </h3>
+                        <AddressBook
+                          selectable
+                          skip={!authToken}
+                          selectedId={selectedAddressId}
+                          onSelect={handleSelectAddress}
+                        />
+                      </div>
+
+                      <div style={{ height: 1, background: 'var(--color_line)', margin: '0 0 24px' }} />
+
+                      <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--color_heading)' }}>
+                        Delivery Zone
+                      </h3>
+
                       {/* Region */}
                       <div style={{ marginBottom: 20 }}>
                         <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
