@@ -454,7 +454,6 @@ const CollectionPage = () => {
                     </div>
                 </main>
                 <Footer />
-                <ExtNotification />
             </>
         )
     }

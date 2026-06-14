@@ -666,7 +666,7 @@ const ProductPage = () => {
                     </div>
                 </main>
                 <Footer />
-                <ExtNotification />
+
             </>
         )
     } else {
