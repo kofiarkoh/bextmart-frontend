@@ -126,7 +126,7 @@ const ProductPage = () => {
             quantity_total: apiProduct.quantity ?? 0,
             stars: apiProduct.stars ?? 0,
             desc: apiProduct.description || '',
-            shortdesc: apiProduct.description || '',
+            shortdesc: apiProduct.short_description || '',
             description: apiProduct.description || '',
             photos,
             image,
