@@ -159,12 +159,14 @@ const ProductPage = () => {
     //         setColumnView('col-12 col-md-12');
     //     }
     // }, [product, qty, proView])
-    function selectVariant(variant) {
+    function selectVariant(variant, updateImages = true) {
         setSelectedVariant(variant);
-        if (Array.isArray(variant?.photos) && variant.photos.length > 0) {
-            setGroupImages(variant.photos);
-        } else {
-            setGroupImages(allPhotos);
+        if (updateImages) {
+            if (Array.isArray(variant?.photos) && variant.photos.length > 0) {
+                setGroupImages(variant.photos);
+            } else {
+                setGroupImages(allPhotos);
+            }
         }
         if (variant?.options && Array.isArray(variant.options) && variant.options.length > 0) {
             const optionTypes = variant.options.reduce((acc, o) => {
@@ -187,7 +189,7 @@ const ProductPage = () => {
     useEffect(() => {
         if (!product?.variants?.length) return;
         const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
-        selectVariant(firstAvailable);
+        selectVariant(firstAvailable, false);
     }, [product?.id]);
 
     const isLoading = isProductLoading;
