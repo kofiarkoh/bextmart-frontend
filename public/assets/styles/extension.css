@@ -3803,3 +3803,26 @@ body.template-index.yam-react-2 {
     margin: 0px auto 0;
     text-align: center;
 }
+
+.header__categories-menu .header__submenu.dropdown-menu {
+    min-width: 260px;
+}
+
+.header__categories-menu .header__vertical-menu {
+    width: 260px;
+}
+
+.header__categories-menu .header__vertical-item .text {
+    white-space: nowrap;
+}
+
+.header__categories-menu .header__vertical-item>svg.svg-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.header__categories-menu.menu__dropdown:hover>.header__submenu.dropdown-menu,
+.header__categories-menu.menu__dropdown:focus>.header__submenu.dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
