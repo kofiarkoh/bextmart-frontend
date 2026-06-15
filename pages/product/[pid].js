@@ -96,8 +96,11 @@ const ProductPage = () => {
 
         if (!apiProduct) return null;
         const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
-        const image = photos.length
-            ? photos.map((photo, index) => ({
+        const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
+            .flatMap(v => Array.isArray(v.photos) ? v.photos : []);
+        const allPhotos = [...new Set([...photos, ...variantPhotos])];
+        const image = allPhotos.length
+            ? allPhotos.map((photo, index) => ({
                 idpro: `${apiProduct.id || productId}-${index}`,
                 imgpath: buildImageUrl(photo),
                 imgalt: apiProduct.name || 'product',
@@ -108,7 +111,7 @@ const ProductPage = () => {
                 imgalt: apiProduct.name || 'product',
             }];
 
-         setGroupImages(photos);
+         setGroupImages(allPhotos);
         return {
             id: apiProduct.id,
             name: apiProduct.name,
@@ -167,11 +170,6 @@ const ProductPage = () => {
             setSelectedOptions(defaultOpts);
         } else {
             setSelectedOptions({});
-        }
-        if (variant && Array.isArray(variant.photos) && variant.photos.length > 0) {
-            setGroupImages([variant.photos[0], ...(product?.photos || [])]);
-        } else if (product?.photos) {
-            setGroupImages(product.photos);
         }
     }
 
@@ -392,6 +390,35 @@ const ProductPage = () => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
                                                                         const hasColor = !!variant.color_code;
+                                                                        const thumb = Array.isArray(variant.photos) && variant.photos.length > 0 ? variant.photos[0] : null;
+                                                                        if (thumb) {
+                                                                            return (
+                                                                                <button
+                                                                                    key={variant.id}
+                                                                                    type="button"
+                                                                                    title={variant.sku}
+                                                                                    disabled={outOfStock}
+                                                                                    onClick={() => selectVariant(variant)}
+                                                                                    style={{
+                                                                                        width: 48,
+                                                                                        height: 48,
+                                                                                        borderRadius: 6,
+                                                                                        overflow: 'hidden',
+                                                                                        border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
+                                                                                        padding: 0,
+                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        flexShrink: 0,
+                                                                                    }}
+                                                                                >
+                                                                                    <img
+                                                                                        src={buildImageUrl(thumb)}
+                                                                                        alt={variant.sku}
+                                                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                                                                    />
+                                                                                </button>
+                                                                            );
+                                                                        }
                                                                         if (hasColor) {
                                                                             return (
                                                                                 <button

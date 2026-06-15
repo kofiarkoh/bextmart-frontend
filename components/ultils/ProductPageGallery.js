@@ -43,10 +43,11 @@ const ProductPageGallery = ({ productImg }) => {
                                     <SwiperSlide key={item}>
                                         <div className="product-item__image swiper-zoom-container">
                                             <img src={buildImageUrl(item)} style={{
-                                                width: 720,
-                                                height: 720,
+                                                width: '100%',
+                                                height: 'auto',
+                                                aspectRatio: '1 / 1',
                                                 objectFit: "contain"
-                                            }} priority="true" alt={buildImageUrl(item)} width={720} height={720} />
+                                            }} priority="true" alt={buildImageUrl(item)} />
                                         </div>
                                     </SwiperSlide>
                                 ))
@@ -82,8 +83,9 @@ const ProductPageGallery = ({ productImg }) => {
                                         <SwiperSlide key={`thumb-${item}`}>
                                             <div className=".product-item__image">
                                                 <img src={buildImageUrl(item)} style={{
-                                                    width: 133,
-                                                    height: 133,
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    aspectRatio: '1 / 1',
                                                     objectFit: "contain"
                                                 }} alt={item.imgalt} />
                                             </div>
