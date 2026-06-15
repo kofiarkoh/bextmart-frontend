@@ -625,7 +625,7 @@ const ProductPage = () => {
                                                 <div className="box-divider">
                                                     <h4 className="box-title">{t("Description")}</h4>
                                                 </div>
-                                                <div className='product-desciption-content'>
+                                                <div className='product-template__content-area'>
                                                     <div dangerouslySetInnerHTML={{ __html: product.desc }} />
                                                 </div>
                                             </div>
