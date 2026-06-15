@@ -92,13 +92,18 @@ const ProductPage = () => {
     const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
 
 
+    const allPhotos = useMemo(() => {
+        if (!apiProduct) return [];
+        const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
+        const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
+            .flatMap(v => Array.isArray(v.photos) ? v.photos : []);
+        return [...new Set([...photos, ...variantPhotos])];
+    }, [apiProduct]);
+
     const product = useMemo(() => {
 
         if (!apiProduct) return null;
         const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
-        const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
-            .flatMap(v => Array.isArray(v.photos) ? v.photos : []);
-        const allPhotos = [...new Set([...photos, ...variantPhotos])];
         const image = allPhotos.length
             ? allPhotos.map((photo, index) => ({
                 idpro: `${apiProduct.id || productId}-${index}`,
@@ -136,7 +141,7 @@ const ProductPage = () => {
                 ? apiProduct.attributes
                 : {},
         };
-    }, [apiProduct, productId]);
+    }, [apiProduct, productId, allPhotos]);
     
 
     // useEffect(() => {
@@ -156,6 +161,11 @@ const ProductPage = () => {
     // }, [product, qty, proView])
     function selectVariant(variant) {
         setSelectedVariant(variant);
+        if (Array.isArray(variant?.photos) && variant.photos.length > 0) {
+            setGroupImages(variant.photos);
+        } else {
+            setGroupImages(allPhotos);
+        }
         if (variant?.options && Array.isArray(variant.options) && variant.options.length > 0) {
             const optionTypes = variant.options.reduce((acc, o) => {
                 if (!acc[o.type]) acc[o.type] = [];
@@ -390,35 +400,6 @@ const ProductPage = () => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
                                                                         const hasColor = !!variant.color_code;
-                                                                        const thumb = Array.isArray(variant.photos) && variant.photos.length > 0 ? variant.photos[0] : null;
-                                                                        if (thumb) {
-                                                                            return (
-                                                                                <button
-                                                                                    key={variant.id}
-                                                                                    type="button"
-                                                                                    title={variant.sku}
-                                                                                    disabled={outOfStock}
-                                                                                    onClick={() => selectVariant(variant)}
-                                                                                    style={{
-                                                                                        width: 48,
-                                                                                        height: 48,
-                                                                                        borderRadius: 6,
-                                                                                        overflow: 'hidden',
-                                                                                        border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
-                                                                                        padding: 0,
-                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                        opacity: outOfStock ? 0.4 : 1,
-                                                                                        flexShrink: 0,
-                                                                                    }}
-                                                                                >
-                                                                                    <img
-                                                                                        src={buildImageUrl(thumb)}
-                                                                                        alt={variant.sku}
-                                                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                                                                                    />
-                                                                                </button>
-                                                                            );
-                                                                        }
                                                                         if (hasColor) {
                                                                             return (
                                                                                 <button
