@@ -143,7 +143,7 @@ export const Comingsoon_it =
     Hrs:"Ore",
     Mins:"Minuti",
     Secs:"Secondi",
-    Copy_right:"Copyright © 2022",
+    Copy_right:"Copyright © 2026",
     Shop_info:"Bextmart",
     All_Rights_Reserved:"Tutti i diritti riservati",
     bkg:"/assets/images/bkgcomingsoon.png",

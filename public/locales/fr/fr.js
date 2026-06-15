@@ -227,7 +227,7 @@ module.exports = {
     Location: "Battlefield, Suite C Springfield, MO 65807",
     Shop_Phone: "111-222-3333",
     Shop_Email: "support@kalathemes.freshdesk.com",
-    Copy_right: "Copyright © 2022",
+    Copy_right: "Copyright © 2026",
     Shop_info: "Bextmart",
     // Extension
     Cookie_bar_content: "Ce site utilise des cookies pour vous garantir la meilleure expérience sur notre site.",
