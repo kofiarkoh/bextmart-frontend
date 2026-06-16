@@ -71,7 +71,27 @@ const DrawerCart = () => {
                         <Link href="/cart" id="cart-icon-bubble" data-cart-icon-bubble="" onClick={(e) => { openDrawer(e) }}>
                             <div className="main-header__cart-icon">
                                 <SVGCart />
-                                <SVGCartMobile />
+                                <span style={{ position: 'relative', display: 'inline-flex' }} className="d-block d-lg-none">
+                                    <SVGCartMobile />
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: -8,
+                                        right: -8,
+                                        minWidth: 22,
+                                        height: 22,
+                                        borderRadius: '50%',
+                                        background: 'var(--color_primary, #e53935)',
+                                        color: '#fff',
+                                        fontSize: 13,
+                                        fontWeight: 700,
+                                        lineHeight: '22px',
+                                        textAlign: 'center',
+                                        padding: '0 4px',
+                                        pointerEvents: 'none',
+                                    }}>
+                                        {sccount}
+                                    </span>
+                                </span>
                             </div>
                             <div className="main-header__cart-text">
                                 <div className="main-header__cart-textline">{t("CART")} (<span className="main-header__cart-count">{sccount}</span>) </div>

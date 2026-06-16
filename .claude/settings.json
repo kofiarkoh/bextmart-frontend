@@ -4,7 +4,8 @@
       "Bash(cp /Users/lithe/Desktop/theo-project/bextmart-front-end/public/assets/images/bexmart_logo_yellow.png /tmp/logo.png)",
       "Bash(python3 -c ' *)",
       "Bash(sips -s format ico /tmp/logo.png --out /Users/lithe/Desktop/theo-project/bextmart-front-end/public/favicon.ico)",
-      "Bash(identify /Users/lithe/Desktop/theo-project/bextmart-front-end/public/assets/images/bexmart_logo_yellow.png)"
+      "Bash(identify /Users/lithe/Desktop/theo-project/bextmart-front-end/public/assets/images/bexmart_logo_yellow.png)",
+      "Bash(curl -s -o /tmp/hdr3.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/\")"
     ]
   }
 }
