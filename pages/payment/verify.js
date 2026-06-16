@@ -30,12 +30,10 @@ function StatusPill({ status }) {
         processing: ['#dbeafe', '#1e40af'], shipped: ['#dbeafe', '#1e40af'],
         failed: ['#fee2e2', '#991b1b'], cancelled: ['#fee2e2', '#991b1b'],
     }
-    const labels = { pending: 'Pending Payment', unpaid: 'Pending Payment' }
     const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
-    const label = labels[status?.toLowerCase()] || status || '—'
     return (
         <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 10, fontSize: 11, fontWeight: 600, background: bg, color, textTransform: 'capitalize' }}>
-            {label}
+            {status || '—'}
         </span>
     )
 }
@@ -110,12 +108,12 @@ export default function PaymentVerifyPage() {
             <Head><title>{pageTitle} — Bextmart</title></Head>
             <Header />
 
-            <main style={{ background: '#f4f5f7', minHeight: '70vh', padding: isMobile ? '24px 0 60px' : '40px 0 80px' }}>
-                <div className="container" style={{ maxWidth: 860 }}>
+            <main style={{ background: '#f4f5f7', minHeight: '70vh', padding: isMobile ? '16px 0 60px' : '40px 0 80px' }}>
+                <div className="container" style={{ maxWidth: 860, paddingLeft: isMobile ? 12 : undefined, paddingRight: isMobile ? 12 : undefined }}>
 
                     {/* Loading — also shown while router resolves query params */}
                     {(!router.isReady || isLoading) && (
-                        <div style={{ background: '#fff', borderRadius: 12, padding: '80px 24px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+                        <div style={{ background: '#fff', borderRadius: isMobile ? 0 : 12, padding: '80px 24px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
                             <div style={{
                                 width: 36, height: 36, borderRadius: '50%',
                                 border: '3px solid #e5e7eb', borderTopColor: 'var(--color_primary)',
@@ -127,7 +125,7 @@ export default function PaymentVerifyPage() {
 
                     {/* No order ID / error fallback — only shown once router is ready */}
                     {router.isReady && !isLoading && (isError || !orderId) && (
-                        <div style={{ background: '#fff', borderRadius: 12, padding: '60px 24px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+                        <div style={{ background: '#fff', borderRadius: isMobile ? 0 : 12, padding: '60px 24px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
                             <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
                             <h2 style={{ marginBottom: 12 }}>Thank you for your order!</h2>
                             <p style={{ color: 'var(--color_body)', marginBottom: 32, fontSize: 15 }}>
@@ -142,8 +140,8 @@ export default function PaymentVerifyPage() {
                         <>
                             {/* ── Status banner ── */}
                             <div style={{
-                                borderRadius: 12, padding: isMobile ? '20px 18px' : '28px 32px',
-                                marginBottom: 16, textAlign: 'center',
+                                borderRadius: isMobile ? 0 : 12, padding: isMobile ? '24px 18px' : '28px 32px',
+                                marginBottom: isMobile ? 2 : 16, textAlign: 'center',
                                 background: succeeded ? '#ecfdf5'
                                           : failed    ? '#fef2f2'
                                           : '#fffbeb',
@@ -186,9 +184,9 @@ export default function PaymentVerifyPage() {
 
                             {/* ── Order header ── */}
                             <div style={{
-                                background: 'var(--color_primary)', borderRadius: 12,
+                                background: 'var(--color_primary)', borderRadius: isMobile ? 0 : 12,
                                 padding: isMobile ? '16px 18px' : '22px 28px',
-                                marginBottom: 12, color: '#fff',
+                                marginBottom: isMobile ? 2 : 12, color: '#fff',
                                 display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12,
                             }}>
                                 <div>
@@ -207,12 +205,12 @@ export default function PaymentVerifyPage() {
                             {/* ── Body ── */}
                             <div style={{
                                 display: 'flex', flexDirection: isMobile ? 'column' : 'row',
-                                gap: 16, alignItems: 'flex-start',
+                                gap: isMobile ? 2 : 16, alignItems: isMobile ? 'stretch' : 'flex-start',
                             }}>
 
                                 {/* Items */}
                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
+                                    <div style={{ background: '#fff', borderRadius: isMobile ? 0 : 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
                                         <div style={{ padding: isMobile ? '14px 16px' : '16px 24px', borderBottom: '1px solid var(--color_line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>Items Ordered</h2>
                                             <span style={{ fontSize: 13, color: 'var(--color_body)' }}>
@@ -317,7 +315,7 @@ export default function PaymentVerifyPage() {
                                 <div style={{ width: isMobile ? '100%' : 240, flexShrink: 0 }}>
 
                                     {/* Order details */}
-                                    <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden', marginBottom: 14 }}>
+                                    <div style={{ background: '#fff', borderRadius: isMobile ? 0 : 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden', marginBottom: isMobile ? 2 : 14 }}>
                                         <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--color_line)' }}>
                                             <h3 style={{ margin: 0, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color_body)' }}>
                                                 Order Details
@@ -328,10 +326,10 @@ export default function PaymentVerifyPage() {
                                             {order.created_at && (
                                                 <MetaRow label="Date" value={new Date(order.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} />
                                             )}
-                                            <MetaRow label="Order Status" value={<StatusPill status={order.status} />} />
                                             <MetaRow label="Payment" value={<StatusPill status={txStatus} />} />
+                                            <MetaRow label="Order Status" value={<StatusPill status={order.status} />} />
                                             {order.payment_method && (
-                                                <MetaRow label="Method" value={order.payment_method} capitalize />
+                                                <MetaRow label="Method" value={order.payment_method.replace(/_/g, ' ')} capitalize />
                                             )}
                                             {transaction?.amount && (
                                                 <MetaRow label="Charged" value={<CurrencyConvert amount={parseFloat(transaction.amount)} />} />
@@ -341,7 +339,7 @@ export default function PaymentVerifyPage() {
 
                                     {/* Delivery address */}
                                     {(address || order.nearby_city || order.delivery_instructions) && (
-                                        <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
+                                        <div style={{ background: '#fff', borderRadius: isMobile ? 0 : 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden' }}>
                                             <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--color_line)' }}>
                                                 <h3 style={{ margin: 0, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color_body)' }}>
                                                     Delivery Address
