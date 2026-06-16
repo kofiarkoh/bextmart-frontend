@@ -360,11 +360,17 @@ function SVGAllCate24() {
 }
 
 
+function SVGUser() {
+    return (
+        <svg className="svg-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 28, height: 28 }}><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor"/><path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="currentColor"/></svg>
+    )
+}
+
 export {
     SVGAllCate1, SVGAllCate2, SVGAllCate3, SVGAllCate4, SVGAllCate5, SVGAllCate6, SVGAllCate7, SVGAllCate8, SVGAllCate9, SVGAllCate10, SVGAllCate11, SVGAllCate12,
     SVGAllCate13, SVGAllCate14, SVGAllCate15, SVGAllCate16, SVGAllCate17, SVGAllCate18, SVGAllCate19, SVGAllCate20, SVGAllCate21, SVGAllCate22, SVGAllCate23, SVGAllCate24,
     SVGAmericanExpress, SVGDinersClub, SVGDiscover, SVGMastercard, SVGPayPal, SVGVisa, SVGTwitter, SVGFacebook, SVGTikTok, SVGInstagram, SVGPinterest, SVGYoutube,
     SVGIcon1, SVGIcon2, SVGIcon3, SVGIcon4, SVGIcon5, SVGIcon6, SVGIcon7, SVGIcon8, SVGIcon9, SVGIcon10, SVGArrowDown, SVGArrowRight, SVGArrowLeft, SVGArrowUp,
     SVGCart, SVGCartMobile, SVGClose, SVGEnvolope, SVGEye, SVGHeart, SVGLocation, SVGLocationPin, SVGMenu, SVGMinus, SVGMore, SVGPhone, SVGPlus, SVGRefresh, SVGSearch,
-    SVGSearchMobile, SVGStar, SVGGrid, SVGList, SVGDiamond, SVGTrash
+    SVGSearchMobile, SVGStar, SVGGrid, SVGList, SVGDiamond, SVGTrash, SVGUser
 }

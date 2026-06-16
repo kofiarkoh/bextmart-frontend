@@ -114,16 +114,6 @@ const DrawerCart = () => {
                             </button>
                         </div>
                         <div className="header-drawer__content cart-drawer__content">
-                            <div className="cart-drawer__shipping" id="cart-dropdown-shipping" data-cart-dropdown-shipping="">
-                                <div className="cart__shipping-content ">
-                                    <div className="cart__shipping-heading">
-                                        <p className="shipping__heading-free">{t("freeshipping_text1")} <strong>{t("freeshipping_text2")}!</strong></p>
-                                    </div>
-                                    <div className="cart__shipping-progress-bar">
-                                        <span width="100%" data-cart-goal-progress="" className="progress-bar__meter" style={{ width: "100%" }}></span>
-                                    </div>
-                                </div>
-                            </div>
                             <div className="header-drawer__scroll">
                                 <div className="cart-drawer__bubble" id="cart-dropdown-bubble">
                                     <cart-dropdown-bubble>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import useTranslation from './useTranslation'
-import { SVGMore, SVGClose } from '../../public/assets/SVG';
+import { SVGUser, SVGClose } from '../../public/assets/SVG';
 import { clearCredentials } from '../../store/authSlice';
 import { notifySuccess } from './notify';
 
@@ -53,7 +53,7 @@ const DrawerMobileMore = () => {
             <div className={`cartdrawer ${isOpen ? 'menu-opening' : ''}`}>
                 <div className="cartsummary header__icon header__icon--account header__icon--summary link focus-inset header-drawer__toggle">
                     <div className="drawer__toggle-icon" onClick={() => setIsOpen(v => !v)}>
-                        <SVGMore />
+                        <SVGUser />
                     </div>
                 </div>
                 <div className="header-drawer__inner header-drawer__right">
@@ -170,7 +170,7 @@ const DrawerMobileMore = () => {
                                         <rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/>
                                         <rect x="2" y="14" width="7" height="7"/><rect x="15" y="14" width="7" height="7"/>
                                     </svg>
-                                    All Products
+                                    View Products
                                 </Link>
                                 <Link href="/page-contact" onClick={() => setIsOpen(false)} style={{
                                     display: 'flex', alignItems: 'center', gap: 12,
@@ -195,8 +195,8 @@ const DrawerMobileMore = () => {
                                 </svg>
                                 <div>
                                     <div style={{ fontSize: 11, color: '#888', marginBottom: 2 }}>Customer Support</div>
-                                    <a href="tel:19006789" style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_primary)', textDecoration: 'none' }}>
-                                        1900-6789
+                                    <a href="tel:+233243662283" style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_primary)', textDecoration: 'none' }}>
+                                        +233 243 662 283
                                     </a>
                                 </div>
                             </div>
