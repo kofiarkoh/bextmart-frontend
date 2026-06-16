@@ -103,7 +103,8 @@ export default function SearchPage() {
                                     {items.length > 0 && (
                                         <>
                                             <div className="search-template__results">
-                                                <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5" style={{ gap: '16px', margin: 0 }}>
+                                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, margin: 0 }}
+                                                    className="products-search-grid">
                                                     {items.map((item, index) => (
                                                         <div key={item?.id || index} style={{ padding: 0, minWidth: 0 }}>
                                                             <ProductItemGrid product={item} />

@@ -1,3 +1,8 @@
+/* Notifications */
+.rnc__base {
+    z-index: 99999 !important;
+}
+
 /* Product Grid*/
 .index-products-grid .product-item__grid {
     margin-bottom: 0;

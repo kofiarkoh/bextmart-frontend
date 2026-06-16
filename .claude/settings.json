@@ -6,7 +6,22 @@
       "Bash(sips -s format ico /tmp/logo.png --out /Users/lithe/Desktop/theo-project/bextmart-front-end/public/favicon.ico)",
       "Bash(identify /Users/lithe/Desktop/theo-project/bextmart-front-end/public/assets/images/bexmart_logo_yellow.png)",
       "Bash(curl -s -o /tmp/hdr3.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/\")",
-      "Bash(curl -s -o /tmp/hdr4.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/\")"
+      "Bash(curl -s -o /tmp/hdr4.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/\")",
+      "Bash(curl -s -o /tmp/products.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/products\")",
+      "Bash(curl -s -o /tmp/products2.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/products\")",
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/$\\(ls /Users/lithe/Desktop/theo-project/bextmart-front-end/.next/dev/static/chunks/)",
+      "Bash(curl -s -o /tmp/products3.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/products\")",
+      "Bash(curl -s -o /tmp/search.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/search?q=iphone\")",
+      "Bash(curl -s -o /tmp/pid.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(curl -s -o /tmp/pid2.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(grep -E \"z-index: [0-9]{3,}\")",
+      "Bash(curl -s -o /tmp/pid3.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(curl -s -o /tmp/pid5.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(curl -s -o /tmp/products4.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/products\")",
+      "Bash(curl -s -o /tmp/pid6.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(curl -s -o /tmp/products5.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/products\")",
+      "Bash(curl -s -o /tmp/pid7.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/product/1\")",
+      "Bash(curl -s -o /tmp/login.html -w \"%{http_code}\\\\n\" \"http://localhost:3000/account-login\")"
     ]
   }
 }

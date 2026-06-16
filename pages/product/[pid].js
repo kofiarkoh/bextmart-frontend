@@ -35,7 +35,7 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
-import { notifyError, notifySuccess } from '../../components/ultils/notify'
+import { notifyError, notifySuccess, notifyAuth } from '../../components/ultils/notify'
 import Button from '../../components/ultils/Button'
 
 const ProductPage = () => {
@@ -89,6 +89,7 @@ const ProductPage = () => {
     const { data: productResponse, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const selectedProduct = useSelector((state) => state.products.selected);
+    const authToken = useSelector((state) => state.auth?.token);
     const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
 
 
@@ -307,6 +308,13 @@ const ProductPage = () => {
     }
 
     async function AddtoCart() {
+        if (!authToken) {
+            notifyAuth('Please log in to add items to your cart and continue shopping.');
+            setTimeout(() => {
+                router.push(`/account-login?redirect=/product/${product?.handle || product?.id}`);
+            }, 1500);
+            return;
+        }
         if (!product?.id) return;
         if (product.variants.length > 0 && !selectedVariant) {
             notifyError('Please select a variant before adding to cart.', 'Select a Variant');

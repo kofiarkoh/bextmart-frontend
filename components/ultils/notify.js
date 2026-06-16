@@ -19,3 +19,16 @@ export function notifySuccess(message, title = 'Success') {
 export function notifyInfo(message, title = '') {
   Store.addNotification({ ...base, title, message, type: 'info' })
 }
+
+export function notifyAuth(message, title = 'Login Required') {
+  Store.addNotification({
+    title,
+    message,
+    type: 'danger',
+    insert: 'top',
+    container: 'top-center',
+    animationIn: [],
+    animationOut: [],
+    dismiss: { duration: 1500, onScreen: false, showIcon: true },
+  })
+}

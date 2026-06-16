@@ -39,9 +39,13 @@ export default function LoginPage() {
 
   const [login, { isLoading: loggingIn }] = useLoginMutation()
 
+  const redirectTo = (typeof router.query.redirect === 'string' && router.query.redirect.startsWith('/'))
+    ? router.query.redirect
+    : '/account'
+
   useEffect(() => {
-    if (authToken) router.replace('/account')
-  }, [authToken, router])
+    if (authToken) router.replace(redirectTo)
+  }, [authToken, router, redirectTo])
 
   function isEmail(v) { return /\S+@\S+\.\S+/.test(v) }
 
@@ -60,7 +64,7 @@ export default function LoginPage() {
         dispatch(setCredentials({ token, user: user || null }))
       }
       notifySuccess('Welcome back!', 'Signed In')
-      router.push('/account')
+      router.push(redirectTo)
     } catch (err) {
       notifyError(err?.data?.message || 'Invalid email or password.')
       setError(err?.data?.message || 'Invalid email or password.')

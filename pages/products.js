@@ -66,7 +66,7 @@ const ProductsPage = () => {
                 )}
                 <div className={styles.products_grid_content}>
                   <div className="collection-grid__content">
-                    <div className={`${styles.products_grid_row} row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-5`}>
+                    <div className={styles.products_grid_row}>
                       {isLoading && (
                         <div className="col">
                           <div className="product-item__content">Loading...</div>
@@ -83,7 +83,7 @@ const ProductsPage = () => {
                         </div>
                       )}
                       {!isLoading && !isError && items.map((item, index) => (
-                        <div key={item?.id || index} className="product-item__content col d-none d-xxl-block d-xl-block d-lg-block d-md-block d-sm-block d-block">
+                        <div key={item?.id || index} className="product-item__content">
                           <ProductItemGrid product={item} />
                         </div>
                       ))}

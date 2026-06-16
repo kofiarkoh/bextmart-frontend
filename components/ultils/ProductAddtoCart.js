@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useAddToCartMutation } from '../../store/cartApi'
 import { SVGCart } from '../../public/assets/SVG';
-import { notifyError, notifySuccess } from './notify';
+import { notifyError, notifySuccess, notifyAuth } from './notify';
 
 const ProductAddtoCart = ({ product }) => {
     const router = useRouter();
@@ -14,7 +14,10 @@ const ProductAddtoCart = ({ product }) => {
 
     async function handleAddToCart() {
         if (!authToken) {
-            router.push('/account-login');
+            notifyAuth('Please log in to add items to your cart and continue shopping.');
+            setTimeout(() => {
+                router.push(`/account-login?redirect=/product/${product?.id}`);
+            }, 1500);
             return;
         }
         setError(null);
