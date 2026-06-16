@@ -226,7 +226,7 @@ module.exports = {
     SHOP_NAME: "YOU AND ME SHOP",
     Location: "Battlefield, Suite C Springfield, MO 65807",
     Shop_Phone: "111-222-3333",
-    Shop_Email: "support@kalathemes.freshdesk.com",
+    Shop_Email: "support@bextmart.com",
     Copy_right: "著作権 © 2022",
     Shop_info: "Bextmart",
     // Extension

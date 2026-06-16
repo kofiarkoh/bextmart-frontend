@@ -65,7 +65,7 @@ export const Contact_fr =
     Phone_Text2: "Ligne d'assistance: 1800 - 1102",
     Email: "E-MAIL",
     Email_Text1: "kalathemes@gmail.com",
-    Email_Text2: "support@kalathemes.freshdesk.com",
+    Email_Text2: "support@bextmart.com",
     More: "PRENEZ CONTACT AVEC NOUS",
     More_Desc:"Mais qui peut légitimement critiquer celui qui veut être dans ce plaisir qui n'entraîne aucun inconfort, ou celui qui évite cette douleur dans laquelle aucun plaisir n'est épargné, ce sera celui-là",
     Form_Name:"Nom",

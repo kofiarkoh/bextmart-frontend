@@ -148,17 +148,17 @@ const Footer = () => {
                                                         <div className="footer__list-info">
                                                             <div className="footer__list-info-item location-area">
                                                                 <SVGLocationPin />
-                                                                <div className="content">{t("Location")}</div>
+                                                                <div className="content">0460 Maame Afia Dubia Rd<br />Nsawam, E/R<br />EG-373-2159</div>
                                                             </div>
                                                             <div className="footer__list-info-item phone-area ">
                                                                 <SVGPhone />
                                                                 <div className="content">{t("Shop_Phone")}</div>
                                                             </div><div className="footer__list-info-item email-area">
                                                                 <SVGEnvolope />
-                                                                <div className="content">{t("Email")}</div>
+                                                                <div className="content">support@bextmart.com</div>
                                                             </div>
                                                         </div>
-                                                        <div className="footer__list-social">
+                                                        {/* <div className="footer__list-social">
                                                             <ul className="list-unstyled list-social" role="list">
                                                                 <li className="list-social__item list-social__twitter">
                                                                     <Link href="https://twitter.com/kalathemes" className="link link--text list-social__link" >
@@ -186,7 +186,7 @@ const Footer = () => {
                                                                 </li>
                                                                 <li className="visually-hidden list-social__item--placeholder">Follow us on social media!</li>
                                                             </ul>
-                                                        </div>
+                                                        </div> */}
                                                     </div>
                                                 </div>
                                             
@@ -206,7 +206,7 @@ const Footer = () => {
                                                                 <div className="content">support@bextmart.com</div>
                                                             </div>
                                                         </div>
-                                                        <div className="footer__list-social">
+                                                        {/* <div className="footer__list-social">
                                                             <ul className="list-unstyled list-social" role="list">
                                                                 <li className="list-social__item list-social__twitter">
                                                                     <Link href="https://twitter.com/kalathemes" className="link link--text list-social__link" >
@@ -234,7 +234,7 @@ const Footer = () => {
                                                                 </li>
                                                                 <li className="visually-hidden list-social__item--placeholder">Follow us on social media!</li>
                                                             </ul>
-                                                        </div>
+                                                        </div> */}
                                                     </div>
                                                 </div>
                                             </div>

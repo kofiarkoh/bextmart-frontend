@@ -65,7 +65,7 @@ export const Contact_jp =
     Phone_Text2: "ホットライン: 1800 - 1102",
     Email: "Eメール",
     Email_Text1: "kalathemes@gmail.com",
-    Email_Text2: "support@kalathemes.freshdesk.com",
+    Email_Text2: "support@bextmart.com",
     More: "お問い合わせ",
     More_Desc:"しかし、何の不快感ももたらさない快楽に浸りたい人や、快楽を惜しまない苦痛を避ける人を正当に批判できる人は、その人です。",
     Form_Name:"名前",

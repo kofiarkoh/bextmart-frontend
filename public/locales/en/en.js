@@ -227,9 +227,9 @@ module.exports = {
     CUSTOMER_SERVICES: "CUSTOMER SERVICES",
     INFORMATION: "INFORMATION",
     SHOP_NAME: "BEXTMART",
-    Location: "Battlefield, Suite C Springfield, MO 65807",
-    Shop_Phone: "111-222-3333",
-    Shop_Email: "support@kalathemes.freshdesk.com",
+    Location: "0460 Maame Afia Dubia Rd, Nsawam, E/R, EG-373-2159",
+    Shop_Phone: "+233 243 662 283",
+    Shop_Email: "support@bextmart.com",
     Copy_right: "Copyright © 2026",
     Shop_info: "Bextmart",
     // Extension
