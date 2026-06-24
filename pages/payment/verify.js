@@ -24,11 +24,18 @@ function formatDate(str) {
 
 function StatusPill({ status }) {
     const map = {
-        paid: ['#d1fae5', '#065f46'], success: ['#d1fae5', '#065f46'],
-        completed: ['#d1fae5', '#065f46'], delivered: ['#d1fae5', '#065f46'],
-        pending: ['#fef3c7', '#92400e'], unpaid: ['#fef3c7', '#92400e'],
-        processing: ['#dbeafe', '#1e40af'], shipped: ['#dbeafe', '#1e40af'],
-        failed: ['#fee2e2', '#991b1b'], cancelled: ['#fee2e2', '#991b1b'],
+        pending:    ['#fef3c7', '#92400e'],
+        confirmed:  ['#d1fae5', '#065f46'],
+        processing: ['#dbeafe', '#1e40af'],
+        shipped:    ['#e0e7ff', '#3730a3'],
+        delivered:  ['#d1fae5', '#065f46'],
+        cancelled:  ['#fee2e2', '#991b1b'],
+        returned:   ['#fef3c7', '#92400e'],
+        refunded:   ['#f3e8ff', '#6b21a8'],
+        failed:     ['#fee2e2', '#991b1b'],
+        // transaction statuses
+        success:    ['#d1fae5', '#065f46'],
+        paid:       ['#d1fae5', '#065f46'],
     }
     const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
     return (

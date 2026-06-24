@@ -64,7 +64,7 @@ const STEPS = [
 ]
 
 const STATUS_TO_STEP = {
-  pending: 0, processing: 1, shipped: 2,
+  pending: 0, confirmed: 0, processing: 1, shipped: 2,
   delivered: 3, completed: 3, success: 3,
 }
 
@@ -76,7 +76,7 @@ const Tick = () => (
 
 function StatusStepper({ status }) {
   const s = (status || '').toLowerCase()
-  const cancelled = s === 'cancelled' || s === 'failed'
+  const cancelled = s === 'cancelled' || s === 'failed' || s === 'returned' || s === 'refunded'
   const activeStep = STATUS_TO_STEP[s] ?? 0
 
   if (cancelled) {
@@ -479,18 +479,22 @@ export default function OrderDetailPage() {
 
 function StatusPill({ status }) {
   const map = {
-    paid:       ['#d1fae5', '#065f46'], success:    ['#d1fae5', '#065f46'],
-    completed:  ['#d1fae5', '#065f46'], delivered:  ['#d1fae5', '#065f46'],
-    pending:    ['#fef3c7', '#92400e'], unpaid:     ['#fef3c7', '#92400e'],
-    processing: ['#dbeafe', '#1e40af'], shipped:    ['#dbeafe', '#1e40af'],
-    failed:     ['#fee2e2', '#991b1b'], cancelled:  ['#fee2e2', '#991b1b'],
+    pending:    ['#fef3c7', '#92400e'],
+    confirmed:  ['#d1fae5', '#065f46'],
+    processing: ['#dbeafe', '#1e40af'],
+    shipped:    ['#e0e7ff', '#3730a3'],
+    delivered:  ['#d1fae5', '#065f46'],
+    cancelled:  ['#fee2e2', '#991b1b'],
+    returned:   ['#fef3c7', '#92400e'],
+    refunded:   ['#f3e8ff', '#6b21a8'],
+    failed:     ['#fee2e2', '#991b1b'],
+    success:    ['#d1fae5', '#065f46'],
+    paid:       ['#d1fae5', '#065f46'],
   }
-  const labels = { pending: 'Pending Payment', unpaid: 'Pending Payment' }
   const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
-  const label = labels[status?.toLowerCase()] || status || '—'
   return (
     <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 10, fontSize: 11, fontWeight: 600, background: bg, color, textTransform: 'capitalize' }}>
-      {label}
+      {status || '—'}
     </span>
   )
 }
