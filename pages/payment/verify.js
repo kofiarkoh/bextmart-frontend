@@ -236,11 +236,12 @@ export default function PaymentVerifyPage() {
                                                     const product  = item.product || {}
                                                     const variant  = item.variant  || null
                                                     const name     = product?.name || 'Product'
-                                                    const imgSrc   = buildImageUrl(product?.photos?.[0] ?? null)
+                                                    const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
                                                     const qty      = item.quantity ?? 1
                                                     const price    = parseFloat(item.price ?? 0)
                                                     const rowTotal = parseFloat(item.total_price ?? price * qty)
                                                     const variantLabel = variant?.attribute_values?.map(av => av.value || av.name).join(', ') || variant?.sku || null
+                                                    const itemStatus = item?.status || null
 
                                                     return (
                                                         <div key={i} style={{
@@ -273,9 +274,12 @@ export default function PaymentVerifyPage() {
                                                                 {variantLabel && (
                                                                     <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--color_body)' }}>{variantLabel}</p>
                                                                 )}
-                                                                <p style={{ margin: 0, fontSize: 12, color: 'var(--color_body)' }}>
-                                                                    <CurrencyConvert amount={price} /> each
-                                                                </p>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                                                    <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
+                                                                        <CurrencyConvert amount={price} /> each
+                                                                    </span>
+                                                                    {itemStatus && <StatusPill status={itemStatus} />}
+                                                                </div>
                                                             </div>
 
                                                             {isMobile ? (

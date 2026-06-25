@@ -312,11 +312,14 @@ export default function OrderDetailPage() {
                       <>
                         {items.map((item, i) => {
                           const product  = item.product || item
+                          const variant  = item.variant || null
                           const name     = product?.name || item?.name || 'Product'
-                          const imgSrc   = buildImageUrl(product?.photos?.[0] ?? item?.photos?.[0] ?? null)
+                          const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? item?.photos?.[0] ?? null)
                           const qty      = item?.quantity ?? item?.qty ?? 1
                           const price    = parseFloat(item?.price ?? product?.price ?? 0)
-                          const rowTotal = parseFloat(item?.total ?? item?.subtotal ?? price * qty)
+                          const rowTotal = parseFloat(item?.total_price ?? item?.total ?? item?.subtotal ?? price * qty)
+                          const variantLabel = variant?.attribute_values?.map(av => av.value || av.name).join(', ') || variant?.sku || null
+                          const itemStatus = item?.status || null
 
                           return (
                             <div key={i} style={{
@@ -346,10 +349,10 @@ export default function OrderDetailPage() {
                                 )}
                               </div>
 
-                              {/* Name + price */}
+                              {/* Name + variant + status + price */}
                               <div style={{ flex: 1, minWidth: 0, width: 0, overflow: 'hidden' }}>
                                 <p style={{
-                                  margin: '0 0 4px', fontWeight: 500, fontSize: 14,
+                                  margin: '0 0 2px', fontWeight: 500, fontSize: 14,
                                   color: 'var(--color_heading)',
                                   overflow: 'hidden', textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap',
@@ -357,9 +360,15 @@ export default function OrderDetailPage() {
                                 }}>
                                   {name}
                                 </p>
-                                <p style={{ margin: 0, fontSize: 12, color: 'var(--color_body)' }}>
-                                  <CurrencyConvert amount={price} /> each
-                                </p>
+                                {variantLabel && (
+                                  <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--color_body)' }}>{variantLabel}</p>
+                                )}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                  <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
+                                    <CurrencyConvert amount={price} /> each
+                                  </span>
+                                  {itemStatus && <StatusPill status={itemStatus} />}
+                                </div>
                               </div>
 
                               {/* Qty + total stacked on mobile, inline on desktop */}
