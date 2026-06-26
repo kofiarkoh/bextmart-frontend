@@ -15,12 +15,23 @@ import AddressBook from '../components/account/AddressBook'
 import {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
+  useGetCheckoutSummaryQuery,
 } from '../store/checkoutApi'
+import { useGetCartQuery } from '../store/cartApi'
 
 const STEP_ADDRESS = 0
 const STEP_REVIEW = 1
 
 const STEP_LABELS = ['Delivery Address', 'Review & Pay']
+
+const CHECKOUT_KEY = 'bextmart_checkout'
+
+function loadSaved() {
+  try {
+    const raw = typeof window !== 'undefined' && sessionStorage.getItem(CHECKOUT_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch { return {} }
+}
 
 export default function CheckoutPage() {
   if (typeof window !== 'undefined') {
@@ -30,7 +41,7 @@ export default function CheckoutPage() {
 
   const { t } = useTranslation()
   const router = useRouter()
-const authToken = useSelector((state) => state.auth?.token)
+  const authToken = useSelector((state) => state.auth?.token)
   const cartItems = useSelector((state) => state.cart.items)
 
   const [step, setStep] = useState(STEP_ADDRESS)
@@ -43,6 +54,27 @@ const authToken = useSelector((state) => state.auth?.token)
   const [paymentError, setPaymentError] = useState(null)
   const [tokenChecked, setTokenChecked] = useState(false)
 
+  // restore saved checkout state after mount (client-only, avoids SSR hydration mismatch)
+  useEffect(() => {
+    const saved = loadSaved()
+    if (!saved || !Object.keys(saved).length) return
+    if (saved.regionId)             setRegionId(saved.regionId)
+    if (saved.cityId)               setCityId(saved.cityId)
+    if (saved.nearbyCity)           setNearbyCity(saved.nearbyCity)
+    if (saved.deliveryInstructions) setDeliveryInstructions(saved.deliveryInstructions)
+    if (saved.selectedAddressId)    setSelectedAddressId(saved.selectedAddressId)
+    if (saved.step != null)         setStep(saved.step)
+  }, [])
+
+  // persist whenever any address field or step changes
+  useEffect(() => {
+    sessionStorage.setItem(CHECKOUT_KEY, JSON.stringify({
+      step, selectedAddressId, regionId, cityId, nearbyCity, deliveryInstructions,
+    }))
+  }, [step, selectedAddressId, regionId, cityId, nearbyCity, deliveryInstructions])
+
+  const { isLoading: cartLoading } = useGetCartQuery(undefined, { skip: !tokenChecked || !authToken })
+
   useEffect(() => {
     const local = typeof window !== 'undefined' && localStorage.getItem('auth_token')
     if (!local) router.replace('/account-login')
@@ -50,10 +82,13 @@ const authToken = useSelector((state) => state.auth?.token)
   }, [router])
 
   useEffect(() => {
+    if (!tokenChecked) return
+    if (!authToken) return // auth useEffect already handles redirect to login
+    if (cartLoading) return
     if (Array.isArray(cartItems) && cartItems.length === 0) {
       router.replace('/')
     }
-  }, [cartItems, router])
+  }, [tokenChecked, authToken, cartLoading, cartItems, router])
 
   const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery(
     undefined,
@@ -79,6 +114,15 @@ const authToken = useSelector((state) => state.auth?.token)
   }
 
   const [processPayment, { isLoading: processingPayment }] = useProcessPaymentMutation()
+
+  const { data: summaryData, isLoading: loadingSummary, refetch: refetchSummary } = useGetCheckoutSummaryQuery(cityId, {
+    skip: !cityId || step !== STEP_REVIEW,
+  })
+  const summary = summaryData?.data || null
+
+  useEffect(() => {
+    if (cityId && step === STEP_REVIEW) refetchSummary()
+  }, [cartItems])
 
   function handleContinue() {
     if (!regionId) {
@@ -114,6 +158,7 @@ const authToken = useSelector((state) => state.auth?.token)
         return
       }
 
+      sessionStorage.removeItem(CHECKOUT_KEY)
       window.location.href = paymentUrl
     } catch (err) {
       const msg = err?.data?.message || 'Payment initiation failed. Please try again.'
@@ -419,36 +464,37 @@ const authToken = useSelector((state) => state.auth?.token)
                       )
                     })}
 
-                    {/* Totals breakdown */}
-                    {(() => {
-                      const subtotal = cartItems.reduce((sum, item) => {
-                        const variant       = item.variant || item.product_variant
-                        const variantOption = item.variant_option
-                        const product       = item.product || item
-                        const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
-                        return sum + price * (item?.quantity || 1)
-                      }, 0)
-                      const deliveryFee = parseFloat(selectedCity?.delivery_fee || 0)
-                      const grandTotal = subtotal + deliveryFee
-                      return (
-                        <div style={{ background: '#f9fafb', borderTop: '2px solid var(--color_line)' }}>
+                    {/* Totals breakdown — from API summary */}
+                    <div style={{ background: '#f9fafb', borderTop: '2px solid var(--color_line)' }}>
+                      {loadingSummary ? (
+                        <div style={{ padding: '16px', textAlign: 'center', fontSize: 13, color: 'var(--color_body)' }}>
+                          Calculating totals…
+                        </div>
+                      ) : (
+                        <>
                           <div style={{ padding: '12px 16px 4px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)' }}>
                             <span>Subtotal</span>
-                            <span><CurrencyConvert amount={subtotal} /></span>
+                            <span><CurrencyConvert amount={parseFloat(summary?.cart_total ?? 0)} /></span>
                           </div>
-                          <div style={{ padding: '4px 16px 12px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)', borderBottom: '1px solid var(--color_line)' }}>
+                          <div style={{ padding: '4px 16px 4px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)' }}>
                             <span>Delivery fee ({selectedCity?.name})</span>
-                            <span><CurrencyConvert amount={deliveryFee} /></span>
+                            <span><CurrencyConvert amount={parseFloat(summary?.delivery_fee ?? selectedCity?.delivery_fee ?? 0)} /></span>
                           </div>
-                          <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          {parseFloat(summary?.weight_cost ?? 0) > 0 && (
+                            <div style={{ padding: '4px 16px 12px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)', borderBottom: '1px solid var(--color_line)' }}>
+                              <span>Weight cost</span>
+                              <span><CurrencyConvert amount={parseFloat(summary.weight_cost)} /></span>
+                            </div>
+                          )}
+                          <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: parseFloat(summary?.weight_cost ?? 0) > 0 ? 'none' : '1px solid var(--color_line)' }}>
                             <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>Total</span>
                             <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--color_primary)' }}>
-                              <CurrencyConvert amount={grandTotal} />
+                              <CurrencyConvert amount={parseFloat(summary?.total_amount ?? 0)} />
                             </span>
                           </div>
-                        </div>
-                      )
-                    })()}
+                        </>
+                      )}
+                    </div>
                   </div>
 
                   {/* Payment method */}

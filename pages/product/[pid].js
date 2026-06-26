@@ -35,7 +35,7 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
-import { notifyError, notifySuccess, notifyAuth } from '../../components/ultils/notify'
+import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
 import Button from '../../components/ultils/Button'
 
 const ProductPage = () => {
@@ -120,9 +120,9 @@ const ProductPage = () => {
          setGroupImages(allPhotos);
         return {
             id: apiProduct.id,
+            uuid: apiProduct.uuid,
             name: apiProduct.name,
             price: apiProduct.price,
-            price_compare: apiProduct.price_compare || apiProduct.compare_price || apiProduct.price,
             quantity: apiProduct.quantity ?? 0,
             quantity_total: apiProduct.quantity ?? 0,
             stars: apiProduct.stars ?? 0,
@@ -263,7 +263,7 @@ const ProductPage = () => {
                         <span className="form__label-title">{t("Choose_style")}:</span>
                     </legend>
                     <div className={styles.product_advance_form_item}>
-                        <Link className={`${styles.product_advance_item} product-advance__item ${styles.isactive}`} href={`/product/${product.handle}`}>
+                        <Link className={`${styles.product_advance_item} product-advance__item ${styles.isactive}`} href={`/product/${product.uuid || product.handle}`}>
                             <div className={styles.product_advance_item_image}>
                                 <Image src={product.image[0].imgpath} alt='' width={119} height={119} />
                             </div>
@@ -311,7 +311,8 @@ const ProductPage = () => {
         if (!authToken) {
             notifyAuth('Please log in to add items to your cart and continue shopping.');
             setTimeout(() => {
-                router.push(`/account-login?redirect=/product/${product?.handle || product?.id}`);
+                dismissAll();
+                router.push(`/account-login?redirect=/product/${product?.uuid || product?.id}`);
             }, 1500);
             return;
         }
@@ -322,7 +323,7 @@ const ProductPage = () => {
         }
         try {
             setClassStatus('cart-loadding');
-            const payload = { product_id: product.id, quantity: qty };
+            const payload = { product_uuid: product.uuid, quantity: qty };
             if (selectedVariant) {
                 payload.product_variant_id = selectedVariant.id;
                 if (selectedVariant.options?.length > 0) {
@@ -373,7 +374,7 @@ const ProductPage = () => {
                                                                 o => selectedOptions[o.type] === o.value && o.price != null
                                                             );
                                                             const activePrice = activeOption?.price ?? selectedVariant?.price ?? product.price;
-                                                            return displayPrice(activePrice, product.price_compare);
+                                                            return displayPrice(activePrice);
                                                         })()}
                                                     </div>
                                                     <div className={styles.product_earnpoints}>
@@ -649,7 +650,7 @@ const ProductPage = () => {
                                                         {similarProducts.slice(0, 6).map((item, index) => (
                                                             <Link
                                                                 key={item.id || index}
-                                                                href={`/product/${item.id}`}
+                                                                href={`/product/${item.uuid || item.id}`}
                                                                 style={{ textDecoration: 'none' }}
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
@@ -692,22 +693,29 @@ const ProductPage = () => {
             <>
                 <Header />
                 <main>
-                    {
-                        isLoading ? <ProductPageSkeleton /> : <>
-                            <div className="product-template">
-                                <div className={`product-template__layout ${styles.template_wrapper}`}>
-                                    <div className="container">
-                                        <div className='product-template__container row'>
-                                            <div className={`${styles.no_category} no_product`}>
-                                                <h2 className={styles.no_category_h2}>{t("No_found_product")}</h2>
-                                            </div>
-                                        </div>
-                                    </div>
+                    {isLoading ? <ProductPageSkeleton /> : (
+                        <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 20px', background: '#f9fafb' }}>
+                            <div style={{ textAlign: 'center', maxWidth: 440 }}>
+                                <div style={{ fontSize: 72, marginBottom: 16, lineHeight: 1 }}>
+                                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                        <line x1="8" y1="11" x2="14" y2="11"/>
+                                    </svg>
+                                </div>
+                                <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color_heading)', margin: '0 0 8px' }}>
+                                    Product Not Found
+                                </h1>
+                                <p style={{ fontSize: 15, color: 'var(--color_body)', margin: '0 0 28px', lineHeight: 1.6 }}>
+                                    Sorry, the product you&apos;re looking for doesn&apos;t exist or may have been removed. Try browsing our catalog or search for something else.
+                                </p>
+                                <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                                    <Link href="/products" className="button button--primary">Browse Products</Link>
+                                    <Link href="/" className="button button--secondary">Go Home</Link>
                                 </div>
                             </div>
-                        </>
-                    }
-
+                        </div>
+                    )}
                 </main>
                 <Footer />
             </>

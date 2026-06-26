@@ -16,7 +16,7 @@ const CollectionProduct = ({ product }) => {
 
             <div className="product-item__grid ">
                 <div className="product-item__top">
-                    <Link className='product-item__link product-item__hover_image' href={`/product/${product.handle}`}>
+                    <Link className='product-item__link product-item__hover_image' href={`/product/${product.uuid || product.handle}`}>
                         <div className='product-item__image'>
                             <div className='product-item__image'>
                                 <Image src={product.image[0].imgpath} priority="true" alt={product.image[0].imgalt} width={370} height={370} />
@@ -37,21 +37,21 @@ const CollectionProduct = ({ product }) => {
                     <ProductAddtoCart product={product} />
                 </div>
                 <div className="product-item__bottom">
-                    <Link href={`/product/${product.handle}`} className="product-item__title h5">
+                    <Link href={`/product/${product.uuid || product.handle}`} className="product-item__title h5">
                         {product.name}
                     </Link>
                     {displayRating(product.stars)}
-                    {displayPrice(product.price, product.price_compare)}
+                    {displayPrice(product.price)}
                     {displayInventoryBar(product.quantity, product.quantity_total, t("Left"))}
                 </div>
                 <div className="collection-product-item__list">
                     <div className="product-item__list-title">
                         {displayRating(product.stars)}
-                        <Link href={`/product/${product.handle}`} className="product-item__title h5">
+                        <Link href={`/product/${product.uuid || product.handle}`} className="product-item__title h5">
                             {product.name}
                         </Link>
                     </div>
-                    {displayPrice(product.price, product.price_compare)}
+                    {displayPrice(product.price)}
                     <div className="product-item__list-description">
                         {product.shortdesc}
                     </div>

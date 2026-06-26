@@ -12,7 +12,7 @@ const ProductItemGrid = ({ product }) => {
     return (
         <>
             <div className="product-item__top">
-                <Link href={`/product/${product.handle}`} className='product-item__link product-item__hover_image'>
+                <Link href={`/product/${product.uuid || product.handle}`} className='product-item__link product-item__hover_image'>
                     <>
                             <div className='product-item__image'>
                                 <div className='product-item__image'>
@@ -30,11 +30,11 @@ const ProductItemGrid = ({ product }) => {
 
             </div>
             <div className="product-item__bottom">
-                <Link href={`/product/${product.handle}`} className="product-item__title h5">
+                <Link href={`/product/${product.uuid || product.handle}`} className="product-item__title h5">
                     {product.name}
                 </Link>
                 {displayRating(product.stars)}
-                {displayPrice(product.price, product.price_compare)}
+                {displayPrice(product.price)}
                 <div className="product-item__hover">
                     <ProductAddtoCart product={product} />
                     <ProductQuickView product={product} directly="1" />

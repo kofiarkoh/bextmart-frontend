@@ -23,6 +23,12 @@ export const checkoutApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCheckoutSummary: builder.query({
+      query: (cityId) => ({
+        url: `${BASE_URL}/checkout/summary?city_id=${cityId}`,
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 })
@@ -31,4 +37,5 @@ export const {
   useGetAddressOptionsQuery,
   useProcessPaymentMutation,
   useGetPaymentStatusQuery,
+  useGetCheckoutSummaryQuery,
 } = checkoutApi

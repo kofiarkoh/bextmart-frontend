@@ -201,7 +201,7 @@ const ProductQuickView = ({ product, directly }) => {
                                         <div className="product-template__info col-12 col-sm-12 col-md-6">
                                             <div className="product-template__info-left">
                                                 <h1 className="product-template__title">{product.name}</h1>
-                                                {displayPrice(product.price, product.price_compare)}
+                                                {displayPrice(product.price)}
                                                 {displayRating(product.stars)}
                                                 <div className="product-template__details"><div className="product-template__title-area">{t("Details")}</div><div className="product-template__content-area">
                                                     <ul>

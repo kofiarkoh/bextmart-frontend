@@ -24,18 +24,23 @@ function formatDate(str) {
 
 function StatusPill({ status }) {
     const map = {
-        paid: ['#d1fae5', '#065f46'], success: ['#d1fae5', '#065f46'],
-        completed: ['#d1fae5', '#065f46'], delivered: ['#d1fae5', '#065f46'],
-        pending: ['#fef3c7', '#92400e'], unpaid: ['#fef3c7', '#92400e'],
-        processing: ['#dbeafe', '#1e40af'], shipped: ['#dbeafe', '#1e40af'],
-        failed: ['#fee2e2', '#991b1b'], cancelled: ['#fee2e2', '#991b1b'],
+        pending:    ['#fef3c7', '#92400e'],
+        confirmed:  ['#d1fae5', '#065f46'],
+        processing: ['#dbeafe', '#1e40af'],
+        shipped:    ['#e0e7ff', '#3730a3'],
+        delivered:  ['#d1fae5', '#065f46'],
+        cancelled:  ['#fee2e2', '#991b1b'],
+        returned:   ['#fef3c7', '#92400e'],
+        refunded:   ['#f3e8ff', '#6b21a8'],
+        failed:     ['#fee2e2', '#991b1b'],
+        // transaction statuses
+        success:    ['#d1fae5', '#065f46'],
+        paid:       ['#d1fae5', '#065f46'],
     }
-    const labels = { pending: 'Pending Payment', unpaid: 'Pending Payment' }
     const [bg, color] = map[status?.toLowerCase()] || ['#f3f4f6', '#374151']
-    const label = labels[status?.toLowerCase()] || status || '—'
     return (
         <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 10, fontSize: 11, fontWeight: 600, background: bg, color, textTransform: 'capitalize' }}>
-            {label}
+            {status || '—'}
         </span>
     )
 }
@@ -81,6 +86,7 @@ export default function PaymentVerifyPage() {
     const items       = Array.isArray(order?.items) ? order.items : []
     const subtotal    = parseFloat(order?.cart_price   ?? 0)
     const shippingFee = parseFloat(order?.delivery_fee ?? 0)
+    const weightCost  = parseFloat(order?.weight_cost  ?? 0)
     const totalPrice  = parseFloat(order?.total_price  ?? 0)
     // delivery info: address object + top-level nearby_city / delivery_instructions
     const address     = order?.address || null
@@ -110,8 +116,8 @@ export default function PaymentVerifyPage() {
             <Head><title>{pageTitle} — Bextmart</title></Head>
             <Header />
 
-            <main style={{ background: '#f4f5f7', minHeight: '70vh', padding: isMobile ? '24px 0 60px' : '40px 0 80px' }}>
-                <div className="container" style={{ maxWidth: 860 }}>
+            <main style={{ background: '#f4f5f7', minHeight: '70vh', padding: isMobile ? '16px 0 60px' : '40px 0 80px' }}>
+                <div className="container" style={{ maxWidth: 860, paddingLeft: isMobile ? 12 : undefined, paddingRight: isMobile ? 12 : undefined }}>
 
                     {/* Loading — also shown while router resolves query params */}
                     {(!router.isReady || isLoading) && (
@@ -142,7 +148,7 @@ export default function PaymentVerifyPage() {
                         <>
                             {/* ── Status banner ── */}
                             <div style={{
-                                borderRadius: 12, padding: isMobile ? '20px 18px' : '28px 32px',
+                                borderRadius: 12, padding: isMobile ? '24px 18px' : '28px 32px',
                                 marginBottom: 16, textAlign: 'center',
                                 background: succeeded ? '#ecfdf5'
                                           : failed    ? '#fef2f2'
@@ -207,7 +213,7 @@ export default function PaymentVerifyPage() {
                             {/* ── Body ── */}
                             <div style={{
                                 display: 'flex', flexDirection: isMobile ? 'column' : 'row',
-                                gap: 16, alignItems: 'flex-start',
+                                gap: 12, alignItems: isMobile ? 'stretch' : 'flex-start',
                             }}>
 
                                 {/* Items */}
@@ -230,11 +236,12 @@ export default function PaymentVerifyPage() {
                                                     const product  = item.product || {}
                                                     const variant  = item.variant  || null
                                                     const name     = product?.name || 'Product'
-                                                    const imgSrc   = buildImageUrl(product?.photos?.[0] ?? null)
+                                                    const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
                                                     const qty      = item.quantity ?? 1
                                                     const price    = parseFloat(item.price ?? 0)
                                                     const rowTotal = parseFloat(item.total_price ?? price * qty)
                                                     const variantLabel = variant?.attribute_values?.map(av => av.value || av.name).join(', ') || variant?.sku || null
+                                                    const itemStatus = item?.status || null
 
                                                     return (
                                                         <div key={i} style={{
@@ -267,9 +274,12 @@ export default function PaymentVerifyPage() {
                                                                 {variantLabel && (
                                                                     <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--color_body)' }}>{variantLabel}</p>
                                                                 )}
-                                                                <p style={{ margin: 0, fontSize: 12, color: 'var(--color_body)' }}>
-                                                                    <CurrencyConvert amount={price} /> each
-                                                                </p>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                                                    <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
+                                                                        <CurrencyConvert amount={price} /> each
+                                                                    </span>
+                                                                    {itemStatus && <StatusPill status={itemStatus} />}
+                                                                </div>
                                                             </div>
 
                                                             {isMobile ? (
@@ -304,6 +314,12 @@ export default function PaymentVerifyPage() {
                                                         <span>Delivery Fee</span>
                                                         <span>{shippingFee > 0 ? <CurrencyConvert amount={shippingFee} /> : 'Free'}</span>
                                                     </div>
+                                                    {weightCost > 0 && (
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 8 }}>
+                                                            <span>Weight Cost</span>
+                                                            <span><CurrencyConvert amount={weightCost} /></span>
+                                                        </div>
+                                                    )}
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: 'var(--color_heading)', paddingTop: 10, borderTop: '1px solid var(--color_line)', marginTop: 4 }}>
                                                         <span>Total</span><span><CurrencyConvert amount={totalPrice} /></span>
                                                     </div>
@@ -317,7 +333,7 @@ export default function PaymentVerifyPage() {
                                 <div style={{ width: isMobile ? '100%' : 240, flexShrink: 0 }}>
 
                                     {/* Order details */}
-                                    <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden', marginBottom: 14 }}>
+                                    <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden', marginBottom: 12 }}>
                                         <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--color_line)' }}>
                                             <h3 style={{ margin: 0, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color_body)' }}>
                                                 Order Details
@@ -328,10 +344,10 @@ export default function PaymentVerifyPage() {
                                             {order.created_at && (
                                                 <MetaRow label="Date" value={new Date(order.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} />
                                             )}
-                                            <MetaRow label="Order Status" value={<StatusPill status={order.status} />} />
                                             <MetaRow label="Payment" value={<StatusPill status={txStatus} />} />
+                                            <MetaRow label="Order Status" value={<StatusPill status={order.status} />} />
                                             {order.payment_method && (
-                                                <MetaRow label="Method" value={order.payment_method} capitalize />
+                                                <MetaRow label="Method" value={order.payment_method.replace(/_/g, ' ')} capitalize />
                                             )}
                                             {transaction?.amount && (
                                                 <MetaRow label="Charged" value={<CurrencyConvert amount={parseFloat(transaction.amount)} />} />

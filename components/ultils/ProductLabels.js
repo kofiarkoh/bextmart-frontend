@@ -1,4 +1,4 @@
-import {showDiscount, hotlabel, newlabel, featuredlabel} from './Tools';
+import {hotlabel, newlabel, featuredlabel} from './Tools';
 import useTranslation from './useTranslation'
 
 const ProductLabels = ({ product }) => {   
