@@ -35,7 +35,7 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
-import { notifyError, notifySuccess, notifyAuth } from '../../components/ultils/notify'
+import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
 import Button from '../../components/ultils/Button'
 
 const ProductPage = () => {
@@ -311,6 +311,7 @@ const ProductPage = () => {
         if (!authToken) {
             notifyAuth('Please log in to add items to your cart and continue shopping.');
             setTimeout(() => {
+                dismissAll();
                 router.push(`/account-login?redirect=/product/${product?.handle || product?.id}`);
             }, 1500);
             return;

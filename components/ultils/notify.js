@@ -29,6 +29,10 @@ export function notifyAuth(message, title = 'Login Required') {
     container: 'top-center',
     animationIn: [],
     animationOut: [],
-    dismiss: { duration: 1500, onScreen: false, showIcon: true },
+    dismiss: { duration: 1200, onScreen: false, showIcon: true },
   })
+}
+
+export function dismissAll() {
+  Store.removeAllNotifications()
 }
