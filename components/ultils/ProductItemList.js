@@ -34,7 +34,7 @@ const ProductItemGrid = ({ product }) => {
                     {product.name}
                 </Link>
                 {displayRating(product.stars)}
-                {displayPrice(product.price, product.price_compare)}
+                {displayPrice(product.price)}
                 <div className="product-item__hover">
                     <ProductAddtoCart product={product} />
                     <ProductQuickView product={product} directly="1" />

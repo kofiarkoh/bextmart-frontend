@@ -122,7 +122,6 @@ const ProductPage = () => {
             id: apiProduct.id,
             name: apiProduct.name,
             price: apiProduct.price,
-            price_compare: apiProduct.price_compare || apiProduct.compare_price || apiProduct.price,
             quantity: apiProduct.quantity ?? 0,
             quantity_total: apiProduct.quantity ?? 0,
             stars: apiProduct.stars ?? 0,
@@ -374,7 +373,7 @@ const ProductPage = () => {
                                                                 o => selectedOptions[o.type] === o.value && o.price != null
                                                             );
                                                             const activePrice = activeOption?.price ?? selectedVariant?.price ?? product.price;
-                                                            return displayPrice(activePrice, product.price_compare);
+                                                            return displayPrice(activePrice);
                                                         })()}
                                                     </div>
                                                     <div className={styles.product_earnpoints}>

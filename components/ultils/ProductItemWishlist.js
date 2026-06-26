@@ -40,7 +40,7 @@ const ProductItemWishlist = ({ product }) => {
                         {product.name}
                     </Link>
                     {displayRating(product.stars)}
-                    {displayPrice(product.price, product.price_compare)}
+                    {displayPrice(product.price)}
                     {displayInventoryBar(product.quantity, product.quantity_total, t("Left"))}
                 </div>
             </div>

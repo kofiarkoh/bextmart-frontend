@@ -41,7 +41,7 @@ const CollectionProduct = ({ product }) => {
                         {product.name}
                     </Link>
                     {displayRating(product.stars)}
-                    {displayPrice(product.price, product.price_compare)}
+                    {displayPrice(product.price)}
                     {displayInventoryBar(product.quantity, product.quantity_total, t("Left"))}
                 </div>
                 <div className="collection-product-item__list">
@@ -51,7 +51,7 @@ const CollectionProduct = ({ product }) => {
                             {product.name}
                         </Link>
                     </div>
-                    {displayPrice(product.price, product.price_compare)}
+                    {displayPrice(product.price)}
                     <div className="product-item__list-description">
                         {product.shortdesc}
                     </div>
