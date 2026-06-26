@@ -17,13 +17,13 @@ const ProductAddtoCart = ({ product }) => {
             notifyAuth('Please log in to add items to your cart and continue shopping.');
             setTimeout(() => {
                 dismissAll();
-                router.push(`/account-login?redirect=/product/${product?.id}`);
+                router.push(`/account-login?redirect=/product/${product?.uuid || product?.id}`);
             }, 1500);
             return;
         }
         setError(null);
         try {
-            await addToCart({ product_id: product.id, quantity: 1 }).unwrap();
+            await addToCart({ product_uuid: product.uuid, quantity: 1 }).unwrap();
             notifySuccess(`${product.name} added to cart.`, 'Added to Cart')
         } catch (err) {
             const msg = err?.data?.message || 'Could not add to cart.';

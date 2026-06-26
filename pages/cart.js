@@ -94,7 +94,7 @@ export default function CartPage() {
                                     {
                                         cartData.map((item, index) => {
                                             const product = item.product || {};
-                                            const productId = product.id || item.product_id;
+                                            const productId = product.uuid || item.product_uuid || product.id || item.product_id;
                                             const productName = product.name || t("Product");
                                             const variant = item.variant || item.product_variant || null;
                                             const variantOption = item.variant_option || null;
