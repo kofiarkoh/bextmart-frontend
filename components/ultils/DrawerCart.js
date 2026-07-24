@@ -131,7 +131,10 @@ const DrawerCart = () => {
                                         <h3 className="totals__subtotal">{t("Subtotal")}</h3>
                                         <p className="totals__subtotal-value" data-cart-modal-total=""><span className="money"><CurrencyConvert amount={parseInt(scTotal)} /></span></p>
                                     </div>
-                                    <div className="cart__dropdown-action">
+                                    <div className="cart__dropdown-action" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        <Link href="/cart" className="button button--secondary" style={{ width: '100%', textAlign: 'center' }} onClick={closeDrawer}>
+                                            View Cart
+                                        </Link>
                                         <Link href="/checkout" className="button button--primary" style={{ width: '100%' }}>
                                             {t("Check_out")}
                                         </Link>

@@ -17,7 +17,7 @@ import {
   useProcessPaymentMutation,
   useGetCheckoutSummaryQuery,
 } from '../store/checkoutApi'
-import { useGetCartQuery } from '../store/cartApi'
+import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation } from '../store/cartApi'
 
 const STEP_ADDRESS = 0
 const STEP_REVIEW = 1
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
     }))
   }, [step, selectedAddressId, regionId, cityId, nearbyCity, deliveryInstructions])
 
-  const { isLoading: cartLoading } = useGetCartQuery(undefined, { skip: !tokenChecked || !authToken })
+  const { isLoading: cartLoading, refetch: refetchCart } = useGetCartQuery(undefined, { skip: !tokenChecked || !authToken })
 
   useEffect(() => {
     const local = typeof window !== 'undefined' && localStorage.getItem('auth_token')
@@ -111,14 +111,47 @@ export default function CheckoutPage() {
   }
 
   const [processPayment, { isLoading: processingPayment }] = useProcessPaymentMutation()
+  const [updateCartItem] = useUpdateCartItemMutation()
+  const [removeCartItem] = useRemoveCartItemMutation()
+  const [loadingItemId, setLoadingItemId] = useState(null)
+
+  async function handleUpdateQty(itemId, newQty) {
+    setLoadingItemId(itemId)
+    try {
+      if (newQty < 1) {
+        await removeCartItem(itemId).unwrap()
+      } else {
+        await updateCartItem({ id: itemId, quantity: newQty }).unwrap()
+      }
+      refetchCart()
+      if (cityId) refetchSummary()
+    } catch {
+      notifyError('Could not update item. Please try again.')
+    } finally {
+      setLoadingItemId(null)
+    }
+  }
+
+  async function handleRemoveItem(itemId) {
+    setLoadingItemId(itemId)
+    try {
+      await removeCartItem(itemId).unwrap()
+      refetchCart()
+      if (cityId) refetchSummary()
+    } catch {
+      notifyError('Could not remove item. Please try again.')
+    } finally {
+      setLoadingItemId(null)
+    }
+  }
 
   const { data: summaryData, isLoading: loadingSummary, refetch: refetchSummary } = useGetCheckoutSummaryQuery(cityId, {
-    skip: !cityId || step !== STEP_REVIEW,
+    skip: !cityId,
   })
   const summary = summaryData?.data || null
 
   useEffect(() => {
-    if (cityId && step === STEP_REVIEW) refetchSummary()
+    if (cityId) refetchSummary()
   }, [cartItems])
 
   function handleContinue() {
@@ -128,6 +161,10 @@ export default function CheckoutPage() {
     }
     if (!cityId) {
       setAddressError('Please select a delivery city.')
+      return
+    }
+    if (hasShippingConflict) {
+      setAddressError(null)
       return
     }
     setAddressError(null)
@@ -165,6 +202,9 @@ export default function CheckoutPage() {
   }
 
   const selectedCity = cities.find((c) => String(c.id) === String(cityId)) || null
+
+  const restrictedItems = Array.isArray(summary?.restricted_items) ? summary.restricted_items : []
+  const hasShippingConflict = restrictedItems.length > 0
 
   return (
     <>
@@ -236,6 +276,97 @@ export default function CheckoutPage() {
                 <div style={{ maxWidth: 560, margin: '0 auto' }}>
                   <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Delivery Address</h2>
 
+                  {/* Cart items — editable */}
+                  <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--color_line)', marginBottom: 28 }}>
+                    <div style={{ padding: '12px 16px', background: '#f9fafb', borderBottom: '1px solid var(--color_line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color_body)' }}>
+                        Your Items
+                      </span>
+                      <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
+                        {cartItems.length} item{cartItems.length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    {cartItems.map((item, i) => {
+                      const product       = item.product || item
+                      const variant       = item.variant || item.product_variant
+                      const variantOption = item.variant_option
+                      const name          = product?.name || 'Product'
+                      const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
+                      const qty           = item?.quantity || 1
+                      const imgSrc        = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
+                      const isUpdating    = loadingItemId === item.id
+                      return (
+                        <div key={item.id ?? i} style={{
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          padding: '14px 16px',
+                          borderBottom: i < cartItems.length - 1 ? '1px solid var(--color_line)' : 'none',
+                          background: '#fff',
+                          opacity: isUpdating ? 0.5 : 1,
+                          transition: 'opacity 0.15s',
+                        }}>
+                          {/* Thumbnail */}
+                          <div style={{ width: 52, height: 52, flexShrink: 0, borderRadius: 8, overflow: 'hidden', border: '1px solid var(--color_line)', background: '#f3f4f6' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={imgSrc} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                          </div>
+
+                          {/* Name + variant */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ margin: '0 0 2px', fontSize: 13, fontWeight: 500, color: 'var(--color_heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {name}
+                            </p>
+                            {variant && (
+                              <p style={{ margin: '0 0 6px', fontSize: 11, color: 'var(--color_body)' }}>
+                                {variant.color_code && (
+                                  <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: variant.color_code, border: '1px solid #ddd', marginRight: 4, verticalAlign: 'middle' }} />
+                                )}
+                                {variantOption?.value || variant?.sku || ''}
+                              </p>
+                            )}
+                            {/* Quantity stepper */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1px solid var(--color_line)', borderRadius: 6, width: 'fit-content', overflow: 'hidden' }}>
+                              <button
+                                type="button"
+                                disabled={isUpdating}
+                                onClick={() => handleUpdateQty(item.id, qty - 1)}
+                                aria-label="Decrease quantity"
+                                style={{ width: 28, height: 28, background: '#f9fafb', border: 'none', borderRight: '1px solid var(--color_line)', cursor: 'pointer', fontSize: 16, fontWeight: 600, color: 'var(--color_heading)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              >−</button>
+                              <span style={{ minWidth: 28, textAlign: 'center', fontSize: 13, fontWeight: 600, padding: '0 4px' }}>{qty}</span>
+                              <button
+                                type="button"
+                                disabled={isUpdating}
+                                onClick={() => handleUpdateQty(item.id, qty + 1)}
+                                aria-label="Increase quantity"
+                                style={{ width: 28, height: 28, background: '#f9fafb', border: 'none', borderLeft: '1px solid var(--color_line)', cursor: 'pointer', fontSize: 16, fontWeight: 600, color: 'var(--color_heading)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              >+</button>
+                            </div>
+                          </div>
+
+                          {/* Price + remove */}
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                            <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--color_heading)' }}>
+                              <CurrencyConvert amount={price * qty} />
+                            </span>
+                            <button
+                              type="button"
+                              disabled={isUpdating}
+                              onClick={() => handleRemoveItem(item.id)}
+                              aria-label="Remove item"
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', display: 'flex', alignItems: 'center' }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#dc2626'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+                            >
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
                   {loadingAddresses ? (
                     <p>Loading delivery options...</p>
                   ) : (
@@ -280,7 +411,7 @@ export default function CheckoutPage() {
                         </select>
                       </div>
 
-                      {/* City — only shown once a region is chosen */}
+                      {/* City — shown once a region is chosen */}
                       {regionId && (
                         <div style={{ marginBottom: 20 }}>
                           <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
@@ -291,7 +422,7 @@ export default function CheckoutPage() {
                             onChange={(e) => setCityId(e.target.value)}
                             style={{
                               width: '100%', padding: '10px 12px',
-                              border: '1px solid var(--color_line)', borderRadius: 4,
+                              border: `1px solid ${hasShippingConflict ? '#fca5a5' : 'var(--color_line)'}`, borderRadius: 4,
                               fontSize: 14, backgroundColor: '#fff', appearance: 'auto',
                             }}
                           >
@@ -302,7 +433,7 @@ export default function CheckoutPage() {
                               </option>
                             ))}
                           </select>
-                          {cityId && (() => {
+                          {cityId && !hasShippingConflict && (() => {
                             const city = cities.find((c) => String(c.id) === String(cityId));
                             return city ? (
                               <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 6 }}>
@@ -310,6 +441,28 @@ export default function CheckoutPage() {
                               </p>
                             ) : null;
                           })()}
+                        </div>
+                      )}
+
+                      {/* Shipping restriction warning */}
+                      {hasShippingConflict && (
+                        <div style={{ marginBottom: 20, padding: '12px 16px', borderRadius: 8, background: '#fef2f2', border: '1px solid #fecaca' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: '#dc2626' }}>
+                              Unfortunately, a few items in your cart aren&apos;t available for delivery to this area:
+                            </span>
+                          </div>
+                          <ul style={{ margin: 0, padding: '0 0 0 24px', fontSize: 13, color: '#b91c1c' }}>
+                            {restrictedItems.map((name, i) => (
+                              <li key={i}>{name}</li>
+                            ))}
+                          </ul>
+                          <p style={{ margin: '8px 0 0', fontSize: 12, color: '#6b7280' }}>
+                            You can remove these items above or choose a different delivery city to continue.
+                          </p>
                         </div>
                       )}
 
@@ -354,7 +507,7 @@ export default function CheckoutPage() {
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
                         <Link href="/cart" className="button button--secondary">← Back to Cart</Link>
-                        <Button type="button" label="Continue →" onClick={handleContinue} />
+                        <Button type="button" label="Continue →" onClick={handleContinue} disabled={hasShippingConflict} />
                       </div>
                     </>
                   )}
@@ -426,36 +579,72 @@ export default function CheckoutPage() {
                       const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
                       const qty           = item?.quantity || 1
                       const imgSrc        = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
+                      const isUpdating    = loadingItemId === item.id
                       return (
-                        <div key={i} style={{
+                        <div key={item.id ?? i} style={{
                           display: 'flex', alignItems: 'center', gap: 12,
                           padding: '14px 16px',
                           borderBottom: i < cartItems.length - 1 ? '1px solid var(--color_line)' : 'none',
                           background: '#fff',
+                          opacity: isUpdating ? 0.5 : 1,
+                          transition: 'opacity 0.15s',
                         }}>
                           {/* Thumbnail */}
-                          <div style={{
-                            width: 52, height: 52, flexShrink: 0, borderRadius: 8,
-                            overflow: 'hidden', border: '1px solid var(--color_line)',
-                            background: '#f3f4f6',
-                          }}>
+                          <div style={{ width: 52, height: 52, flexShrink: 0, borderRadius: 8, overflow: 'hidden', border: '1px solid var(--color_line)', background: '#f3f4f6' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={imgSrc} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                           </div>
 
-                          {/* Name */}
-                          <div style={{ flex: 1, minWidth: 0, width: 0 }}>
-                            <p style={{ margin: '0 0 3px', fontSize: 14, fontWeight: 500, color: 'var(--color_heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {/* Name + variant + stepper */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ margin: '0 0 2px', fontSize: 13, fontWeight: 500, color: 'var(--color_heading)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {name}
                             </p>
-                            <p style={{ margin: 0, fontSize: 12, color: 'var(--color_body)' }}>
-                              <CurrencyConvert amount={price} /> × {qty}
-                            </p>
+                            {variant && (
+                              <p style={{ margin: '0 0 6px', fontSize: 11, color: 'var(--color_body)' }}>
+                                {variant.color_code && (
+                                  <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: variant.color_code, border: '1px solid #ddd', marginRight: 4, verticalAlign: 'middle' }} />
+                                )}
+                                {variantOption?.value || variant?.sku || ''}
+                              </p>
+                            )}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1px solid var(--color_line)', borderRadius: 6, width: 'fit-content', overflow: 'hidden' }}>
+                              <button
+                                type="button"
+                                disabled={isUpdating}
+                                onClick={() => handleUpdateQty(item.id, qty - 1)}
+                                aria-label="Decrease quantity"
+                                style={{ width: 28, height: 28, background: '#f9fafb', border: 'none', borderRight: '1px solid var(--color_line)', cursor: 'pointer', fontSize: 16, fontWeight: 600, color: 'var(--color_heading)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              >−</button>
+                              <span style={{ minWidth: 28, textAlign: 'center', fontSize: 13, fontWeight: 600, padding: '0 4px' }}>{qty}</span>
+                              <button
+                                type="button"
+                                disabled={isUpdating}
+                                onClick={() => handleUpdateQty(item.id, qty + 1)}
+                                aria-label="Increase quantity"
+                                style={{ width: 28, height: 28, background: '#f9fafb', border: 'none', borderLeft: '1px solid var(--color_line)', cursor: 'pointer', fontSize: 16, fontWeight: 600, color: 'var(--color_heading)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              >+</button>
+                            </div>
                           </div>
 
-                          {/* Row total */}
-                          <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--color_heading)', flexShrink: 0 }}>
-                            <CurrencyConvert amount={price * qty} />
+                          {/* Total + remove */}
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                            <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--color_heading)' }}>
+                              <CurrencyConvert amount={price * qty} />
+                            </span>
+                            <button
+                              type="button"
+                              disabled={isUpdating}
+                              onClick={() => handleRemoveItem(item.id)}
+                              aria-label="Remove item"
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#9ca3af', display: 'flex', alignItems: 'center' }}
+                              onMouseEnter={(e) => e.currentTarget.style.color = '#dc2626'}
+                              onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+                            >
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                              </svg>
+                            </button>
                           </div>
                         </div>
                       )
@@ -522,6 +711,24 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
+                  {hasShippingConflict && (
+                    <div style={{ marginBottom: 16, padding: '12px 16px', borderRadius: 8, background: '#fef2f2', border: '1px solid #fecaca' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#dc2626' }}>
+                          We&apos;re sorry — the following items can&apos;t be delivered to {selectedCity?.name || selectedRegion?.name || 'your selected location'}:
+                        </span>
+                      </div>
+                      <ul style={{ margin: 0, padding: '0 0 0 24px', fontSize: 13, color: '#b91c1c' }}>
+                        {restrictedItems.map((name, i) => (
+                          <li key={i}>{name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
                   {paymentError && (
                     <p style={{ color: 'red', fontSize: 14, marginBottom: 16 }}>{paymentError}</p>
                   )}
@@ -533,6 +740,7 @@ export default function CheckoutPage() {
                       label="Pay with Mobile Money"
                       loading={processingPayment}
                       onClick={handleProcessPayment}
+                      disabled={hasShippingConflict}
                       style={{ flex: 1 }}
                     />
                   </div>

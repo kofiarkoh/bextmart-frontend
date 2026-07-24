@@ -102,6 +102,11 @@ const ProductPage = () => {
     const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
     const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
 
+    const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
+        String(typeof r === 'object' ? r.id : r)
+    );
+    const isRegionRestricted = !!estRegionId && restrictedRegionIds.includes(String(estRegionId));
+
 
     const allPhotos = useMemo(() => {
         if (!apiProduct) return [];
@@ -638,39 +643,50 @@ const ProductPage = () => {
                                                             <select
                                                                 value={estRegionId}
                                                                 onChange={(e) => { setEstRegionId(e.target.value); setEstCityId(''); }}
-                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: 'pointer' }}
+                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: `1.5px solid ${isRegionRestricted ? '#fca5a5' : 'var(--color_line, #d1d5db)'}`, fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: 'pointer' }}
                                                             >
                                                                 <option value="">Select Region</option>
                                                                 {estRegions.map((r) => (
                                                                     <option key={r.id} value={r.id}>{r.name}</option>
                                                                 ))}
                                                             </select>
-                                                            <select
-                                                                value={estCityId}
-                                                                onChange={(e) => setEstCityId(e.target.value)}
-                                                                disabled={!estRegionId}
-                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: estRegionId ? 'pointer' : 'not-allowed', opacity: estRegionId ? 1 : 0.5 }}
-                                                            >
-                                                                <option value="">Select City</option>
-                                                                {estCities.map((c) => (
-                                                                    <option key={c.id} value={c.id}>{c.name}</option>
-                                                                ))}
-                                                            </select>
+                                                            {!isRegionRestricted && (
+                                                                <select
+                                                                    value={estCityId}
+                                                                    onChange={(e) => setEstCityId(e.target.value)}
+                                                                    disabled={!estRegionId}
+                                                                    style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: estRegionId ? 'pointer' : 'not-allowed', opacity: estRegionId ? 1 : 0.5 }}
+                                                                >
+                                                                    <option value="">Select City</option>
+                                                                    {estCities.map((c) => (
+                                                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
                                                         </div>
-                                                        {estSelectedCity && (
+                                                        {isRegionRestricted ? (
+                                                            <div style={{ marginTop: 10, display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px', borderRadius: 8, background: '#fef2f2', border: '1px solid #fecaca' }}>
+                                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                                                                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                                                                </svg>
+                                                                <span style={{ fontSize: 13, color: '#dc2626', fontWeight: 500 }}>
+                                                                    This product cannot be shipped to {estSelectedRegion?.name || 'this region'}.
+                                                                </span>
+                                                            </div>
+                                                        ) : estSelectedCity ? (
                                                             <div style={{ marginTop: 10, fontSize: 13 }}>
                                                                 {parseFloat(estSelectedCity.delivery_fee || 0) > 0 ? (
                                                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                                         <span style={{ color: '#6b7280' }}>Delivery fee</span>
-                                                                        <span style={{ color: 'var(--color_heading)',  fontWeight: 600 }}>
-                                                                            <CurrencyConvert amount={parseFloat(estSelectedCity.delivery_fee)} style={{fontSize: 14}} />
+                                                                        <span style={{ color: 'var(--color_heading)', fontWeight: 600 }}>
+                                                                            <CurrencyConvert amount={parseFloat(estSelectedCity.delivery_fee)} style={{ fontSize: 14 }} />
                                                                         </span>
                                                                     </div>
                                                                 ) : (
                                                                     <span style={{ color: '#059669', fontWeight: 600 }}>Free delivery to this city</span>
                                                                 )}
                                                             </div>
-                                                        )}
+                                                        ) : null}
                                                     </div>
 
                                                     {product.photos.length > 0 && (() => {
