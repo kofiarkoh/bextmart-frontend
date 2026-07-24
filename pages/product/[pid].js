@@ -407,6 +407,11 @@ const ProductPage = () => {
                                                     {product.variants.length > 0 && (
                                                         <div style={{ marginBottom: 16 }}>
                                                             {/* Step 1 — pick a variant */}
+                                                            {(() => {
+                                                            const allHaveThumbnails = product.variants.every(
+                                                                (v) => v.thumbnail || (Array.isArray(v.photos) && v.photos.length > 0)
+                                                            );
+                                                            return (
                                                             <div style={{ marginBottom: 14 }}>
                                                                 <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 8 }}>
                                                                     Variant:
@@ -420,7 +425,49 @@ const ProductPage = () => {
                                                                     {product.variants.map((variant) => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
+                                                                        const thumbSrc = allHaveThumbnails && variant.thumbnail
+                                                                            ? buildImageUrl(variant.thumbnail)
+                                                                            : null;
                                                                         const hasColor = !!variant.color_code;
+
+                                                                        if (thumbSrc) {
+                                                                            return (
+                                                                                <button
+                                                                                    key={variant.id}
+                                                                                    type="button"
+                                                                                    title={variant.sku}
+                                                                                    disabled={outOfStock}
+                                                                                    onClick={() => selectVariant(variant)}
+                                                                                    style={{
+                                                                                        width: 56,
+                                                                                        height: 56,
+                                                                                        padding: 2,
+                                                                                        borderRadius: 8,
+                                                                                        border: isSelected ? '2.5px solid var(--color_primary)' : '2px solid #e5e7eb',
+                                                                                        background: '#f9fafb',
+                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        flexShrink: 0,
+                                                                                        overflow: 'hidden',
+                                                                                        position: 'relative',
+                                                                                    }}
+                                                                                >
+                                                                                    <img
+                                                                                        src={thumbSrc}
+                                                                                        alt={variant.sku}
+                                                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+                                                                                    />
+                                                                                    {outOfStock && (
+                                                                                        <span style={{
+                                                                                            position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                                                            background: 'rgba(255,255,255,0.7)', fontSize: 9, fontWeight: 700, color: '#e53935', borderRadius: 6,
+                                                                                        }}>
+                                                                                            Out of stock
+                                                                                        </span>
+                                                                                    )}
+                                                                                </button>
+                                                                            );
+                                                                        }
                                                                         if (hasColor) {
                                                                             return (
                                                                                 <button
@@ -473,6 +520,8 @@ const ProductPage = () => {
                                                                     })}
                                                                 </div>
                                                             </div>
+                                                            );
+                                                            })()}
 
                                                             {/* Step 2 — pick sub-options of the selected variant */}
                                                             {selectedVariant && Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0 && (() => {
