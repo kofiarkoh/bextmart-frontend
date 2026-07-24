@@ -35,8 +35,10 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
+import { useGetAddressOptionsQuery } from '../../store/checkoutApi'
 import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
 import Button from '../../components/ultils/Button'
+import CurrencyConvert from '../../components/ultils/CurrencyConvert'
 
 const ProductPage = () => {
 
@@ -82,6 +84,8 @@ const ProductPage = () => {
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
     const [groupImages, setGroupImages] = useState([]);
+    const [estRegionId, setEstRegionId] = useState('');
+    const [estCityId, setEstCityId] = useState('');
 
     const router = useRouter();
     const { pid } = router.query;
@@ -90,6 +94,12 @@ const ProductPage = () => {
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const selectedProduct = useSelector((state) => state.products.selected);
     const authToken = useSelector((state) => state.auth?.token);
+
+    const { data: addressOptionsData } = useGetAddressOptionsQuery();
+    const estRegions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : [];
+    const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
+    const estCities = estSelectedRegion?.cities || [];
+    const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
     const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
 
 
@@ -193,7 +203,7 @@ const ProductPage = () => {
         selectVariant(firstAvailable, false);
     }, [product?.id]);
 
-    const isLoading = isProductLoading;
+    const isLoading = !router.isReady || isProductLoading;
 
     const { asPath } = useRouter();
     const origin =
@@ -565,6 +575,53 @@ const ProductPage = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+
+                                                    {/* Delivery Estimate */}
+                                                    <div style={{ margin: '20px 0', padding: '14px 16px', borderRadius: 10, border: '1.5px solid var(--color_line, #e5e7eb)', background: 'var(--color_bg_2, #f9fafb)' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color_primary)', flexShrink: 0 }}>
+                                                                <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                                                            </svg>
+                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Estimate Delivery Cost</span>
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                                            <select
+                                                                value={estRegionId}
+                                                                onChange={(e) => { setEstRegionId(e.target.value); setEstCityId(''); }}
+                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: 'pointer' }}
+                                                            >
+                                                                <option value="">Select Region</option>
+                                                                {estRegions.map((r) => (
+                                                                    <option key={r.id} value={r.id}>{r.name}</option>
+                                                                ))}
+                                                            </select>
+                                                            <select
+                                                                value={estCityId}
+                                                                onChange={(e) => setEstCityId(e.target.value)}
+                                                                disabled={!estRegionId}
+                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: estRegionId ? 'pointer' : 'not-allowed', opacity: estRegionId ? 1 : 0.5 }}
+                                                            >
+                                                                <option value="">Select City</option>
+                                                                {estCities.map((c) => (
+                                                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                        {estSelectedCity && (
+                                                            <div style={{ marginTop: 10, fontSize: 13 }}>
+                                                                {parseFloat(estSelectedCity.delivery_fee || 0) > 0 ? (
+                                                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                        <span style={{ color: '#6b7280' }}>Delivery fee</span>
+                                                                        <span style={{ color: 'var(--color_heading)',  fontWeight: 600 }}>
+                                                                            <CurrencyConvert amount={parseFloat(estSelectedCity.delivery_fee)} style={{fontSize: 14}} />
+                                                                        </span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <span style={{ color: '#059669', fontWeight: 600 }}>Free delivery to this city</span>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     </div>
 
                                                     {product.photos.length > 0 && (() => {

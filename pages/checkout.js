@@ -90,10 +90,7 @@ export default function CheckoutPage() {
     }
   }, [tokenChecked, authToken, cartLoading, cartItems, router])
 
-  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery(
-    undefined,
-    { skip: !authToken }
-  )
+  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery()
 
   const regions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : []
   const selectedRegion = regions.find((r) => String(r.id) === String(regionId))
