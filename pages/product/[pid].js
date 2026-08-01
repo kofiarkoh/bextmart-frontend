@@ -359,15 +359,16 @@ const ProductPage = () => {
     }
 
     if (product?.name != undefined) {
+        const displayName = selectedVariant?.title?.trim() ? selectedVariant.title : product.name;
         return (
             <>
                 <Head>
-                    <title>{product.name}</title>
+                    <title>{displayName}</title>
                 </Head>
 
                 <Header />
                 <main>
-                    <Breadcrumbs text={product.name} />
+                    <Breadcrumbs text={displayName} />
                     <div className="product-template">
                         <div className={styles.product_template_layout}>
                             <div className="container">
@@ -382,7 +383,7 @@ const ProductPage = () => {
                                             </div>
                                             <div className={`${styles.product_template_info} product-template__info col-12 col-sm-12 col-md-5`}>
                                                 <StickyBox offsetTop={30} offsetBottom={20}>
-                                                    <h1 className={styles.product_title}>{product.name}</h1>
+                                                    <h1 className={styles.product_title}>{displayName}</h1>
                                                     <div className="price price--large">
                                                         {(() => {
                                                             const activeOption = selectedVariant?.options?.find(
