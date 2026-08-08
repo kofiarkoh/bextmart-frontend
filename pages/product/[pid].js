@@ -112,7 +112,8 @@ const ProductPage = () => {
         if (!apiProduct) return [];
         const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
         const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
-            .flatMap(v => Array.isArray(v.photos) ? v.photos : []);
+            .map(v => v.photos?.[0])
+            .filter(Boolean);
         return [...new Set([...photos, ...variantPhotos])];
     }, [apiProduct]);
 
@@ -178,8 +179,10 @@ const ProductPage = () => {
     function selectVariant(variant, updateImages = true) {
         setSelectedVariant(variant);
         if (updateImages) {
-            if (Array.isArray(variant?.photos) && variant.photos.length > 0) {
-                setGroupImages(variant.photos);
+            if (variant?.photos?.[0]) {
+                const variantPhoto = variant.photos[0];
+                const rest = allPhotos.filter(p => p !== variantPhoto);
+                setGroupImages([variantPhoto, ...rest]);
             } else {
                 setGroupImages(allPhotos);
             }
@@ -205,7 +208,7 @@ const ProductPage = () => {
     useEffect(() => {
         if (!product?.variants?.length) return;
         const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
-        selectVariant(firstAvailable, false);
+        selectVariant(firstAvailable);
     }, [product?.id]);
 
     const isLoading = !router.isReady || isProductLoading;
@@ -415,7 +418,7 @@ const ProductPage = () => {
                                                             {/* Step 1 — pick a variant */}
                                                             {(() => {
                                                             const allHaveThumbnails = product.variants.every(
-                                                                (v) => v.thumbnail || (Array.isArray(v.photos) && v.photos.length > 0)
+                                                                (v) => Array.isArray(v.photos) && v.photos.length > 0
                                                             );
                                                             return (
                                                             <div style={{ marginBottom: 14 }}>
@@ -431,8 +434,8 @@ const ProductPage = () => {
                                                                     {product.variants.map((variant) => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
-                                                                        const thumbSrc = allHaveThumbnails && variant.thumbnail
-                                                                            ? buildImageUrl(variant.thumbnail)
+                                                                        const thumbSrc = allHaveThumbnails && variant.photos?.[0]
+                                                                            ? buildImageUrl(variant.photos[0])
                                                                             : null;
                                                                         const hasColor = !!variant.color_code;
 
