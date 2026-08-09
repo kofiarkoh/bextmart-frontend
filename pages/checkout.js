@@ -26,6 +26,14 @@ const STEP_LABELS = ['Delivery Address', 'Review & Pay']
 
 const CHECKOUT_KEY = 'bextmart_checkout'
 
+function getDeliveryEstimate(days, isPickup) {
+  if (!days) return null;
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
+  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+}
+
 function loadSaved() {
   try {
     const raw = typeof window !== 'undefined' && sessionStorage.getItem(CHECKOUT_KEY)
@@ -48,6 +56,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [regionId, setRegionId] = useState('')
   const [cityId, setCityId] = useState('')
+  const [deliveryTypeId, setDeliveryTypeId] = useState('')
   const [nearbyCity, setNearbyCity] = useState('')
   const [deliveryInstructions, setDeliveryInstructions] = useState('')
   const [addressError, setAddressError] = useState(null)
@@ -60,6 +69,7 @@ export default function CheckoutPage() {
     if (!saved || !Object.keys(saved).length) return
     if (saved.regionId)             setRegionId(saved.regionId)
     if (saved.cityId)               setCityId(saved.cityId)
+    if (saved.deliveryTypeId)       setDeliveryTypeId(saved.deliveryTypeId)
     if (saved.nearbyCity)           setNearbyCity(saved.nearbyCity)
     if (saved.deliveryInstructions) setDeliveryInstructions(saved.deliveryInstructions)
     if (saved.selectedAddressId)    setSelectedAddressId(saved.selectedAddressId)
@@ -69,9 +79,9 @@ export default function CheckoutPage() {
   // persist whenever any address field or step changes
   useEffect(() => {
     sessionStorage.setItem(CHECKOUT_KEY, JSON.stringify({
-      step, selectedAddressId, regionId, cityId, nearbyCity, deliveryInstructions,
+      step, selectedAddressId, regionId, cityId, deliveryTypeId, nearbyCity, deliveryInstructions,
     }))
-  }, [step, selectedAddressId, regionId, cityId, nearbyCity, deliveryInstructions])
+  }, [step, selectedAddressId, regionId, cityId, deliveryTypeId, nearbyCity, deliveryInstructions])
 
   const { isLoading: cartLoading, refetch: refetchCart } = useGetCartQuery(undefined, { skip: !tokenChecked || !authToken })
 
@@ -145,9 +155,10 @@ export default function CheckoutPage() {
     }
   }
 
-  const { data: summaryData, isLoading: loadingSummary, refetch: refetchSummary } = useGetCheckoutSummaryQuery(cityId, {
-    skip: !cityId,
-  })
+  const { data: summaryData, isLoading: loadingSummary, refetch: refetchSummary } = useGetCheckoutSummaryQuery(
+    { cityId, deliveryTypeId },
+    { skip: !cityId || !deliveryTypeId }
+  )
   const summary = summaryData?.data || null
 
   useEffect(() => {
@@ -161,6 +172,10 @@ export default function CheckoutPage() {
     }
     if (!cityId) {
       setAddressError('Please select a delivery city.')
+      return
+    }
+    if (!deliveryTypeId) {
+      setAddressError('Please select a delivery type.')
       return
     }
     if (hasShippingConflict) {
@@ -177,6 +192,7 @@ export default function CheckoutPage() {
       const result = await processPayment({
         payment_method: 'mobile_money',
         city_id: Number(cityId),
+        delivery_type_id: Number(deliveryTypeId),
         nearby_city: nearbyCity || '',
         delivery_instructions: deliveryInstructions || '',
       }).unwrap()
@@ -202,6 +218,8 @@ export default function CheckoutPage() {
   }
 
   const selectedCity = cities.find((c) => String(c.id) === String(cityId)) || null
+  const availableDeliveryTypes = (selectedCity?.delivery_types || []).filter(dt => dt.is_available)
+  const selectedDeliveryType = availableDeliveryTypes.find(dt => String(dt.delivery_type_id) === String(deliveryTypeId)) || null
 
   const restrictedItems = Array.isArray(summary?.restricted_items) ? summary.restricted_items : []
   const hasShippingConflict = restrictedItems.length > 0
@@ -397,7 +415,7 @@ export default function CheckoutPage() {
                         </label>
                         <select
                           value={regionId}
-                          onChange={(e) => { setRegionId(e.target.value); setCityId(''); }}
+                          onChange={(e) => { setRegionId(e.target.value); setCityId(''); setDeliveryTypeId(''); }}
                           style={{
                             width: '100%', padding: '10px 12px',
                             border: '1px solid var(--color_line)', borderRadius: 4,
@@ -419,7 +437,13 @@ export default function CheckoutPage() {
                           </label>
                           <select
                             value={cityId}
-                            onChange={(e) => setCityId(e.target.value)}
+                            onChange={(e) => {
+                              const newCityId = e.target.value;
+                              setCityId(newCityId);
+                              const city = cities.find((c) => String(c.id) === String(newCityId));
+                              const firstType = (city?.delivery_types || []).find(dt => dt.is_available);
+                              setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '');
+                            }}
                             style={{
                               width: '100%', padding: '10px 12px',
                               border: `1px solid ${hasShippingConflict ? '#fca5a5' : 'var(--color_line)'}`, borderRadius: 4,
@@ -428,19 +452,55 @@ export default function CheckoutPage() {
                           >
                             <option value="">Select a city</option>
                             {cities.map((city) => (
-                              <option key={city.id} value={city.id}>
-                                {city.name} — GHC {city.delivery_fee} delivery
-                              </option>
+                              <option key={city.id} value={city.id}>{city.name}</option>
                             ))}
                           </select>
-                          {cityId && !hasShippingConflict && (() => {
-                            const city = cities.find((c) => String(c.id) === String(cityId));
-                            return city ? (
-                              <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 6 }}>
-                                Delivery fee: <strong>GHC {city.delivery_fee}</strong>
-                              </p>
-                            ) : null;
-                          })()}
+
+                          {/* Delivery type selection */}
+                          {cityId && !hasShippingConflict && availableDeliveryTypes.length > 0 && (
+                            <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                              {availableDeliveryTypes.map((dt) => {
+                                const isPickup = dt.type?.slug === 'pickup';
+                                const icon = isPickup ? '🏪' : '🚚';
+                                const isSelected = String(dt.delivery_type_id) === String(deliveryTypeId);
+                                return (
+                                  <button
+                                    key={dt.delivery_type_id}
+                                    type="button"
+                                    onClick={() => setDeliveryTypeId(String(dt.delivery_type_id))}
+                                    style={{
+                                      flex: 1, minWidth: 160, padding: '12px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 13,
+                                      border: `2px solid ${isSelected ? 'var(--color_primary)' : 'var(--color_line)'}`,
+                                      background: isSelected ? 'rgba(0,0,128,0.04)' : '#fff',
+                                      color: 'var(--color_heading)', fontWeight: isSelected ? 600 : 400,
+                                      textAlign: 'left', display: 'flex', alignItems: 'flex-start', gap: 10,
+                                      transition: 'border-color 0.15s, background 0.15s',
+                                    }}
+                                  >
+                                    <span style={{ fontSize: 18, lineHeight: 1, marginTop: 1 }}>{icon}</span>
+                                    <span style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                      <span style={{ fontSize: 13, fontWeight: isSelected ? 600 : 500 }}>
+                                        {dt.type?.name}
+                                      </span>
+                                      <span style={{ fontSize: 12, color: isSelected ? 'var(--color_primary)' : '#6b7280', fontWeight: 500 }}>
+                                        {parseFloat(dt.fee) > 0 ? `GHC ${dt.fee}` : 'Free delivery'}
+                                      </span>
+                                      {getDeliveryEstimate(dt.estimated_days, isPickup) && (
+                                        <span style={{ fontSize: 12, fontWeight: 400, color: '#6b7280', marginTop: 2 }}>
+                                          {getDeliveryEstimate(dt.estimated_days, isPickup)}
+                                        </span>
+                                      )}
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                          {cityId && availableDeliveryTypes.length === 0 && (
+                            <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 6 }}>
+                              No delivery options available for this city yet.
+                            </p>
+                          )}
                         </div>
                       )}
 
@@ -536,10 +596,24 @@ export default function CheckoutPage() {
                     <p style={{ fontSize: 14, margin: '0 0 4px' }}>
                       <strong>City:</strong> {selectedCity?.name || cityId}
                     </p>
-                    {selectedCity?.delivery_fee != null && (
-                      <p style={{ fontSize: 14, margin: '0 0 4px' }}>
-                        <strong>Delivery fee:</strong> GHC {selectedCity.delivery_fee}
-                      </p>
+                    {selectedDeliveryType && (
+                      <>
+                        <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                          <strong>Delivery type:</strong>{' '}
+                          {selectedDeliveryType.type?.slug === 'pickup' ? '🏪' : '🚚'}{' '}
+                          {selectedDeliveryType.type?.name}
+                        </p>
+                        {parseFloat(selectedDeliveryType.fee) > 0 && (
+                          <p style={{ fontSize: 14, margin: '0 0 4px' }}>
+                            <strong>Delivery fee:</strong> GHC {selectedDeliveryType.fee}
+                          </p>
+                        )}
+                        {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup') && (
+                          <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, margin: '6px 0 0' }}>
+                            {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup')}
+                          </p>
+                        )}
+                      </>
                     )}
                     {nearbyCity && (
                       <p style={{ fontSize: 14, margin: '0 0 4px' }}>

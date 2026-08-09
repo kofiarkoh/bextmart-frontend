@@ -40,6 +40,14 @@ import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../compon
 import Button from '../../components/ultils/Button'
 import CurrencyConvert from '../../components/ultils/CurrencyConvert'
 
+function getDeliveryEstimate(days, isPickup) {
+  if (!days) return null;
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
+  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+}
+
 const ProductPage = () => {
 
     const t = (text) =>  text;
@@ -679,16 +687,37 @@ const ProductPage = () => {
                                                             </div>
                                                         ) : estSelectedCity ? (
                                                             <div style={{ marginTop: 10, fontSize: 13 }}>
-                                                                {parseFloat(estSelectedCity.delivery_fee || 0) > 0 ? (
-                                                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                                        <span style={{ color: '#6b7280' }}>Delivery fee</span>
-                                                                        <span style={{ color: 'var(--color_heading)', fontWeight: 600 }}>
-                                                                            <CurrencyConvert amount={parseFloat(estSelectedCity.delivery_fee)} style={{ fontSize: 14 }} />
-                                                                        </span>
-                                                                    </div>
-                                                                ) : (
-                                                                    <span style={{ color: '#059669', fontWeight: 600 }}>Free delivery to this city</span>
-                                                                )}
+                                                                {(() => {
+                                                                    const types = (estSelectedCity.delivery_types || []).filter(dt => dt.is_available);
+                                                                    if (!types.length) return <span style={{ color: '#6b7280' }}>No delivery options available for this city.</span>;
+                                                                    return (
+                                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                                                            {types.map((dt) => {
+                                                                                const isPickup = dt.type?.slug === 'pickup';
+                                                                                const estimate = getDeliveryEstimate(dt.estimated_days, isPickup);
+                                                                                return (
+                                                                                <div key={dt.delivery_type_id} style={{ display: 'flex', flexDirection: 'column', gap: 5, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+                                                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                                        <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--color_heading)', fontWeight: 500 }}>
+                                                                                            <span style={{ fontSize: 16 }}>{isPickup ? '🏪' : '🚚'}</span>
+                                                                                            {dt.type?.name}
+                                                                                        </span>
+                                                                                        <span style={{ fontWeight: 600, color: 'var(--color_heading)' }}>
+                                                                                            {parseFloat(dt.fee) > 0
+                                                                                                ? <CurrencyConvert amount={parseFloat(dt.fee)} style={{ fontSize: 13 }} />
+                                                                                                : <span style={{ color: '#059669' }}>Free</span>
+                                                                                            }
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    {estimate && (
+                                                                                        <span style={{ fontSize: 13, color: '#6b7280', fontWeight: 400 }}>{estimate}</span>
+                                                                                    )}
+                                                                                </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    );
+                                                                })()}
                                                             </div>
                                                         ) : null}
                                                     </div>
