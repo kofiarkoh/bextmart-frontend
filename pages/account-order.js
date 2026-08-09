@@ -114,8 +114,9 @@ function ItemStepper({ status }) {
         {/* Step columns */}
         <div style={{ display: 'flex', position: 'relative', zIndex: 1 }}>
           {STEPS.map((step, i) => {
-            const done = i < activeStep
-            const active = i === activeStep
+            const isTerminal = activeStep === STEPS.length - 1
+            const done = i < activeStep || (isTerminal && i === activeStep)
+            const active = !isTerminal && i === activeStep
             return (
               <div key={step.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                 <div style={{
