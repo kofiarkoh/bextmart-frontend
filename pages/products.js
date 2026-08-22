@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -17,10 +17,16 @@ const ProductsPage = () => {
   const page = Number(router.query.page || 1)
   const category = router.query.category || undefined
 
-  const { data, isLoading, isError } = useSearchProductsQuery(
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
     category ? { page, category } : { page },
     { skip: !router.isReady }
   )
+  const isLoading = !mounted || isQueryLoading
 
   const pageData = data?.data || {}
   const items = Array.isArray(pageData.data) ? pageData.data : []

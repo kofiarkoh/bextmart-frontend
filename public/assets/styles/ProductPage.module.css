@@ -46,6 +46,10 @@
     .padding_right .product_template_info {
         padding-right: 20px;
     }
+
+    .product_template_info {
+        max-width: 480px;
+    }
 }
 
 @media screen and (max-width: 767px) {
