@@ -810,7 +810,7 @@ const ProductPage = () => {
                                             {similarProducts.length > 0 && (
                                                 <div className='product-desciption page-width' style={{ marginTop: 40 }}>
                                                     <div className="box-divider">
-                                                        <h4 className="box-title">Similar Products</h4>
+                                                        <h4 className="box-title">Products You May Like</h4>
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 16, marginTop: 20 }}>
                                                         {similarProducts.slice(0, 6).map((item, index) => (

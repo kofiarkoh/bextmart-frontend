@@ -28,8 +28,6 @@ const DrawerMobileMenu = () => {
     Productdata = HorizontalData().Productdata,
     MenuBanner = HorizontalData().MenuBanner;
 
-    function checkToggle(number) { if (currenttoggle === number) return true; }
-
     return (
         <>
             <div className={`menu-drawer-container cartdrawer ${isOpen ? 'menu-opening' : ''}`}>
@@ -58,19 +56,19 @@ const DrawerMobileMenu = () => {
                                                         {TextMenu.find((m) => m.id === 1).text}
                                                     </Link>
                                                 </li>
-                                                <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(1) ? 'open' : ''}`} data-toggle="1">
-                                                    <Link href={TextMenu.find((m) => m.id === 2).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 2).url)? 'header__menu-active':'' }`} onClick={(e) => { e.preventDefault(); if (currenttoggle === 1) setcurrenttoggle(0); else setcurrenttoggle(1); }}>
+                                                <li className="header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area" data-toggle="1">
+                                                    <Link href={TextMenu.find((m) => m.id === 2).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 2).url)? 'header__menu-active':'' }`} onClick={() => setIsOpen(false)}>
                                                         {TextMenu.find((m) => m.id === 2).text}
 
                                                     </Link>
-                                                   
+
                                                 </li>
-                                               
-                                                <li className={`header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area ${checkToggle(5) ? 'open' : ''}`} data-toggle="5">
-                                                    <Link href={TextMenu.find((m) => m.id === 6).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 6).url)? 'header__menu-active':'' }`} aria-current="page" onClick={(e) => { e.preventDefault(); if (currenttoggle === 5) setcurrenttoggle(0); else setcurrenttoggle(5); }}>
+
+                                                <li className="header__menu-root menu__dropdown menu__mega mobile-menu-toggle toggle__area" data-toggle="5">
+                                                    <Link href={TextMenu.find((m) => m.id === 6).url} className={`header__menu-item list-menu__item dropdown-toggle ${ (router.asPath === TextMenu.find((m) => m.id === 6).url)? 'header__menu-active':'' }`} aria-current="page" onClick={() => setIsOpen(false)}>
                                                         {TextMenu.find((m) => m.id === 6).text}
                                                     </Link>
-                                                    
+
                                                 </li>
                                             </ul>
                                         </toggle-component>
