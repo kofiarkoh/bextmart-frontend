@@ -1,44 +1,29 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import Head from 'next/head'
+import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import Image from 'next/image'
 import { useRouter } from "next/router";
-import { useSelector } from 'react-redux'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import StickyBox from "react-sticky-box";
-import Popup from "reactjs-popup";
-import useTranslation from '../../components/ultils/useTranslation'
-import Header from '../../components/Header'
-import Breadcrumbs from '../../components/ultils/Breadcrumbs'
-import Footer from '../../components/Footer'
-import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton'
-import ProductPageGallery from '../../components/ultils/ProductPageGallery'
-import ProductPageGalleryVertical from '../../components/ultils/ProductPageGalleryVertical'
-import ProductPageGalleryStacked from '../../components/ultils/ProductPageGalleryStacked'
-import ProductItemList from '../../components/ultils/ProductItemList'
-import ProductPageRelated from '../../components/ultils/ProductPageRelated'
-import ProductPageReview from '../../components/ultils/ProductPageReview'
-import { displayRating, displayPrice, buildImageUrl } from '../../components/ultils/Tools'
-import ProductWishlist from '../../components/ultils/ProductWishlist'
-import ExtNotification from '../../components/ExtNotification'
-import { SVGArrowLeft, SVGArrowRight, SVGArrowDown, SVGDiamond, SVGMinus, SVGPlus, SVGTwitter, SVGFacebook, SVGPinterest, SVGClose } from '../../public/assets/SVG';
-import styles from '../../public/assets/styles/ProductPage.module.css'
-import Product_en from "../../public/locales/en/en_Product.json";
-import Product_jp from "../../public/locales/jp/jp_Product.json";
-import Product_fr from "../../public/locales/fr/fr_Product.json";
-import Product_it from "../../public/locales/it/it_Product.json";
-import { Collections_Menu_en } from "../../public/locales/en/en_TextMenuCol";
-import { Collections_Menu_fr } from "../../public/locales/fr/fr_TextMenuCol";
-import { Collections_Menu_it } from "../../public/locales/it/it_TextMenuCol";
-import { Collections_Menu_jp } from "../../public/locales/jp/jp_TextMenuCol";
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import Breadcrumbs from '../../components/ultils/Breadcrumbs';
+import Button from '../../components/ultils/Button';
+import CurrencyConvert from '../../components/ultils/CurrencyConvert';
+import ProductPageGallery from '../../components/ultils/ProductPageGallery';
+import ProductPageRelated from '../../components/ultils/ProductPageRelated';
+import ProductPageReview from '../../components/ultils/ProductPageReview';
+import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton';
+import { buildImageUrl, displayPrice } from '../../components/ultils/Tools';
+import { dismissAll, notifyAuth, notifyError, notifySuccess } from '../../components/ultils/notify';
+import { SVGArrowDown, SVGMinus, SVGPlus } from '../../public/assets/SVG';
 import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
-import safecheckout from "../../public/assets/images/yam-safecheckout.png";
-import sizechart from "../../public/assets/images/sizechart.png";
-import { useGetProductQuery } from '../../store/productsApi'
-import { useAddToCartMutation } from '../../store/cartApi'
-import { useGetAddressOptionsQuery } from '../../store/checkoutApi'
-import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
-import Button from '../../components/ultils/Button'
-import CurrencyConvert from '../../components/ultils/CurrencyConvert'
+import styles from '../../public/assets/styles/ProductPage.module.css';
+import Product_en from "../../public/locales/en/en_Product.json";
+import { Collections_Menu_en } from "../../public/locales/en/en_TextMenuCol";
+import { useAddToCartMutation } from '../../store/cartApi';
+import { useGetAddressOptionsQuery } from '../../store/checkoutApi';
+import { useGetProductQuery } from '../../store/productsApi';
 
 function getDeliveryEstimate(days, isPickup) {
   if (!days) return null;
@@ -323,10 +308,6 @@ const ProductPage = () => {
         }
     }
 
-    function changeQtyInput(qtyNew, price) {
-        if (qty > 0) setQty(parseInt(qtyNew));
-    }
-
     function changeQty(number, price) {
         if (qty > 1) {
             (number) ? setQty((q) => q - 1) : setQty((q) => q + 1);
@@ -435,7 +416,7 @@ const ProductPage = () => {
                                                                 <span className="visually-hidden">{t("Decrease_quantity")}</span>
                                                                 <SVGMinus />
                                                             </button>
-                                                            <input onChange={(e) => changeQtyInput(e.target.value, product.price)} className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
+                                                            <input readOnly className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
                                                             <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
                                                                 <span className="visually-hidden">{t("Increase_quantity")}</span>
                                                                 <SVGPlus />
