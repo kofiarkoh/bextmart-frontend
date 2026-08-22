@@ -347,6 +347,10 @@ const ProductPage = () => {
             notifyError('Please select a variant before adding to cart.', 'Select a Variant');
             return;
         }
+        if (qty > getAvailableStock()) {
+            notifyError('The quantity you selected exceeds available stock.', 'Not Enough Stock');
+            return;
+        }
         try {
             setClassStatus('cart-loadding');
             const payload = { product_uuid: product.uuid, quantity: qty };
@@ -369,8 +373,25 @@ const ProductPage = () => {
         }
     }
 
+    function getAvailableStock() {
+        if (selectedVariant) {
+            if (Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0) {
+                const selectedEntries = Object.entries(selectedOptions)
+                    .map(([type, value]) => selectedVariant.options.find(o => o.type === type && o.value === value))
+                    .filter(Boolean);
+                if (selectedEntries.length > 0) {
+                    return Math.min(...selectedEntries.map(o => parseInt(o.quantity || '0')));
+                }
+            }
+            return selectedVariant.stock - (selectedVariant.reserved_stock || 0);
+        }
+        return product.quantity ?? 0;
+    }
+
     if (product?.name != undefined) {
         const displayName = selectedVariant?.title?.trim() ? selectedVariant.title : product.name;
+        const availableStock = getAvailableStock();
+        const exceedsStock = qty > availableStock;
         return (
             <>
                 <Head>
@@ -421,6 +442,11 @@ const ProductPage = () => {
                                                             </button>
                                                         </div>
                                                     </div>
+                                                    {exceedsStock && (
+                                                        <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
+                                                            Selected quantity exceeds available stock.
+                                                        </div>
+                                                    )}
                                                     {
                                                         product.advanced != undefined ? loadStyles() : ''
                                                     }
@@ -636,6 +662,7 @@ const ProductPage = () => {
                                                                         <Button
                                                                             label="Add to Cart"
                                                                             loading={classStatus === 'cart-loadding'}
+                                                                            disabled={exceedsStock}
                                                                             onClick={AddtoCart}
                                                                             size="full"
                                                                             type="submit"
