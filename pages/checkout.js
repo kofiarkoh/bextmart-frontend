@@ -31,7 +31,9 @@ function getDeliveryEstimate(days, isPickup) {
   const d = new Date();
   d.setDate(d.getDate() + days);
   const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
-  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+  return isPickup
+    ? `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`
+    : `Your item will be delivered by ${date}`;
 }
 
 function loadSaved() {

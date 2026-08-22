@@ -30,7 +30,9 @@ function getDeliveryEstimate(days, isPickup) {
   const d = new Date();
   d.setDate(d.getDate() + days);
   const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
-  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+  return isPickup
+    ? `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`
+    : `Your item will be delivered by ${date}`;
 }
 
 const ProductPage = () => {
@@ -679,7 +681,7 @@ const ProductPage = () => {
                                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color_primary)', flexShrink: 0 }}>
                                                                 <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
                                                             </svg>
-                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Estimate Delivery Cost</span>
+                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Choose Your Location</span>
                                                         </div>
                                                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                                             <select
