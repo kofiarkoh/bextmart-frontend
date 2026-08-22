@@ -70,6 +70,11 @@
     color: var(--color_heading);
 }
 
+.product_title_mobile {
+    padding-top: 28px;
+    padding-bottom: 16px;
+}
+
 .product_rating {
     display: flex;
     flex-wrap: nowrap;

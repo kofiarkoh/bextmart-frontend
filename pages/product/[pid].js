@@ -379,22 +379,25 @@ const ProductPage = () => {
 
                 <Header />
                 <main>
-                    <Breadcrumbs text={displayName} />
+                    <div className="d-none d-md-block">
+                        <Breadcrumbs text={displayName} />
+                    </div>
                     <div className="product-template">
                         <div className={styles.product_template_layout}>
                             <div className="container">
+                                <h1 className={`${styles.product_title} ${styles.product_title_mobile} d-block d-md-none`}>{displayName}</h1>
                                 <div className='product-template__container row'>
                                     <div className="product-template__content col-12">
                                         <div className="product-template__inner row">
-                                            <div className="product-template__media col-12 col-sm-12 col-md-7">
+                                            <div className="product-template__media col-12 col-sm-12 col-md-5">
                                                 <StickyBox offsetTop={0} offsetBottom={20}>
                                                     <ProductPageGallery productImg={groupImages} />
 
                                                 </StickyBox>
                                             </div>
-                                            <div className={`${styles.product_template_info} product-template__info col-12 col-sm-12 col-md-5`}>
+                                            <div className={`${styles.product_template_info} product-template__info col-12 col-sm-12 col-md-7`}>
                                                 <StickyBox offsetTop={30} offsetBottom={20}>
-                                                    <h1 className={styles.product_title}>{displayName}</h1>
+                                                    <h2 className={`${styles.product_title} d-none d-md-block`}>{displayName}</h2>
                                                     <div className="price price--large">
                                                         {(() => {
                                                             const activeOption = selectedVariant?.options?.find(

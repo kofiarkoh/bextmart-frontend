@@ -3125,6 +3125,10 @@ a.product__text {
     ;
 }
 
+.product-desciption .product-template__content-area {
+    line-height: 1.8em;
+}
+
 .product-desciption-content br {
     margin-top: 20px;
 }
