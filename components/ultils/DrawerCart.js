@@ -119,7 +119,7 @@ const DrawerCart = () => {
                                     <cart-dropdown-bubble>
                                         <div className="component-scrollbar cart__dropdown-content ">
                                             <div id="cart-dropdown-bubble-product" className="cart__dropdown-product" data-cart-dropdown-bubble-product="">
-                                                <DrawerCartItem />
+                                                <DrawerCartItem onItemClick={closeDrawer} />
                                             </div>
                                         </div>
                                     </cart-dropdown-bubble>

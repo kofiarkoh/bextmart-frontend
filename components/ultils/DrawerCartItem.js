@@ -7,7 +7,7 @@ import useTranslation from './useTranslation'
 import { useSelector } from 'react-redux'
 import { buildImageUrl } from './Tools'
 
-const DrawerCartItem = () => {
+const DrawerCartItem = ({ onItemClick }) => {
     const { t } = useTranslation();
     const items = useSelector((state) => state.cart.items);
 
@@ -23,12 +23,12 @@ const DrawerCartItem = () => {
                     return (
                         <div className="cart__dropdown-item" key={index}>
                             <div className="cart__dropdown-item">
-                                <Link href={`/product/${productId}`} className='cart__dropdown-product-image'>
+                                <Link href={`/product/${productId}`} className='cart__dropdown-product-image' onClick={onItemClick}>
                                     <img src={productImage} alt={productName} width={61} height={61} />
                                 </Link>
                                 <div className="cart__dropdown-product-info">
                                     <h3 className="cart__dropdown-product-title">
-                                        <Link href={`/product/${productId}`}>{productName}</Link>
+                                        <Link href={`/product/${productId}`} onClick={onItemClick}>{productName}</Link>
                                     </h3>
                                     <div className="cart__dropdown-product-variants">
                                         {Array.isArray(item.options) && item.options.length > 0
