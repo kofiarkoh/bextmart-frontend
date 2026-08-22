@@ -200,7 +200,7 @@ const ProductPage = () => {
 
     useEffect(() => {
         if (!product?.variants?.length) return;
-        const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
+        const firstAvailable = product.variants.find(v => (v.quantity - (v.reserved_stock || 0)) > 0) || product.variants[0];
         selectVariant(firstAvailable);
     }, [product?.id]);
 
@@ -329,7 +329,7 @@ const ProductPage = () => {
             return;
         }
         if (qty > getAvailableStock()) {
-            notifyError('The quantity you selected exceeds available stock.', 'Not Enough Stock');
+            notifyError('Out of stock', 'Not Enough Stock');
             return;
         }
         try {
@@ -354,17 +354,25 @@ const ProductPage = () => {
         }
     }
 
+    function getVariantStock(variant) {
+        if (!variant || typeof variant.quantity !== 'number') return null;
+        return variant.quantity - (variant.reserved_stock || 0);
+    }
+
     function getAvailableStock() {
         if (selectedVariant) {
+            const variantStock = getVariantStock(selectedVariant);
             if (Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0) {
                 const selectedEntries = Object.entries(selectedOptions)
                     .map(([type, value]) => selectedVariant.options.find(o => o.type === type && o.value === value))
                     .filter(Boolean);
                 if (selectedEntries.length > 0) {
-                    return Math.min(...selectedEntries.map(o => parseInt(o.quantity || '0')));
+                    const quantities = selectedEntries.map(o => parseInt(o.quantity || '0'));
+                    if (variantStock !== null) quantities.push(variantStock);
+                    return Math.min(...quantities);
                 }
             }
-            return selectedVariant.stock - (selectedVariant.reserved_stock || 0);
+            return variantStock !== null ? variantStock : (selectedVariant.quantity - (selectedVariant.reserved_stock || 0));
         }
         return product.quantity ?? 0;
     }
@@ -425,7 +433,7 @@ const ProductPage = () => {
                                                     </div>
                                                     {exceedsStock && (
                                                         <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
-                                                            Selected quantity exceeds available stock.
+                                                            Out of stock
                                                         </div>
                                                     )}
                                                     {
@@ -450,7 +458,7 @@ const ProductPage = () => {
                                                                 </div>
                                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                                                                     {product.variants.map((variant) => {
-                                                                        const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
+                                                                        const outOfStock = variant.quantity - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
                                                                         const thumbSrc = allHaveThumbnails && variant.photos?.[0]
                                                                             ? buildImageUrl(variant.photos[0])
@@ -462,8 +470,7 @@ const ProductPage = () => {
                                                                                 <button
                                                                                     key={variant.id}
                                                                                     type="button"
-                                                                                    title={variant.sku}
-                                                                                    disabled={outOfStock}
+                                                                                    title={outOfStock ? `${variant.sku} - Out of stock` : variant.sku}
                                                                                     onClick={() => selectVariant(variant)}
                                                                                     style={{
                                                                                         width: 56,
@@ -472,8 +479,8 @@ const ProductPage = () => {
                                                                                         borderRadius: 8,
                                                                                         border: isSelected ? '2.5px solid var(--color_primary)' : '2px solid #e5e7eb',
                                                                                         background: '#f9fafb',
-                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        cursor: 'pointer',
+                                                                                        opacity: 1,
                                                                                         flexShrink: 0,
                                                                                         overflow: 'hidden',
                                                                                         position: 'relative',
@@ -500,8 +507,7 @@ const ProductPage = () => {
                                                                                 <button
                                                                                     key={variant.id}
                                                                                     type="button"
-                                                                                    title={variant.sku}
-                                                                                    disabled={outOfStock}
+                                                                                    title={outOfStock ? `${variant.sku} - Out of stock` : variant.sku}
                                                                                     onClick={() => selectVariant(variant)}
                                                                                     style={{
                                                                                         width: 32,
@@ -511,29 +517,36 @@ const ProductPage = () => {
                                                                                         border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
                                                                                         boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
                                                                                         padding: 0,
-                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        cursor: 'pointer',
+                                                                                        opacity: 1,
                                                                                         flexShrink: 0,
+                                                                                        position: 'relative',
                                                                                     }}
-                                                                                />
+                                                                                >
+                                                                                    {outOfStock && (
+                                                                                        <span style={{
+                                                                                            position: 'absolute', inset: 0, borderRadius: '50%',
+                                                                                            background: 'linear-gradient(to top right, transparent 47%, #e53935 47%, #e53935 53%, transparent 53%)',
+                                                                                        }} />
+                                                                                    )}
+                                                                                </button>
                                                                             );
                                                                         }
                                                                         return (
                                                                             <button
                                                                                 key={variant.id}
                                                                                 type="button"
-                                                                                disabled={outOfStock}
                                                                                 onClick={() => selectVariant(variant)}
                                                                                 style={{
                                                                                     padding: '6px 14px',
                                                                                     borderRadius: 6,
                                                                                     border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
                                                                                     background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                    color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                    color: isSelected ? '#fff' : '#333',
                                                                                     fontSize: 13,
                                                                                     fontWeight: isSelected ? 700 : 400,
-                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                    opacity: outOfStock ? 0.5 : 1,
+                                                                                    cursor: 'pointer',
+                                                                                    opacity: 1,
                                                                                 }}
                                                                             >
                                                                                 {variant.sku}
@@ -573,7 +586,8 @@ const ProductPage = () => {
                                                                                 {values.map((value) => {
                                                                                     const optionEntry = selectedVariant.options.find(o => o.type === type && o.value === value);
                                                                                     const optionQty = optionEntry ? parseInt(optionEntry.quantity || '0') : 0;
-                                                                                    const outOfStock = optionQty <= 0;
+                                                                                    const variantStock = getVariantStock(selectedVariant);
+                                                                                    const outOfStock = optionQty <= 0 || (variantStock !== null && variantStock <= 0);
                                                                                     const isSelected = selectedVal === value;
                                                                                     const hasColor = !!optionEntry?.color_code;
                                                                                     if (hasColor) {
@@ -581,8 +595,7 @@ const ProductPage = () => {
                                                                                             <button
                                                                                                 key={value}
                                                                                                 type="button"
-                                                                                                title={value}
-                                                                                                disabled={outOfStock}
+                                                                                                title={outOfStock ? `${value} - Out of stock` : value}
                                                                                                 onClick={() => setSelectedOptions(prev => ({ ...prev, [type]: value }))}
                                                                                                 style={{
                                                                                                     width: 32,
@@ -592,18 +605,25 @@ const ProductPage = () => {
                                                                                                     border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
                                                                                                     boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
                                                                                                     padding: 0,
-                                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                                    opacity: outOfStock ? 0.4 : 1,
+                                                                                                    cursor: 'pointer',
+                                                                                                    opacity: 1,
                                                                                                     flexShrink: 0,
+                                                                                                    position: 'relative',
                                                                                                 }}
-                                                                                            />
+                                                                                            >
+                                                                                                {outOfStock && (
+                                                                                                    <span style={{
+                                                                                                        position: 'absolute', inset: 0, borderRadius: '50%',
+                                                                                                        background: 'linear-gradient(to top right, transparent 47%, #e53935 47%, #e53935 53%, transparent 53%)',
+                                                                                                    }} />
+                                                                                                )}
+                                                                                            </button>
                                                                                         );
                                                                                     }
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
                                                                                             type="button"
-                                                                                            disabled={outOfStock}
                                                                                             onClick={() => {
                                                                                                 setSelectedOptions(prev => ({ ...prev, [type]: value }));
                                                                                             }}
@@ -612,11 +632,11 @@ const ProductPage = () => {
                                                                                                 borderRadius: 6,
                                                                                                 border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
                                                                                                 background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                                color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                                color: isSelected ? '#fff' : '#333',
                                                                                                 fontSize: 13,
                                                                                                 fontWeight: isSelected ? 700 : 400,
-                                                                                                cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                                opacity: outOfStock ? 0.5 : 1,
+                                                                                                cursor: 'pointer',
+                                                                                                opacity: 1,
                                                                                             }}
                                                                                         >
                                                                                             {value}
@@ -821,7 +841,7 @@ const ProductPage = () => {
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
                                                                     <img
-                                                                        src={buildImageUrl(item?.photos?.[0])}
+                                                                        src={buildImageUrl(item?.photos?.[0] || item?.variants?.[0]?.photos?.[0])}
                                                                         alt={item.name}
                                                                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                                                     />
