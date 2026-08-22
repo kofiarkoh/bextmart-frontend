@@ -19,6 +19,13 @@ function formatDate(str) {
   })
 }
 
+function orderEstimatedArrival(createdAt, days) {
+  if (!days || !createdAt) return null;
+  const d = new Date(createdAt);
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 
 // ─── status stepper ───────────────────────────────────────────────────────────
 
@@ -31,6 +38,15 @@ const STEPS = [
         <rect x="9" y="3" width="6" height="4" rx="1"/>
         <line x1="9" y1="12" x2="15" y2="12"/>
         <line x1="9" y1="16" x2="13" y2="16"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Confirmed',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
     ),
   },
@@ -64,96 +80,70 @@ const STEPS = [
 ]
 
 const STATUS_TO_STEP = {
-  pending: 0, confirmed: 0, processing: 1, shipped: 2,
-  delivered: 3, completed: 3, success: 3,
+  pending: 0, confirmed: 1, processing: 2, shipped: 3,
+  delivered: 4, completed: 4, success: 4,
 }
 
-const Tick = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-)
 
-function StatusStepper({ status }) {
+function ItemStepper({ status }) {
   const s = (status || '').toLowerCase()
   const cancelled = s === 'cancelled' || s === 'failed' || s === 'returned' || s === 'refunded'
   const activeStep = STATUS_TO_STEP[s] ?? 0
+  const fillPct = (activeStep / (STEPS.length - 1)) * 100
 
   if (cancelled) {
     return (
-      <div style={{
-        background: '#fff', borderRadius: 12,
-        boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
-        padding: '20px 28px', marginBottom: 20,
-        display: 'flex', alignItems: 'center', gap: 12,
-      }}>
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%', background: '#fee2e2',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </div>
-        <div>
-          <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: '#dc2626', textTransform: 'capitalize' }}>
-            Order {status}
-          </p>
-          <p style={{ margin: 0, fontSize: 13, color: 'var(--color_body)' }}>
-            This order has been {status}.
-          </p>
-        </div>
+      <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#dc2626', flexShrink: 0 }} />
+        <span style={{ fontSize: 12, color: '#dc2626', fontWeight: 600, textTransform: 'capitalize' }}>
+          This item has been {status}
+        </span>
       </div>
     )
   }
 
   return (
-    <div style={{
-      background: '#fff', borderRadius: 12,
-      boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
-      padding: '24px 28px', marginBottom: 20,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-        {STEPS.map((step, i) => {
-          const done   = i < activeStep
-          const active = i === activeStep
-          return (
-            <React.Fragment key={step.label}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 80 }}>
+    <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid #f3f4f6' }}>
+      {/* Track + nodes */}
+      <div style={{ position: 'relative', marginBottom: 8 }}>
+        {/* Background track, positioned center-of-first-col to center-of-last-col */}
+        <div style={{ position: 'absolute', top: 7, left: '12.5%', right: '12.5%', height: 3, background: '#e5e7eb', borderRadius: 2 }}>
+          <div style={{ height: '100%', width: `${fillPct}%`, background: 'var(--color_primary)', borderRadius: 2, transition: 'width 0.4s ease' }} />
+        </div>
+
+        {/* Step columns */}
+        <div style={{ display: 'flex', position: 'relative', zIndex: 1 }}>
+          {STEPS.map((step, i) => {
+            const isTerminal = activeStep === STEPS.length - 1
+            const done = i < activeStep || (isTerminal && i === activeStep)
+            const active = !isTerminal && i === activeStep
+            return (
+              <div key={step.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                 <div style={{
-                  width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
+                  width: 16, height: 16, borderRadius: '50%',
+                  background: done ? 'var(--color_primary)' : '#fff',
+                  border: `2.5px solid ${done || active ? 'var(--color_primary)' : '#d1d5db'}`,
+                  boxShadow: active ? '0 0 0 4px rgba(0,0,100,0.1)' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: done     ? 'var(--color_primary)'
-                             : active  ? '#fff'
-                             : '#f3f4f6',
-                  border: done     ? '2px solid var(--color_primary)'
-                        : active   ? '2px solid var(--color_primary)'
-                        : '2px solid #e5e7eb',
-                  color: done    ? '#fff'
-                       : active  ? 'var(--color_primary)'
-                       : '#9ca3af',
                   transition: 'all 0.2s',
                 }}>
-                  {done ? <Tick /> : step.icon}
+                  {done && (
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  )}
                 </div>
                 <span style={{
-                  fontSize: 11, fontWeight: active || done ? 600 : 400, lineHeight: 1.3,
-                  color: active || done ? 'var(--color_heading)' : '#9ca3af',
-                  textAlign: 'center',
+                  fontSize: 10, textAlign: 'center', lineHeight: 1.2, whiteSpace: 'nowrap',
+                  fontWeight: active ? 700 : done ? 500 : 400,
+                  color: active ? 'var(--color_primary)' : done ? '#374151' : '#9ca3af',
                 }}>
                   {step.label}
                 </span>
               </div>
-              {i < STEPS.length - 1 && (
-                <div style={{
-                  flex: 1, height: 2, marginTop: 20, minWidth: 12,
-                  background: i < activeStep ? 'var(--color_primary)' : '#e5e7eb',
-                  transition: 'background 0.3s',
-                }} />
-              )}
-            </React.Fragment>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -204,6 +194,11 @@ export default function OrderDetailPage() {
   const shippingFee = parseFloat(order?.shipping_fee ?? order?.delivery_fee ?? order?.shipping ?? 0)
   const totalPrice  = parseFloat(order?.total_price  ?? order?.total ?? 0)
   const delivery    = order?.delivery_address || order?.address || null
+
+  const cityDeliveryType = order?.delivery_city?.delivery_types?.find(
+    dt => String(dt.delivery_type_id) === String(order?.delivery_type_id)
+  )
+  const estimatedArrival = orderEstimatedArrival(order?.created_at, cityDeliveryType?.estimated_days)
 
   // Render nothing until we've confirmed a token exists in localStorage
   if (!tokenChecked) return null
@@ -277,13 +272,6 @@ export default function OrderDetailPage() {
                 </div>
               </div>
 
-              {/* ── Status stepper ── */}
-              <div style={{ overflowX: isMobile ? 'auto' : 'visible', paddingBottom: isMobile ? 4 : 0 }}>
-                <div style={{ minWidth: isMobile ? 360 : 'auto' }}>
-                  <StatusStepper status={order.status} />
-                </div>
-              </div>
-
               {/* ── Body: stacks on mobile, side-by-side on desktop ── */}
               <div style={{
                 display: 'flex',
@@ -295,53 +283,57 @@ export default function OrderDetailPage() {
               }}>
 
                 {/* Left — Items */}
-                <div style={{ flex: 1, minWidth: 0, width: isMobile ? '100%' : 'auto', overflow: 'hidden' }}>
-                  <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', overflow: 'hidden', width: '100%' }}>
-                    <div style={{ padding: isMobile ? '14px 16px' : '16px 24px', borderBottom: '1px solid var(--color_line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600 }}>Items Ordered</h2>
-                      <span style={{ fontSize: 13, color: 'var(--color_body)' }}>
-                        {items.length} item{items.length !== 1 ? 's' : ''}
-                      </span>
+                <div style={{ flex: 1, minWidth: 0, width: isMobile ? '100%' : 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+                  {/* Section label */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 2 }}>
+                    <h2 style={{ margin: 0, fontSize: 13, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color_body)' }}>
+                      Items Ordered
+                    </h2>
+                    <span style={{ fontSize: 13, color: 'var(--color_body)' }}>
+                      {items.length} item{items.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+
+                  {items.length === 0 ? (
+                    <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', padding: '48px 24px', textAlign: 'center', color: 'var(--color_body)', fontSize: 14 }}>
+                      No item details available for this order.
                     </div>
+                  ) : (
+                    <>
+                      {items.map((item, i) => {
+                        const product  = item.product || item
+                        const variant  = item.variant || null
+                        const name     = product?.name || item?.name || 'Product'
+                        const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? item?.photos?.[0] ?? null)
+                        const qty      = item?.quantity ?? item?.qty ?? 1
+                        const price    = parseFloat(item?.price ?? product?.price ?? 0)
+                        const rowTotal = parseFloat(item?.total_price ?? item?.total ?? item?.subtotal ?? price * qty)
+                        const variantLabel = variant?.attribute_values?.map(av => av.value || av.name).join(', ') || variant?.sku || null
+                        const itemStatus = item?.status || null
+                        const effectiveStatus = itemStatus || order.status
 
-                    {items.length === 0 ? (
-                      <div style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--color_body)', fontSize: 14 }}>
-                        No item details available for this order.
-                      </div>
-                    ) : (
-                      <>
-                        {items.map((item, i) => {
-                          const product  = item.product || item
-                          const variant  = item.variant || null
-                          const name     = product?.name || item?.name || 'Product'
-                          const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? item?.photos?.[0] ?? null)
-                          const qty      = item?.quantity ?? item?.qty ?? 1
-                          const price    = parseFloat(item?.price ?? product?.price ?? 0)
-                          const rowTotal = parseFloat(item?.total_price ?? item?.total ?? item?.subtotal ?? price * qty)
-                          const variantLabel = variant?.attribute_values?.map(av => av.value || av.name).join(', ') || variant?.sku || null
-                          const itemStatus = item?.status || null
-
-                          return (
-                            <div key={i} style={{
-                              display: 'flex', alignItems: 'center', gap: 12,
-                              padding: isMobile ? '12px 16px' : '16px 24px',
-                              borderBottom: i < items.length - 1 ? '1px solid var(--color_line)' : 'none',
-                              overflow: 'hidden',
-                              width: '100%',
-                              boxSizing: 'border-box',
-                            }}>
+                        return (
+                          <div key={i} style={{
+                            background: '#fff', borderRadius: 12,
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+                            padding: isMobile ? '16px' : '20px 24px',
+                            boxSizing: 'border-box',
+                          }}>
+                            {/* Top row */}
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
                               {/* Thumbnail */}
                               <div style={{
-                                width: isMobile ? 48 : 64, height: isMobile ? 48 : 64,
-                                flexShrink: 0, borderRadius: 8,
-                                overflow: 'hidden', border: '1px solid var(--color_line)',
+                                width: isMobile ? 56 : 72, height: isMobile ? 56 : 72,
+                                flexShrink: 0, borderRadius: 10,
+                                overflow: 'hidden', border: '1px solid #f0f0f0',
                                 background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 {imgSrc ? (
                                   // eslint-disable-next-line @next/next/no-img-element
                                   <img src={imgSrc} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                                 ) : (
-                                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
                                     <rect x="3" y="3" width="18" height="18" rx="2"/>
                                     <circle cx="8.5" cy="8.5" r="1.5"/>
                                     <polyline points="21 15 16 10 5 21"/>
@@ -349,69 +341,55 @@ export default function OrderDetailPage() {
                                 )}
                               </div>
 
-                              {/* Name + variant + status + price */}
-                              <div style={{ flex: 1, minWidth: 0, width: 0, overflow: 'hidden' }}>
+                              {/* Info */}
+                              <div style={{ flex: 1, minWidth: 0 }}>
                                 <p style={{
-                                  margin: '0 0 2px', fontWeight: 500, fontSize: 14,
+                                  margin: '0 0 3px', fontWeight: 600, fontSize: 14,
                                   color: 'var(--color_heading)',
-                                  overflow: 'hidden', textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  maxWidth: '100%',
+                                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                 }}>
                                   {name}
                                 </p>
                                 {variantLabel && (
-                                  <p style={{ margin: '0 0 2px', fontSize: 12, color: 'var(--color_body)' }}>{variantLabel}</p>
+                                  <p style={{ margin: '0 0 4px', fontSize: 12, color: 'var(--color_body)' }}>{variantLabel}</p>
                                 )}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                                  <span style={{ fontSize: 12, color: 'var(--color_body)' }}>
-                                    <CurrencyConvert amount={price} /> each
-                                  </span>
-                                  {itemStatus && <StatusPill status={itemStatus} />}
-                                </div>
+                                <span style={{ fontSize: 12, color: '#9ca3af' }}>
+                                  <CurrencyConvert amount={price} /> × {qty}
+                                </span>
                               </div>
 
-                              {/* Qty + total stacked on mobile, inline on desktop */}
-                              {isMobile ? (
-                                <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color_heading)' }}>
-                                    <CurrencyConvert amount={rowTotal} />
-                                  </div>
-                                  <div style={{ fontSize: 12, color: 'var(--color_body)', marginTop: 2 }}>× {qty}</div>
+                              {/* Total */}
+                              <div style={{ flexShrink: 0, textAlign: 'right' }}>
+                                <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>
+                                  <CurrencyConvert amount={rowTotal} />
                                 </div>
-                              ) : (
-                                <>
-                                  <div style={{ padding: '3px 12px', borderRadius: 20, background: '#f3f4f6', fontSize: 13, color: 'var(--color_body)', flexShrink: 0 }}>
-                                    × {qty}
-                                  </div>
-                                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--color_heading)', flexShrink: 0, minWidth: 72, textAlign: 'right' }}>
-                                    <CurrencyConvert amount={rowTotal} />
-                                  </div>
-                                </>
-                              )}
+                              </div>
                             </div>
-                          )
-                        })}
 
-                        {/* Totals */}
-                        <div style={{ padding: isMobile ? '14px 16px' : '16px 24px', borderTop: '2px solid var(--color_line)', background: '#fafafa' }}>
-                          {subtotal > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 8 }}>
-                              <span>Subtotal</span><span><CurrencyConvert amount={subtotal} /></span>
-                            </div>
-                          )}
-                          {shippingFee > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 8 }}>
-                              <span>Shipping</span><span><CurrencyConvert amount={shippingFee} /></span>
-                            </div>
-                          )}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: 'var(--color_heading)', paddingTop: 10, borderTop: '1px solid var(--color_line)', marginTop: 4 }}>
-                            <span>Total</span><span><CurrencyConvert amount={totalPrice} /></span>
+                            {/* Per-item progress stepper */}
+                            <ItemStepper status={effectiveStatus} />
                           </div>
+                        )
+                      })}
+
+                      {/* Totals card */}
+                      <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.07)', padding: isMobile ? '14px 16px' : '16px 24px' }}>
+                        {subtotal > 0 && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 10 }}>
+                            <span>Subtotal</span><span><CurrencyConvert amount={subtotal} /></span>
+                          </div>
+                        )}
+                        {shippingFee > 0 && (
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 10 }}>
+                            <span>Shipping</span><span><CurrencyConvert amount={shippingFee} /></span>
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: 'var(--color_heading)', paddingTop: 10, borderTop: '1px solid #f3f4f6', marginTop: subtotal > 0 || shippingFee > 0 ? 4 : 0 }}>
+                          <span>Order Total</span><span><CurrencyConvert amount={totalPrice} /></span>
                         </div>
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Right — Meta */}
@@ -427,11 +405,15 @@ export default function OrderDetailPage() {
                     <div style={{ padding: '16px 20px' }}>
                       <MetaRow label="Order #" value={`#${order.order_number}`} />
                       <MetaRow label="Date" value={new Date(order.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} />
-                      <MetaRow label="Status" value={
-                        <StatusPill status={order.status} />
-                      } />
+{estimatedArrival && order.status !== 'delivered' && order.status !== 'cancelled' && (
+                        <MetaRow label="Est. delivery" value={
+                          <span style={{ color: 'var(--color_heading)', fontWeight: 500 }}>
+                            {estimatedArrival}
+                          </span>
+                        } />
+                      )}
                       {order.payment_method && (
-                        <MetaRow label="Payment" value={order.payment_method} capitalize />
+                        <MetaRow label="Payment" value={order.payment_method.replace(/_/g, ' ')} capitalize />
                       )}
                     </div>
                   </div>

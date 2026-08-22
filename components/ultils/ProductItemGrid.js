@@ -9,7 +9,8 @@ import useTranslation from './useTranslation'
 
 const ProductItemGrid = ({ product }) => {
     const { t } = useTranslation();
-    const primaryPhoto = product?.photos?.[0]
+    const firstVariant = product?.variants?.[0]
+    const primaryPhoto = firstVariant?.photos?.[0] || product?.photos?.[0]
 
     return (
         <div className="product-item__grid product-card">

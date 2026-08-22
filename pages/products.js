@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -17,10 +17,16 @@ const ProductsPage = () => {
   const page = Number(router.query.page || 1)
   const category = router.query.category || undefined
 
-  const { data, isLoading, isError } = useSearchProductsQuery(
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
     category ? { page, category } : { page },
     { skip: !router.isReady }
   )
+  const isLoading = !mounted || isQueryLoading
 
   const pageData = data?.data || {}
   const items = Array.isArray(pageData.data) ? pageData.data : []
@@ -98,7 +104,15 @@ const ProductsPage = () => {
                   className="button button--secondary"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage <= 1}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px 12px',
+                    backgroundColor: '#fff',
+                    color: 'var(--color_heading)',
+                    borderColor: 'var(--color_line)',
+                  }}
                   aria-label="Previous page"
                 >
                   <SVGArrowLeft />
@@ -115,9 +129,9 @@ const ProductsPage = () => {
                       justifyContent: 'center',
                       padding: '8px 12px',
                       fontWeight: p === currentPage ? 700 : 400,
-                      backgroundColor: p === currentPage ? 'var(--color_primary)' : '',
-                      color: p === currentPage ? '#fff' : '',
-                      borderColor: p === currentPage ? 'var(--color_primary)' : '',
+                      backgroundColor: p === currentPage ? 'var(--color_primary)' : '#fff',
+                      color: p === currentPage ? '#fff' : 'var(--color_heading)',
+                      borderColor: p === currentPage ? 'var(--color_primary)' : 'var(--color_line)',
                     }}
                   >
                     {p}
@@ -128,7 +142,15 @@ const ProductsPage = () => {
                   className="button button--secondary"
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage >= lastPage}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px 12px',
+                    backgroundColor: '#fff',
+                    color: 'var(--color_heading)',
+                    borderColor: 'var(--color_line)',
+                  }}
                   aria-label="Next page"
                 >
                   <SVGArrowRight />

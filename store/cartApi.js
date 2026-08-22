@@ -56,6 +56,14 @@ export const cartApi = apiSlice.injectEndpoints({
         method: 'PUT',
         body: { quantity },
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          if (data) dispatch(setCart(normalizeCart(data)))
+        } catch {
+          // no-op
+        }
+      },
       invalidatesTags: ['Cart'],
     }),
     removeCartItem: builder.mutation({
@@ -63,6 +71,14 @@ export const cartApi = apiSlice.injectEndpoints({
         url: `${CART_BASE_URL}/cart/items/${id}`,
         method: 'DELETE',
       }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          if (data) dispatch(setCart(normalizeCart(data)))
+        } catch {
+          // no-op
+        }
+      },
       invalidatesTags: ['Cart'],
     }),
   }),

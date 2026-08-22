@@ -35,8 +35,18 @@ import safecheckout from "../../public/assets/images/yam-safecheckout.png";
 import sizechart from "../../public/assets/images/sizechart.png";
 import { useGetProductQuery } from '../../store/productsApi'
 import { useAddToCartMutation } from '../../store/cartApi'
+import { useGetAddressOptionsQuery } from '../../store/checkoutApi'
 import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
 import Button from '../../components/ultils/Button'
+import CurrencyConvert from '../../components/ultils/CurrencyConvert'
+
+function getDeliveryEstimate(days, isPickup) {
+  if (!days) return null;
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
+  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+}
 
 const ProductPage = () => {
 
@@ -82,6 +92,8 @@ const ProductPage = () => {
     const [open, setOpen] = useState(false);
     const closeModal = () => setOpen(false);
     const [groupImages, setGroupImages] = useState([]);
+    const [estRegionId, setEstRegionId] = useState('');
+    const [estCityId, setEstCityId] = useState('');
 
     const router = useRouter();
     const { pid } = router.query;
@@ -90,14 +102,26 @@ const ProductPage = () => {
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const selectedProduct = useSelector((state) => state.products.selected);
     const authToken = useSelector((state) => state.auth?.token);
+
+    const { data: addressOptionsData } = useGetAddressOptionsQuery();
+    const estRegions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : [];
+    const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
+    const estCities = estSelectedRegion?.cities || [];
+    const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
     const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
+
+    const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
+        String(typeof r === 'object' ? r.id : r)
+    );
+    const isRegionRestricted = !!estRegionId && restrictedRegionIds.includes(String(estRegionId));
 
 
     const allPhotos = useMemo(() => {
         if (!apiProduct) return [];
         const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
         const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
-            .flatMap(v => Array.isArray(v.photos) ? v.photos : []);
+            .map(v => v.photos?.[0])
+            .filter(Boolean);
         return [...new Set([...photos, ...variantPhotos])];
     }, [apiProduct]);
 
@@ -163,8 +187,10 @@ const ProductPage = () => {
     function selectVariant(variant, updateImages = true) {
         setSelectedVariant(variant);
         if (updateImages) {
-            if (Array.isArray(variant?.photos) && variant.photos.length > 0) {
-                setGroupImages(variant.photos);
+            if (variant?.photos?.[0]) {
+                const variantPhoto = variant.photos[0];
+                const rest = allPhotos.filter(p => p !== variantPhoto);
+                setGroupImages([variantPhoto, ...rest]);
             } else {
                 setGroupImages(allPhotos);
             }
@@ -190,10 +216,10 @@ const ProductPage = () => {
     useEffect(() => {
         if (!product?.variants?.length) return;
         const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
-        selectVariant(firstAvailable, false);
+        selectVariant(firstAvailable);
     }, [product?.id]);
 
-    const isLoading = isProductLoading;
+    const isLoading = !router.isReady || isProductLoading;
 
     const { asPath } = useRouter();
     const origin =
@@ -321,6 +347,10 @@ const ProductPage = () => {
             notifyError('Please select a variant before adding to cart.', 'Select a Variant');
             return;
         }
+        if (qty > getAvailableStock()) {
+            notifyError('The quantity you selected exceeds available stock.', 'Not Enough Stock');
+            return;
+        }
         try {
             setClassStatus('cart-loadding');
             const payload = { product_uuid: product.uuid, quantity: qty };
@@ -343,31 +373,52 @@ const ProductPage = () => {
         }
     }
 
+    function getAvailableStock() {
+        if (selectedVariant) {
+            if (Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0) {
+                const selectedEntries = Object.entries(selectedOptions)
+                    .map(([type, value]) => selectedVariant.options.find(o => o.type === type && o.value === value))
+                    .filter(Boolean);
+                if (selectedEntries.length > 0) {
+                    return Math.min(...selectedEntries.map(o => parseInt(o.quantity || '0')));
+                }
+            }
+            return selectedVariant.stock - (selectedVariant.reserved_stock || 0);
+        }
+        return product.quantity ?? 0;
+    }
+
     if (product?.name != undefined) {
+        const displayName = selectedVariant?.title?.trim() ? selectedVariant.title : product.name;
+        const availableStock = getAvailableStock();
+        const exceedsStock = qty > availableStock;
         return (
             <>
                 <Head>
-                    <title>{product.name}</title>
+                    <title>{displayName}</title>
                 </Head>
 
                 <Header />
                 <main>
-                    <Breadcrumbs text={product.name} />
+                    <div className="d-none d-md-block">
+                        <Breadcrumbs text={displayName} />
+                    </div>
                     <div className="product-template">
                         <div className={styles.product_template_layout}>
                             <div className="container">
+                                <h1 className={`${styles.product_title} ${styles.product_title_mobile} d-block d-md-none`}>{displayName}</h1>
                                 <div className='product-template__container row'>
                                     <div className="product-template__content col-12">
                                         <div className="product-template__inner row">
-                                            <div className="product-template__media col-12 col-sm-12 col-md-7">
+                                            <div className="product-template__media col-12 col-sm-12 col-md-5">
                                                 <StickyBox offsetTop={0} offsetBottom={20}>
                                                     <ProductPageGallery productImg={groupImages} />
 
                                                 </StickyBox>
                                             </div>
-                                            <div className={`${styles.product_template_info} product-template__info col-12 col-sm-12 col-md-5`}>
+                                            <div className={`${styles.product_template_info} product-template__info col-12 col-sm-12 col-md-7`}>
                                                 <StickyBox offsetTop={30} offsetBottom={20}>
-                                                    <h1 className={styles.product_title}>{product.name}</h1>
+                                                    <h2 className={`${styles.product_title} d-none d-md-block`}>{displayName}</h2>
                                                     <div className="price price--large">
                                                         {(() => {
                                                             const activeOption = selectedVariant?.options?.find(
@@ -391,12 +442,22 @@ const ProductPage = () => {
                                                             </button>
                                                         </div>
                                                     </div>
+                                                    {exceedsStock && (
+                                                        <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
+                                                            Selected quantity exceeds available stock.
+                                                        </div>
+                                                    )}
                                                     {
                                                         product.advanced != undefined ? loadStyles() : ''
                                                     }
                                                     {product.variants.length > 0 && (
                                                         <div style={{ marginBottom: 16 }}>
                                                             {/* Step 1 — pick a variant */}
+                                                            {(() => {
+                                                            const allHaveThumbnails = product.variants.every(
+                                                                (v) => Array.isArray(v.photos) && v.photos.length > 0
+                                                            );
+                                                            return (
                                                             <div style={{ marginBottom: 14 }}>
                                                                 <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 8 }}>
                                                                     Variant:
@@ -410,7 +471,49 @@ const ProductPage = () => {
                                                                     {product.variants.map((variant) => {
                                                                         const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
+                                                                        const thumbSrc = allHaveThumbnails && variant.photos?.[0]
+                                                                            ? buildImageUrl(variant.photos[0])
+                                                                            : null;
                                                                         const hasColor = !!variant.color_code;
+
+                                                                        if (thumbSrc) {
+                                                                            return (
+                                                                                <button
+                                                                                    key={variant.id}
+                                                                                    type="button"
+                                                                                    title={variant.sku}
+                                                                                    disabled={outOfStock}
+                                                                                    onClick={() => selectVariant(variant)}
+                                                                                    style={{
+                                                                                        width: 56,
+                                                                                        height: 56,
+                                                                                        padding: 2,
+                                                                                        borderRadius: 8,
+                                                                                        border: isSelected ? '2.5px solid var(--color_primary)' : '2px solid #e5e7eb',
+                                                                                        background: '#f9fafb',
+                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
+                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        flexShrink: 0,
+                                                                                        overflow: 'hidden',
+                                                                                        position: 'relative',
+                                                                                    }}
+                                                                                >
+                                                                                    <img
+                                                                                        src={thumbSrc}
+                                                                                        alt={variant.sku}
+                                                                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }}
+                                                                                    />
+                                                                                    {outOfStock && (
+                                                                                        <span style={{
+                                                                                            position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                                                            background: 'rgba(255,255,255,0.7)', fontSize: 9, fontWeight: 700, color: '#e53935', borderRadius: 6,
+                                                                                        }}>
+                                                                                            Out of stock
+                                                                                        </span>
+                                                                                    )}
+                                                                                </button>
+                                                                            );
+                                                                        }
                                                                         if (hasColor) {
                                                                             return (
                                                                                 <button
@@ -463,6 +566,8 @@ const ProductPage = () => {
                                                                     })}
                                                                 </div>
                                                             </div>
+                                                            );
+                                                            })()}
 
                                                             {/* Step 2 — pick sub-options of the selected variant */}
                                                             {selectedVariant && Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0 && (() => {
@@ -557,6 +662,7 @@ const ProductPage = () => {
                                                                         <Button
                                                                             label="Add to Cart"
                                                                             loading={classStatus === 'cart-loadding'}
+                                                                            disabled={exceedsStock}
                                                                             onClick={AddtoCart}
                                                                             size="full"
                                                                             type="submit"
@@ -565,6 +671,85 @@ const ProductPage = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+
+                                                    {/* Delivery Estimate */}
+                                                    <div style={{ margin: '20px 0', padding: '14px 16px', borderRadius: 10, border: '1.5px solid var(--color_line, #e5e7eb)', background: 'var(--color_bg_2, #f9fafb)' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color_primary)', flexShrink: 0 }}>
+                                                                <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                                                            </svg>
+                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Estimate Delivery Cost</span>
+                                                        </div>
+                                                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                                            <select
+                                                                value={estRegionId}
+                                                                onChange={(e) => { setEstRegionId(e.target.value); setEstCityId(''); }}
+                                                                style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: `1.5px solid ${isRegionRestricted ? '#fca5a5' : 'var(--color_line, #d1d5db)'}`, fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: 'pointer' }}
+                                                            >
+                                                                <option value="">Select Region</option>
+                                                                {estRegions.map((r) => (
+                                                                    <option key={r.id} value={r.id}>{r.name}</option>
+                                                                ))}
+                                                            </select>
+                                                            {!isRegionRestricted && (
+                                                                <select
+                                                                    value={estCityId}
+                                                                    onChange={(e) => setEstCityId(e.target.value)}
+                                                                    disabled={!estRegionId}
+                                                                    style={{ flex: 1, minWidth: 120, padding: '7px 10px', borderRadius: 6, border: '1.5px solid var(--color_line, #d1d5db)', fontSize: 13, background: '#fff', color: 'var(--color_body)', cursor: estRegionId ? 'pointer' : 'not-allowed', opacity: estRegionId ? 1 : 0.5 }}
+                                                                >
+                                                                    <option value="">Select City</option>
+                                                                    {estCities.map((c) => (
+                                                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
+                                                        </div>
+                                                        {isRegionRestricted ? (
+                                                            <div style={{ marginTop: 10, display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px', borderRadius: 8, background: '#fef2f2', border: '1px solid #fecaca' }}>
+                                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                                                                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                                                                </svg>
+                                                                <span style={{ fontSize: 13, color: '#dc2626', fontWeight: 500 }}>
+                                                                    This product cannot be shipped to {estSelectedRegion?.name || 'this region'}.
+                                                                </span>
+                                                            </div>
+                                                        ) : estSelectedCity ? (
+                                                            <div style={{ marginTop: 10, fontSize: 13 }}>
+                                                                {(() => {
+                                                                    const types = (estSelectedCity.delivery_types || []).filter(dt => dt.is_available);
+                                                                    if (!types.length) return <span style={{ color: '#6b7280' }}>No delivery options available for this city.</span>;
+                                                                    return (
+                                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                                                            {types.map((dt) => {
+                                                                                const isPickup = dt.type?.slug === 'pickup';
+                                                                                const estimate = getDeliveryEstimate(dt.estimated_days, isPickup);
+                                                                                return (
+                                                                                <div key={dt.delivery_type_id} style={{ display: 'flex', flexDirection: 'column', gap: 5, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+                                                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                                        <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--color_heading)', fontWeight: 500 }}>
+                                                                                            <span style={{ fontSize: 16 }}>{isPickup ? '🏪' : '🚚'}</span>
+                                                                                            {dt.type?.name}
+                                                                                        </span>
+                                                                                        <span style={{ fontWeight: 600, color: 'var(--color_heading)' }}>
+                                                                                            {parseFloat(dt.fee) > 0
+                                                                                                ? <CurrencyConvert amount={parseFloat(dt.fee)} style={{ fontSize: 13 }} />
+                                                                                                : <span style={{ color: '#059669' }}>Free</span>
+                                                                                            }
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    {estimate && (
+                                                                                        <span style={{ fontSize: 13, color: '#6b7280', fontWeight: 400 }}>{estimate}</span>
+                                                                                    )}
+                                                                                </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    );
+                                                                })()}
+                                                            </div>
+                                                        ) : null}
                                                     </div>
 
                                                     {product.photos.length > 0 && (() => {

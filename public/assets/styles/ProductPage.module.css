@@ -46,6 +46,10 @@
     .padding_right .product_template_info {
         padding-right: 20px;
     }
+
+    .product_template_info {
+        max-width: 480px;
+    }
 }
 
 @media screen and (max-width: 767px) {
@@ -63,11 +67,16 @@
     margin-top: 0;
     text-transform: capitalize;
     font-weight: 600;
-    font-size: 24px;
-    line-height: 1.1em;
+    font-size: 20px;
+    line-height: 1.2em;
     margin-bottom: 10px;
     width: 100%;
     color: var(--color_heading);
+}
+
+.product_title_mobile {
+    padding-top: 28px;
+    padding-bottom: 16px;
 }
 
 .product_rating {

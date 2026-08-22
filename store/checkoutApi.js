@@ -24,8 +24,8 @@ export const checkoutApi = apiSlice.injectEndpoints({
       }),
     }),
     getCheckoutSummary: builder.query({
-      query: (cityId) => ({
-        url: `${BASE_URL}/checkout/summary?city_id=${cityId}`,
+      query: ({ cityId, deliveryTypeId }) => ({
+        url: `${BASE_URL}/checkout/summary?city_id=${cityId}&delivery_type_id=${deliveryTypeId}`,
         method: 'GET',
       }),
     }),
