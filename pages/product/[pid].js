@@ -1,51 +1,38 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import Head from 'next/head'
+import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import Image from 'next/image'
 import { useRouter } from "next/router";
-import { useSelector } from 'react-redux'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import StickyBox from "react-sticky-box";
-import Popup from "reactjs-popup";
-import useTranslation from '../../components/ultils/useTranslation'
-import Header from '../../components/Header'
-import Breadcrumbs from '../../components/ultils/Breadcrumbs'
-import Footer from '../../components/Footer'
-import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton'
-import ProductPageGallery from '../../components/ultils/ProductPageGallery'
-import ProductPageGalleryVertical from '../../components/ultils/ProductPageGalleryVertical'
-import ProductPageGalleryStacked from '../../components/ultils/ProductPageGalleryStacked'
-import ProductItemList from '../../components/ultils/ProductItemList'
-import ProductPageRelated from '../../components/ultils/ProductPageRelated'
-import ProductPageReview from '../../components/ultils/ProductPageReview'
-import { displayRating, displayPrice, buildImageUrl } from '../../components/ultils/Tools'
-import ProductWishlist from '../../components/ultils/ProductWishlist'
-import ExtNotification from '../../components/ExtNotification'
-import { SVGArrowLeft, SVGArrowRight, SVGArrowDown, SVGDiamond, SVGMinus, SVGPlus, SVGTwitter, SVGFacebook, SVGPinterest, SVGClose } from '../../public/assets/SVG';
-import styles from '../../public/assets/styles/ProductPage.module.css'
-import Product_en from "../../public/locales/en/en_Product.json";
-import Product_jp from "../../public/locales/jp/jp_Product.json";
-import Product_fr from "../../public/locales/fr/fr_Product.json";
-import Product_it from "../../public/locales/it/it_Product.json";
-import { Collections_Menu_en } from "../../public/locales/en/en_TextMenuCol";
-import { Collections_Menu_fr } from "../../public/locales/fr/fr_TextMenuCol";
-import { Collections_Menu_it } from "../../public/locales/it/it_TextMenuCol";
-import { Collections_Menu_jp } from "../../public/locales/jp/jp_TextMenuCol";
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import Breadcrumbs from '../../components/ultils/Breadcrumbs';
+import Button from '../../components/ultils/Button';
+import CurrencyConvert from '../../components/ultils/CurrencyConvert';
+import ProductPageGallery from '../../components/ultils/ProductPageGallery';
+import ProductPageRelated from '../../components/ultils/ProductPageRelated';
+import ProductPageReview from '../../components/ultils/ProductPageReview';
+import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton';
+import { buildImageUrl, displayPrice } from '../../components/ultils/Tools';
+import { dismissAll, notifyAuth, notifyError, notifySuccess } from '../../components/ultils/notify';
+import { SVGArrowDown, SVGMinus, SVGPlus } from '../../public/assets/SVG';
 import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
-import safecheckout from "../../public/assets/images/yam-safecheckout.png";
-import sizechart from "../../public/assets/images/sizechart.png";
-import { useGetProductQuery } from '../../store/productsApi'
-import { useAddToCartMutation } from '../../store/cartApi'
-import { useGetAddressOptionsQuery } from '../../store/checkoutApi'
-import { notifyError, notifySuccess, notifyAuth, dismissAll } from '../../components/ultils/notify'
-import Button from '../../components/ultils/Button'
-import CurrencyConvert from '../../components/ultils/CurrencyConvert'
+import styles from '../../public/assets/styles/ProductPage.module.css';
+import Product_en from "../../public/locales/en/en_Product.json";
+import { Collections_Menu_en } from "../../public/locales/en/en_TextMenuCol";
+import { useAddToCartMutation } from '../../store/cartApi';
+import { useGetAddressOptionsQuery } from '../../store/checkoutApi';
+import { useGetProductQuery } from '../../store/productsApi';
 
 function getDeliveryEstimate(days, isPickup) {
   if (!days) return null;
   const d = new Date();
   d.setDate(d.getDate() + days);
   const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
-  return isPickup ? `Your item will be ready for pickup by ${date}` : `Your item will be delivered by ${date}`;
+  return isPickup
+    ? `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`
+    : `Your item will be delivered by ${date}`;
 }
 
 const ProductPage = () => {
@@ -100,7 +87,6 @@ const ProductPage = () => {
     const productId = router.isReady ? (Array.isArray(pid) ? pid[0] : pid) : null;
     const { data: productResponse, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
-    const selectedProduct = useSelector((state) => state.products.selected);
     const authToken = useSelector((state) => state.auth?.token);
 
     const { data: addressOptionsData } = useGetAddressOptionsQuery();
@@ -108,7 +94,7 @@ const ProductPage = () => {
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];
     const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
-    const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
+    const apiProduct = productResponse?.data || productResponse?.product || productResponse || null;
 
     const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
         String(typeof r === 'object' ? r.id : r)
@@ -215,7 +201,7 @@ const ProductPage = () => {
 
     useEffect(() => {
         if (!product?.variants?.length) return;
-        const firstAvailable = product.variants.find(v => (v.stock - (v.reserved_stock || 0)) > 0) || product.variants[0];
+        const firstAvailable = product.variants.find(v => (v.quantity - (v.reserved_stock || 0)) > 0) || product.variants[0];
         selectVariant(firstAvailable);
     }, [product?.id]);
 
@@ -323,10 +309,6 @@ const ProductPage = () => {
         }
     }
 
-    function changeQtyInput(qtyNew, price) {
-        if (qty > 0) setQty(parseInt(qtyNew));
-    }
-
     function changeQty(number, price) {
         if (qty > 1) {
             (number) ? setQty((q) => q - 1) : setQty((q) => q + 1);
@@ -348,7 +330,7 @@ const ProductPage = () => {
             return;
         }
         if (qty > getAvailableStock()) {
-            notifyError('The quantity you selected exceeds available stock.', 'Not Enough Stock');
+            notifyError('Out of stock', 'Not Enough Stock');
             return;
         }
         try {
@@ -373,17 +355,25 @@ const ProductPage = () => {
         }
     }
 
+    function getVariantStock(variant) {
+        if (!variant || typeof variant.quantity !== 'number') return null;
+        return variant.quantity - (variant.reserved_stock || 0);
+    }
+
     function getAvailableStock() {
         if (selectedVariant) {
+            const variantStock = getVariantStock(selectedVariant);
             if (Array.isArray(selectedVariant.options) && selectedVariant.options.length > 0) {
                 const selectedEntries = Object.entries(selectedOptions)
                     .map(([type, value]) => selectedVariant.options.find(o => o.type === type && o.value === value))
                     .filter(Boolean);
                 if (selectedEntries.length > 0) {
-                    return Math.min(...selectedEntries.map(o => parseInt(o.quantity || '0')));
+                    const quantities = selectedEntries.map(o => parseInt(o.quantity || '0'));
+                    if (variantStock !== null) quantities.push(variantStock);
+                    return Math.min(...quantities);
                 }
             }
-            return selectedVariant.stock - (selectedVariant.reserved_stock || 0);
+            return variantStock !== null ? variantStock : (selectedVariant.quantity - (selectedVariant.reserved_stock || 0));
         }
         return product.quantity ?? 0;
     }
@@ -435,7 +425,7 @@ const ProductPage = () => {
                                                                 <span className="visually-hidden">{t("Decrease_quantity")}</span>
                                                                 <SVGMinus />
                                                             </button>
-                                                            <input onChange={(e) => changeQtyInput(e.target.value, product.price)} className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
+                                                            <input readOnly className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
                                                             <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
                                                                 <span className="visually-hidden">{t("Increase_quantity")}</span>
                                                                 <SVGPlus />
@@ -444,7 +434,7 @@ const ProductPage = () => {
                                                     </div>
                                                     {exceedsStock && (
                                                         <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
-                                                            Selected quantity exceeds available stock.
+                                                            Out of stock
                                                         </div>
                                                     )}
                                                     {
@@ -469,7 +459,7 @@ const ProductPage = () => {
                                                                 </div>
                                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                                                                     {product.variants.map((variant) => {
-                                                                        const outOfStock = variant.stock - (variant.reserved_stock || 0) <= 0;
+                                                                        const outOfStock = variant.quantity - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
                                                                         const thumbSrc = allHaveThumbnails && variant.photos?.[0]
                                                                             ? buildImageUrl(variant.photos[0])
@@ -481,8 +471,7 @@ const ProductPage = () => {
                                                                                 <button
                                                                                     key={variant.id}
                                                                                     type="button"
-                                                                                    title={variant.sku}
-                                                                                    disabled={outOfStock}
+                                                                                    title={outOfStock ? `${variant.sku} - Out of stock` : variant.sku}
                                                                                     onClick={() => selectVariant(variant)}
                                                                                     style={{
                                                                                         width: 56,
@@ -491,8 +480,8 @@ const ProductPage = () => {
                                                                                         borderRadius: 8,
                                                                                         border: isSelected ? '2.5px solid var(--color_primary)' : '2px solid #e5e7eb',
                                                                                         background: '#f9fafb',
-                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        cursor: 'pointer',
+                                                                                        opacity: 1,
                                                                                         flexShrink: 0,
                                                                                         overflow: 'hidden',
                                                                                         position: 'relative',
@@ -519,8 +508,7 @@ const ProductPage = () => {
                                                                                 <button
                                                                                     key={variant.id}
                                                                                     type="button"
-                                                                                    title={variant.sku}
-                                                                                    disabled={outOfStock}
+                                                                                    title={outOfStock ? `${variant.sku} - Out of stock` : variant.sku}
                                                                                     onClick={() => selectVariant(variant)}
                                                                                     style={{
                                                                                         width: 32,
@@ -530,29 +518,36 @@ const ProductPage = () => {
                                                                                         border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
                                                                                         boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
                                                                                         padding: 0,
-                                                                                        cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                        opacity: outOfStock ? 0.4 : 1,
+                                                                                        cursor: 'pointer',
+                                                                                        opacity: 1,
                                                                                         flexShrink: 0,
+                                                                                        position: 'relative',
                                                                                     }}
-                                                                                />
+                                                                                >
+                                                                                    {outOfStock && (
+                                                                                        <span style={{
+                                                                                            position: 'absolute', inset: 0, borderRadius: '50%',
+                                                                                            background: 'linear-gradient(to top right, transparent 47%, #e53935 47%, #e53935 53%, transparent 53%)',
+                                                                                        }} />
+                                                                                    )}
+                                                                                </button>
                                                                             );
                                                                         }
                                                                         return (
                                                                             <button
                                                                                 key={variant.id}
                                                                                 type="button"
-                                                                                disabled={outOfStock}
                                                                                 onClick={() => selectVariant(variant)}
                                                                                 style={{
                                                                                     padding: '6px 14px',
                                                                                     borderRadius: 6,
                                                                                     border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
                                                                                     background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                    color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                    color: isSelected ? '#fff' : '#333',
                                                                                     fontSize: 13,
                                                                                     fontWeight: isSelected ? 700 : 400,
-                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                    opacity: outOfStock ? 0.5 : 1,
+                                                                                    cursor: 'pointer',
+                                                                                    opacity: 1,
                                                                                 }}
                                                                             >
                                                                                 {variant.sku}
@@ -592,7 +587,8 @@ const ProductPage = () => {
                                                                                 {values.map((value) => {
                                                                                     const optionEntry = selectedVariant.options.find(o => o.type === type && o.value === value);
                                                                                     const optionQty = optionEntry ? parseInt(optionEntry.quantity || '0') : 0;
-                                                                                    const outOfStock = optionQty <= 0;
+                                                                                    const variantStock = getVariantStock(selectedVariant);
+                                                                                    const outOfStock = optionQty <= 0 || (variantStock !== null && variantStock <= 0);
                                                                                     const isSelected = selectedVal === value;
                                                                                     const hasColor = !!optionEntry?.color_code;
                                                                                     if (hasColor) {
@@ -600,8 +596,7 @@ const ProductPage = () => {
                                                                                             <button
                                                                                                 key={value}
                                                                                                 type="button"
-                                                                                                title={value}
-                                                                                                disabled={outOfStock}
+                                                                                                title={outOfStock ? `${value} - Out of stock` : value}
                                                                                                 onClick={() => setSelectedOptions(prev => ({ ...prev, [type]: value }))}
                                                                                                 style={{
                                                                                                     width: 32,
@@ -611,18 +606,25 @@ const ProductPage = () => {
                                                                                                     border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
                                                                                                     boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
                                                                                                     padding: 0,
-                                                                                                    cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                                    opacity: outOfStock ? 0.4 : 1,
+                                                                                                    cursor: 'pointer',
+                                                                                                    opacity: 1,
                                                                                                     flexShrink: 0,
+                                                                                                    position: 'relative',
                                                                                                 }}
-                                                                                            />
+                                                                                            >
+                                                                                                {outOfStock && (
+                                                                                                    <span style={{
+                                                                                                        position: 'absolute', inset: 0, borderRadius: '50%',
+                                                                                                        background: 'linear-gradient(to top right, transparent 47%, #e53935 47%, #e53935 53%, transparent 53%)',
+                                                                                                    }} />
+                                                                                                )}
+                                                                                            </button>
                                                                                         );
                                                                                     }
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
                                                                                             type="button"
-                                                                                            disabled={outOfStock}
                                                                                             onClick={() => {
                                                                                                 setSelectedOptions(prev => ({ ...prev, [type]: value }));
                                                                                             }}
@@ -631,11 +633,11 @@ const ProductPage = () => {
                                                                                                 borderRadius: 6,
                                                                                                 border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
                                                                                                 background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                                color: isSelected ? '#fff' : outOfStock ? '#bbb' : '#333',
+                                                                                                color: isSelected ? '#fff' : '#333',
                                                                                                 fontSize: 13,
                                                                                                 fontWeight: isSelected ? 700 : 400,
-                                                                                                cursor: outOfStock ? 'not-allowed' : 'pointer',
-                                                                                                opacity: outOfStock ? 0.5 : 1,
+                                                                                                cursor: 'pointer',
+                                                                                                opacity: 1,
                                                                                             }}
                                                                                         >
                                                                                             {value}
@@ -679,7 +681,7 @@ const ProductPage = () => {
                                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color_primary)', flexShrink: 0 }}>
                                                                 <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
                                                             </svg>
-                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Estimate Delivery Cost</span>
+                                                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_heading)' }}>Choose Your Location</span>
                                                         </div>
                                                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                                             <select
@@ -829,7 +831,7 @@ const ProductPage = () => {
                                             {similarProducts.length > 0 && (
                                                 <div className='product-desciption page-width' style={{ marginTop: 40 }}>
                                                     <div className="box-divider">
-                                                        <h4 className="box-title">Similar Products</h4>
+                                                        <h4 className="box-title">Products You May Like</h4>
                                                     </div>
                                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 16, marginTop: 20 }}>
                                                         {similarProducts.slice(0, 6).map((item, index) => (
@@ -840,7 +842,7 @@ const ProductPage = () => {
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
                                                                     <img
-                                                                        src={buildImageUrl(item?.photos?.[0])}
+                                                                        src={buildImageUrl(item?.photos?.[0] || item?.variants?.[0]?.photos?.[0])}
                                                                         alt={item.name}
                                                                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                                                     />

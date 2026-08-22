@@ -42,7 +42,7 @@ const SectionCategoryGrid = () => {
                 <div key={i} style={{ borderRadius: 16, background: '#e5e7eb', paddingBottom: '115%' }} />
               ))
             : categories.map((cat) => {
-                const img = buildImageUrl(cat.photo || cat.image || cat.thumbnail || null)
+                const img = buildImageUrl(cat.cover_image || cat.photo || cat.image || cat.thumbnail || null)
                 const href = `/products?category=${cat.slug || cat.id}`
                 return (
                   <Link key={cat.id} href={href} style={{ textDecoration: 'none', display: 'block', borderRadius: 16, overflow: 'hidden', position: 'relative', paddingBottom: '115%', background: '#e2e8f0' }}>
