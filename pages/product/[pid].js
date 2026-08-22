@@ -85,7 +85,6 @@ const ProductPage = () => {
     const productId = router.isReady ? (Array.isArray(pid) ? pid[0] : pid) : null;
     const { data: productResponse, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
-    const selectedProduct = useSelector((state) => state.products.selected);
     const authToken = useSelector((state) => state.auth?.token);
 
     const { data: addressOptionsData } = useGetAddressOptionsQuery();
@@ -93,7 +92,7 @@ const ProductPage = () => {
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];
     const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
-    const apiProduct = selectedProduct || productResponse?.data || productResponse?.product || productResponse || null;
+    const apiProduct = productResponse?.data || productResponse?.product || productResponse || null;
 
     const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
         String(typeof r === 'object' ? r.id : r)
