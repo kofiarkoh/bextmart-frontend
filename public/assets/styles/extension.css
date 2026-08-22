@@ -3086,7 +3086,6 @@ a.product__text {
     padding-bottom: 10px;
     border-top: 2px solid var(--color_primary);
     color: var(--color_heading);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .product-template__bottom .box-divider * {
