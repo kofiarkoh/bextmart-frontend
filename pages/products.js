@@ -104,7 +104,15 @@ const ProductsPage = () => {
                   className="button button--secondary"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage <= 1}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px 12px',
+                    backgroundColor: '#fff',
+                    color: 'var(--color_heading)',
+                    borderColor: 'var(--color_line)',
+                  }}
                   aria-label="Previous page"
                 >
                   <SVGArrowLeft />
@@ -121,9 +129,9 @@ const ProductsPage = () => {
                       justifyContent: 'center',
                       padding: '8px 12px',
                       fontWeight: p === currentPage ? 700 : 400,
-                      backgroundColor: p === currentPage ? 'var(--color_primary)' : '',
-                      color: p === currentPage ? '#fff' : '',
-                      borderColor: p === currentPage ? 'var(--color_primary)' : '',
+                      backgroundColor: p === currentPage ? 'var(--color_primary)' : '#fff',
+                      color: p === currentPage ? '#fff' : 'var(--color_heading)',
+                      borderColor: p === currentPage ? 'var(--color_primary)' : 'var(--color_line)',
                     }}
                   >
                     {p}
@@ -134,7 +142,15 @@ const ProductsPage = () => {
                   className="button button--secondary"
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage >= lastPage}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 12px' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px 12px',
+                    backgroundColor: '#fff',
+                    color: 'var(--color_heading)',
+                    borderColor: 'var(--color_line)',
+                  }}
                   aria-label="Next page"
                 >
                   <SVGArrowRight />

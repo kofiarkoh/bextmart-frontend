@@ -231,7 +231,7 @@ const Breadcrumbs = (props) => {
                         {
                             (router.pathname.includes('/product/')) ? (
                                 <>
-                                    <span itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem">
+                                    <span itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem" className="breadcrumb-current" title={props.text}>
                                         <Link href="/collections" itemProp="item"><span itemProp="name">{props.text}</span></Link>
                                         <span itemProp="position" hidden>2</span>
                                     </span>
