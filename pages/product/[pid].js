@@ -83,8 +83,9 @@ const ProductPage = () => {
     const [estCityId, setEstCityId] = useState('');
 
     const router = useRouter();
-    const { pid } = router.query;
-    const productId = router.isReady ? (Array.isArray(pid) ? pid[0] : pid) : null;
+    const pathProductId = (router.asPath.match(/^\/product\/([^/?]+)/) || [])[1] || null;
+    const productId = router.isReady ? pathProductId : null;
+
     const { data: productResponse, isLoading: isProductLoading, isError } = useGetProductQuery(productId, { skip: !productId });
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const authToken = useSelector((state) => state.auth?.token);
@@ -94,7 +95,9 @@ const ProductPage = () => {
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];
     const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
-    const apiProduct = productResponse?.data || productResponse?.product || productResponse || null;
+    const rawApiProduct = productResponse?.data || productResponse?.product || productResponse || null;
+    const isApiProductStale = !!rawApiProduct && String(rawApiProduct.uuid || rawApiProduct.id) !== String(productId);
+    const apiProduct = isApiProductStale ? null : rawApiProduct;
 
     const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
         String(typeof r === 'object' ? r.id : r)
@@ -153,7 +156,6 @@ const ProductPage = () => {
                 : {},
         };
     }, [apiProduct, productId, allPhotos]);
-    
 
     // useEffect(() => {
     //     if (!product) return;
@@ -205,7 +207,7 @@ const ProductPage = () => {
         selectVariant(firstAvailable);
     }, [product?.id]);
 
-    const isLoading = !router.isReady || isProductLoading;
+    const isLoading = !router.isReady || isProductLoading || isApiProductStale;
 
     const { asPath } = useRouter();
     const origin =
@@ -402,7 +404,7 @@ const ProductPage = () => {
                                         <div className="product-template__inner row">
                                             <div className="product-template__media col-12 col-sm-12 col-md-5">
                                                 <StickyBox offsetTop={0} offsetBottom={20}>
-                                                    <ProductPageGallery productImg={groupImages} />
+                                                    <ProductPageGallery key={productId} productImg={groupImages} />
 
                                                 </StickyBox>
                                             </div>

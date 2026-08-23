@@ -80,8 +80,9 @@ const SectionSlideshowIndex1 = () => {
                                                     <div
                                                         className={styles.slideshow_slide__background}
                                                         style={{ height: 0, backgroundImage: `url(${buildImageUrl(banner.file)})`,
-                                                        paddingBottom: '31.25%' ,
-                                                        backgroundSize: 'contain',
+                                                        paddingBottom: '40%' ,
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center',
                                                         backgroundRepeat: 'no-repeat',}}
                                                     />
                                                 </div>
