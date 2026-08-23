@@ -59,6 +59,7 @@ export default function CheckoutPage() {
   const [regionId, setRegionId] = useState('')
   const [cityId, setCityId] = useState('')
   const [deliveryTypeId, setDeliveryTypeId] = useState('')
+  const [pickupPointId, setPickupPointId] = useState('')
   const [nearbyCity, setNearbyCity] = useState('')
   const [deliveryInstructions, setDeliveryInstructions] = useState('')
   const [addressError, setAddressError] = useState(null)
@@ -72,6 +73,7 @@ export default function CheckoutPage() {
     if (saved.regionId)             setRegionId(saved.regionId)
     if (saved.cityId)               setCityId(saved.cityId)
     if (saved.deliveryTypeId)       setDeliveryTypeId(saved.deliveryTypeId)
+    if (saved.pickupPointId)        setPickupPointId(saved.pickupPointId)
     if (saved.nearbyCity)           setNearbyCity(saved.nearbyCity)
     if (saved.deliveryInstructions) setDeliveryInstructions(saved.deliveryInstructions)
     if (saved.selectedAddressId)    setSelectedAddressId(saved.selectedAddressId)
@@ -81,9 +83,9 @@ export default function CheckoutPage() {
   // persist whenever any address field or step changes
   useEffect(() => {
     sessionStorage.setItem(CHECKOUT_KEY, JSON.stringify({
-      step, selectedAddressId, regionId, cityId, deliveryTypeId, nearbyCity, deliveryInstructions,
+      step, selectedAddressId, regionId, cityId, deliveryTypeId, pickupPointId, nearbyCity, deliveryInstructions,
     }))
-  }, [step, selectedAddressId, regionId, cityId, deliveryTypeId, nearbyCity, deliveryInstructions])
+  }, [step, selectedAddressId, regionId, cityId, deliveryTypeId, pickupPointId, nearbyCity, deliveryInstructions])
 
   const { isLoading: cartLoading, refetch: refetchCart } = useGetCartQuery(undefined, { skip: !tokenChecked || !authToken })
 
@@ -116,6 +118,9 @@ export default function CheckoutPage() {
       setRegionId(String(matchedRegion.id))
       const matchedCity = (matchedRegion.cities || []).find((c) => c.name?.toLowerCase() === addr.city?.toLowerCase())
       setCityId(matchedCity ? String(matchedCity.id) : '')
+      const firstType = (matchedCity?.delivery_types || []).find(dt => dt.is_available)
+      setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '')
+      setPickupPointId('')
     }
 
     if (addr.additional_info) setNearbyCity(addr.additional_info)
@@ -180,6 +185,10 @@ export default function CheckoutPage() {
       setAddressError('Please select a delivery type.')
       return
     }
+    if (requiresPickupPoint && !pickupPointId) {
+      setAddressError('Please select a pickup point.')
+      return
+    }
     if (hasShippingConflict) {
       setAddressError(null)
       return
@@ -195,6 +204,7 @@ export default function CheckoutPage() {
         payment_method: 'mobile_money',
         city_id: Number(cityId),
         delivery_type_id: Number(deliveryTypeId),
+        ...(requiresPickupPoint ? { pickup_point_id: Number(pickupPointId) } : {}),
         nearby_city: nearbyCity || '',
         delivery_instructions: deliveryInstructions || '',
       }).unwrap()
@@ -222,6 +232,10 @@ export default function CheckoutPage() {
   const selectedCity = cities.find((c) => String(c.id) === String(cityId)) || null
   const availableDeliveryTypes = (selectedCity?.delivery_types || []).filter(dt => dt.is_available)
   const selectedDeliveryType = availableDeliveryTypes.find(dt => String(dt.delivery_type_id) === String(deliveryTypeId)) || null
+  const isPickupSelected = selectedDeliveryType?.type?.slug === 'pickup'
+  const cityPickupPoints = Array.isArray(selectedCity?.pickup_points) ? selectedCity.pickup_points.filter(p => p.is_active) : []
+  const requiresPickupPoint = isPickupSelected && cityPickupPoints.length > 0
+  const selectedPickupPoint = cityPickupPoints.find((p) => String(p.id) === String(pickupPointId)) || null
 
   const restrictedItems = Array.isArray(summary?.restricted_items) ? summary.restricted_items : []
   const hasShippingConflict = restrictedItems.length > 0
@@ -445,6 +459,7 @@ export default function CheckoutPage() {
                               const city = cities.find((c) => String(c.id) === String(newCityId));
                               const firstType = (city?.delivery_types || []).find(dt => dt.is_available);
                               setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '');
+                              setPickupPointId('');
                             }}
                             style={{
                               width: '100%', padding: '10px 12px',
@@ -469,7 +484,7 @@ export default function CheckoutPage() {
                                   <button
                                     key={dt.delivery_type_id}
                                     type="button"
-                                    onClick={() => setDeliveryTypeId(String(dt.delivery_type_id))}
+                                    onClick={() => { setDeliveryTypeId(String(dt.delivery_type_id)); setPickupPointId(''); }}
                                     style={{
                                       flex: 1, minWidth: 160, padding: '12px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 13,
                                       border: `2px solid ${isSelected ? 'var(--color_primary)' : 'var(--color_line)'}`,
@@ -502,6 +517,40 @@ export default function CheckoutPage() {
                             <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 6 }}>
                               No delivery options available for this city yet.
                             </p>
+                          )}
+
+                          {/* Pickup point selection */}
+                          {isPickupSelected && (
+                            cityPickupPoints.length > 0 ? (
+                              <div style={{ marginTop: 16 }}>
+                                <label style={{ display: 'block', marginBottom: 8, fontWeight: 500, fontSize: 14 }}>
+                                  Pickup Point <span style={{ color: 'red' }}>*</span>
+                                </label>
+                                <select
+                                  value={pickupPointId}
+                                  onChange={(e) => setPickupPointId(e.target.value)}
+                                  style={{
+                                    width: '100%', padding: '10px 12px',
+                                    border: '1px solid var(--color_line)', borderRadius: 4,
+                                    fontSize: 14, backgroundColor: '#fff', appearance: 'auto',
+                                  }}
+                                >
+                                  <option value="">Select a pickup point</option>
+                                  {cityPickupPoints.map((p) => (
+                                    <option key={p.id} value={p.id}>{p.name}{p.address ? ` — ${p.address}` : ''}</option>
+                                  ))}
+                                </select>
+                                {selectedPickupPoint?.address && (
+                                  <p style={{ margin: '6px 0 0', fontSize: 12, color: '#6b7280' }}>
+                                    {selectedPickupPoint.address}
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <p style={{ fontSize: 13, color: 'var(--color_body)', marginTop: 12 }}>
+                                No pickup points are set up for this city yet.
+                              </p>
+                            )
                           )}
                         </div>
                       )}
@@ -613,6 +662,12 @@ export default function CheckoutPage() {
                         {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup') && (
                           <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, margin: '6px 0 0' }}>
                             {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup')}
+                          </p>
+                        )}
+                        {selectedPickupPoint && (
+                          <p style={{ fontSize: 14, margin: '6px 0 0' }}>
+                            <strong>Pickup point:</strong> {selectedPickupPoint.name}
+                            {selectedPickupPoint.address ? ` — ${selectedPickupPoint.address}` : ''}
                           </p>
                         )}
                       </>
