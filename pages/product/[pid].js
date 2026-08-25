@@ -594,41 +594,12 @@ const ProductPage = () => {
                                                                                     const outOfStock = optionQty <= 0 || (variantStock !== null && variantStock <= 0);
                                                                                     const isSelected = selectedVal === value;
                                                                                     const hasColor = !!optionEntry?.color_code;
-                                                                                    if (hasColor) {
-                                                                                        return (
-                                                                                            <button
-                                                                                                key={value}
-                                                                                                type="button"
-                                                                                                title={outOfStock ? `${value} - Out of stock` : value}
-                                                                                                onClick={() => setSelectedOptions(prev => ({ ...prev, [type]: value }))}
-                                                                                                style={{
-                                                                                                    width: 32,
-                                                                                                    height: 32,
-                                                                                                    borderRadius: '50%',
-                                                                                                    background: optionEntry.color_code,
-                                                                                                    border: isSelected ? '3px solid var(--color_primary)' : '2px solid #ddd',
-                                                                                                    boxShadow: isSelected ? '0 0 0 2px #fff inset' : 'none',
-                                                                                                    padding: 0,
-                                                                                                    cursor: 'pointer',
-                                                                                                    opacity: 1,
-                                                                                                    flexShrink: 0,
-                                                                                                    position: 'relative',
-                                                                                                }}
-                                                                                            >
-                                                                                                {outOfStock && (
-                                                                                                    <span style={{
-                                                                                                        position: 'absolute', inset: 0, borderRadius: '50%',
-                                                                                                        background: 'linear-gradient(to top right, transparent 47%, #e53935 47%, #e53935 53%, transparent 53%)',
-                                                                                                    }} />
-                                                                                                )}
-                                                                                            </button>
-                                                                                        );
-                                                                                    }
                                                                                     const optionPrice = optionEntry?.price != null ? parseFloat(optionEntry.price) : null;
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
                                                                                             type="button"
+                                                                                            title={hasColor && outOfStock ? `${value} - Out of stock` : undefined}
                                                                                             onClick={() => {
                                                                                                 setSelectedOptions(prev => ({ ...prev, [type]: value }));
                                                                                             }}
@@ -648,7 +619,16 @@ const ProductPage = () => {
                                                                                                 gap: 2,
                                                                                             }}
                                                                                         >
-                                                                                            <span>{value}</span>
+                                                                                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                                                {hasColor && (
+                                                                                                    <span style={{
+                                                                                                        width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
+                                                                                                        background: optionEntry.color_code,
+                                                                                                        border: '1px solid rgba(0,0,0,0.15)',
+                                                                                                    }} />
+                                                                                                )}
+                                                                                                {value}
+                                                                                            </span>
                                                                                             {optionPrice != null && (
                                                                                                 <CurrencyConvert amount={optionPrice} style={{ fontSize: 13, fontWeight: 400, color: isSelected ? 'var(--color_primary)' : '#666' }} />
                                                                                             )}
