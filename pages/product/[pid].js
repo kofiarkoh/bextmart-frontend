@@ -594,7 +594,13 @@ const ProductPage = () => {
                                                                                     const outOfStock = optionQty <= 0 || (variantStock !== null && variantStock <= 0);
                                                                                     const isSelected = selectedVal === value;
                                                                                     const hasColor = !!optionEntry?.color_code;
-                                                                                    const optionPrice = optionEntry?.price != null ? parseFloat(optionEntry.price) : null;
+                                                                                    const optionPrice = optionEntry?.price != null
+                                                                                        ? parseFloat(optionEntry.price)
+                                                                                        : selectedVariant?.price != null
+                                                                                            ? parseFloat(selectedVariant.price)
+                                                                                            : product?.price != null
+                                                                                                ? parseFloat(product.price)
+                                                                                                : null;
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
