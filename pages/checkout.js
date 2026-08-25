@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -26,14 +26,25 @@ const STEP_LABELS = ['Delivery Address', 'Review & Pay']
 
 const CHECKOUT_KEY = 'bextmart_checkout'
 
-function getDeliveryEstimate(days, isPickup) {
+function hasActivePickupPoints(city) {
+  return Array.isArray(city?.pickup_points) && city.pickup_points.some(p => p.is_active)
+}
+
+function firstUsableDeliveryType(city) {
+  const types = (city?.delivery_types || []).filter(dt => dt.is_available)
+  const usable = types.find(dt => dt.type?.slug !== 'pickup' || hasActivePickupPoints(city))
+  return usable || types[0] || null
+}
+
+function getDeliveryEstimate(days, isPickup, cityName) {
   if (!days) return null;
   const d = new Date();
   d.setDate(d.getDate() + days);
   const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
-  return isPickup
-    ? `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`
-    : `Your item will be delivered by ${date}`;
+  if (isPickup) {
+    return `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`;
+  }
+  return `Your item will be delivered by ${date}. Delivery times may vary slightly based on your exact location within ${cityName || 'the city'}.`;
 }
 
 function loadSaved() {
@@ -95,10 +106,13 @@ export default function CheckoutPage() {
     setTokenChecked(true)
   }, [router])
 
+  const hasCheckedInitialCart = useRef(false)
   useEffect(() => {
     if (!tokenChecked) return
     if (!authToken) return // auth useEffect already handles redirect to login
     if (cartLoading) return
+    if (hasCheckedInitialCart.current) return
+    hasCheckedInitialCart.current = true
     if (Array.isArray(cartItems) && cartItems.length === 0) {
       router.replace('/')
     }
@@ -118,7 +132,7 @@ export default function CheckoutPage() {
       setRegionId(String(matchedRegion.id))
       const matchedCity = (matchedRegion.cities || []).find((c) => c.name?.toLowerCase() === addr.city?.toLowerCase())
       setCityId(matchedCity ? String(matchedCity.id) : '')
-      const firstType = (matchedCity?.delivery_types || []).find(dt => dt.is_available)
+      const firstType = firstUsableDeliveryType(matchedCity)
       setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '')
       setPickupPointId('')
     }
@@ -173,6 +187,10 @@ export default function CheckoutPage() {
   }, [cartItems])
 
   function handleContinue() {
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+      setAddressError('Your cart is empty.')
+      return
+    }
     if (!regionId) {
       setAddressError('Please select a region.')
       return
@@ -457,7 +475,7 @@ export default function CheckoutPage() {
                               const newCityId = e.target.value;
                               setCityId(newCityId);
                               const city = cities.find((c) => String(c.id) === String(newCityId));
-                              const firstType = (city?.delivery_types || []).find(dt => dt.is_available);
+                              const firstType = firstUsableDeliveryType(city);
                               setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '');
                               setPickupPointId('');
                             }}
@@ -480,13 +498,17 @@ export default function CheckoutPage() {
                                 const isPickup = dt.type?.slug === 'pickup';
                                 const icon = isPickup ? '🏪' : '🚚';
                                 const isSelected = String(dt.delivery_type_id) === String(deliveryTypeId);
+                                const isDisabled = isPickup && !hasActivePickupPoints(selectedCity);
                                 return (
                                   <button
                                     key={dt.delivery_type_id}
                                     type="button"
-                                    onClick={() => { setDeliveryTypeId(String(dt.delivery_type_id)); setPickupPointId(''); }}
+                                    disabled={isDisabled}
+                                    onClick={() => { if (isDisabled) return; setDeliveryTypeId(String(dt.delivery_type_id)); setPickupPointId(''); }}
                                     style={{
-                                      flex: 1, minWidth: 160, padding: '12px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 13,
+                                      flex: 1, minWidth: 160, padding: '12px 14px', borderRadius: 10, fontSize: 13,
+                                      cursor: isDisabled ? 'not-allowed' : 'pointer',
+                                      opacity: isDisabled ? 0.5 : 1,
                                       border: `2px solid ${isSelected ? 'var(--color_primary)' : 'var(--color_line)'}`,
                                       background: isSelected ? 'rgba(0,0,128,0.04)' : '#fff',
                                       color: 'var(--color_heading)', fontWeight: isSelected ? 600 : 400,
@@ -499,12 +521,18 @@ export default function CheckoutPage() {
                                       <span style={{ fontSize: 13, fontWeight: isSelected ? 600 : 500 }}>
                                         {dt.type?.name}
                                       </span>
-                                      <span style={{ fontSize: 12, color: isSelected ? 'var(--color_primary)' : '#6b7280', fontWeight: 500 }}>
-                                        {parseFloat(dt.fee) > 0 ? `GHC ${dt.fee}` : 'Free delivery'}
-                                      </span>
-                                      {getDeliveryEstimate(dt.estimated_days, isPickup) && (
+                                      {isDisabled ? (
+                                        <span style={{ fontSize: 12, color: '#dc2626', fontWeight: 500 }}>
+                                          No pickup points available
+                                        </span>
+                                      ) : (
+                                        <span style={{ fontSize: 12, color: isSelected ? 'var(--color_primary)' : '#6b7280', fontWeight: 500 }}>
+                                          {parseFloat(dt.fee) > 0 ? `GHC ${dt.fee}` : 'Free delivery'}
+                                        </span>
+                                      )}
+                                      {!isDisabled && getDeliveryEstimate(dt.estimated_days, isPickup, selectedCity?.name) && (
                                         <span style={{ fontSize: 12, fontWeight: 400, color: '#6b7280', marginTop: 2 }}>
-                                          {getDeliveryEstimate(dt.estimated_days, isPickup)}
+                                          {getDeliveryEstimate(dt.estimated_days, isPickup, selectedCity?.name)}
                                         </span>
                                       )}
                                     </span>
@@ -659,9 +687,9 @@ export default function CheckoutPage() {
                             <strong>Delivery fee:</strong> GHC {selectedDeliveryType.fee}
                           </p>
                         )}
-                        {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup') && (
+                        {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup', selectedCity?.name) && (
                           <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, margin: '6px 0 0' }}>
-                            {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup')}
+                            {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup', selectedCity?.name)}
                           </p>
                         )}
                         {selectedPickupPoint && (

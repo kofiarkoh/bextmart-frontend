@@ -3,6 +3,14 @@
     z-index: 99999 !important;
 }
 
+/* Hide cart drawer Subtotal / View Cart / Checkout for guests on mobile only */
+@media screen and (max-width: 767px) {
+    .cart__dropdown-action .button.guest-hide-mobile,
+    .cart__dropdown-bottom .guest-hide-mobile {
+        display: none !important;
+    }
+}
+
 /* Product Grid*/
 .index-products-grid .product-item__grid {
     margin-bottom: 0;
