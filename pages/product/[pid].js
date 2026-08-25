@@ -25,14 +25,15 @@ import { useAddToCartMutation } from '../../store/cartApi';
 import { useGetAddressOptionsQuery } from '../../store/checkoutApi';
 import { useGetProductQuery } from '../../store/productsApi';
 
-function getDeliveryEstimate(days, isPickup) {
+function getDeliveryEstimate(days, isPickup, cityName) {
   if (!days) return null;
   const d = new Date();
   d.setDate(d.getDate() + days);
   const date = d.toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' });
-  return isPickup
-    ? `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`
-    : `Your item will be delivered by ${date}`;
+  if (isPickup) {
+    return `Your item will be ready for pickup by ${date}. Please bring a valid ID and your Order Number to collect your item, and ensure pickup is completed within 5 days of notice.`;
+  }
+  return `Your item will be delivered by ${date}. Delivery times may vary slightly based on your exact location within ${cityName || 'the city'}.`;
 }
 
 const ProductPage = () => {
@@ -404,7 +405,7 @@ const ProductPage = () => {
                                         <div className="product-template__inner row">
                                             <div className="product-template__media col-12 col-sm-12 col-md-5">
                                                 <StickyBox offsetTop={0} offsetBottom={20}>
-                                                    <ProductPageGallery key={productId} productImg={groupImages} />
+                                                    <ProductPageGallery key={`${productId}-${selectedVariant?.id ?? 'default'}`} productImg={groupImages} />
 
                                                 </StickyBox>
                                             </div>
@@ -623,6 +624,7 @@ const ProductPage = () => {
                                                                                             </button>
                                                                                         );
                                                                                     }
+                                                                                    const optionPrice = optionEntry?.price != null ? parseFloat(optionEntry.price) : null;
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
@@ -631,20 +633,27 @@ const ProductPage = () => {
                                                                                                 setSelectedOptions(prev => ({ ...prev, [type]: value }));
                                                                                             }}
                                                                                             style={{
-                                                                                                padding: '6px 14px',
-                                                                                                borderRadius: 6,
+                                                                                                padding: '10px 16px',
+                                                                                                borderRadius: 10,
                                                                                                 border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
-                                                                                                background: isSelected ? 'var(--color_primary)' : '#fff',
-                                                                                                color: isSelected ? '#fff' : '#333',
-                                                                                                fontSize: 13,
-                                                                                                fontWeight: isSelected ? 700 : 400,
+                                                                                                background: '#fff',
+                                                                                                color: isSelected ? 'var(--color_primary)' : '#333',
+                                                                                                fontSize: 14,
+                                                                                                fontWeight: isSelected ? 700 : 500,
                                                                                                 cursor: 'pointer',
-                                                                                                opacity: 1,
+                                                                                                textAlign: 'left',
+                                                                                                minWidth: 110,
+                                                                                                display: 'flex',
+                                                                                                flexDirection: 'column',
+                                                                                                gap: 2,
                                                                                             }}
                                                                                         >
-                                                                                            {value}
+                                                                                            <span>{value}</span>
+                                                                                            {optionPrice != null && (
+                                                                                                <CurrencyConvert amount={optionPrice} style={{ fontSize: 13, fontWeight: 400, color: isSelected ? 'var(--color_primary)' : '#666' }} />
+                                                                                            )}
                                                                                             {outOfStock && (
-                                                                                                <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                                <span style={{ fontSize: 11, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
                                                                                                     Out of stock
                                                                                                 </span>
                                                                                             )}
@@ -728,7 +737,7 @@ const ProductPage = () => {
                                                                         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                                                                             {types.map((dt) => {
                                                                                 const isPickup = dt.type?.slug === 'pickup';
-                                                                                const estimate = getDeliveryEstimate(dt.estimated_days, isPickup);
+                                                                                const estimate = getDeliveryEstimate(dt.estimated_days, isPickup, estSelectedCity?.name);
                                                                                 return (
                                                                                 <div key={dt.delivery_type_id} style={{ display: 'flex', flexDirection: 'column', gap: 5, padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
                                                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
