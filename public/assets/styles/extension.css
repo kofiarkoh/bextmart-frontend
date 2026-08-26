@@ -3,6 +3,12 @@
     z-index: 99999 !important;
 }
 
+/* Order status stepper — pulsing dot on the current/active step */
+@keyframes orderStepPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+}
+
 /* Hide cart drawer Subtotal / View Cart / Checkout for guests on mobile only */
 @media screen and (max-width: 767px) {
     .cart__dropdown-action .button.guest-hide-mobile,
