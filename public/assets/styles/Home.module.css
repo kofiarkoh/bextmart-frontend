@@ -396,6 +396,12 @@
   display: inherit !important;
 }
 
+@media screen and (max-width: 767px) {
+  .slideshow_slide__background {
+    padding-bottom: 55% !important;
+  }
+}
+
 .slideshow_slide_caption {
   position: absolute;
   z-index: 9;
