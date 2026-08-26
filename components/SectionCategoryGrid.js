@@ -50,7 +50,8 @@ const SectionCategoryGrid = () => {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={img} alt={cat.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.35s ease' }} />
                     )}
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.08) 70%, transparent 100%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.22)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.15) 70%, transparent 100%)' }} />
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 14px 16px' }}>
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1.3, textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>{cat.name}</p>
                       <p style={{ margin: '3px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.9)', fontWeight: 500, textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>Browse →</p>
