@@ -65,6 +65,7 @@ const ProductPage = () => {
     const [option2, setOption2] = useState(null);
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState({});
+    const [selectedSubOptions, setSelectedSubOptions] = useState({});
     const [qty, setQty] = useState(1);
     const [total, setTotal] = useState(0);
     const [classStatus, setClassStatus] = useState('');
@@ -173,6 +174,26 @@ const ProductPage = () => {
     //         setColumnView('col-12 col-md-12');
     //     }
     // }, [product, qty, proView])
+    function computeSubOptionDefaults(variant, optionsMap) {
+        if (!variant || !Array.isArray(variant.options)) return {};
+        const defaults = {};
+        Object.entries(optionsMap).forEach(([type, value]) => {
+            const optionEntry = variant.options.find(o => o.type === type && o.value === value);
+            const suboptions = Array.isArray(optionEntry?.suboptions) ? optionEntry.suboptions : [];
+            if (suboptions.length === 0) return;
+            const subTypes = suboptions.reduce((acc, s) => {
+                if (!acc[s.type]) acc[s.type] = [];
+                acc[s.type].push(s);
+                return acc;
+            }, {});
+            Object.entries(subTypes).forEach(([subType, entries]) => {
+                const firstAvailable = entries.find(e => parseInt(e.quantity || '0') > 0) || entries[0];
+                if (firstAvailable) defaults[subType] = firstAvailable.value;
+            });
+        });
+        return defaults;
+    }
+
     function selectVariant(variant, updateImages = true) {
         setSelectedVariant(variant);
         if (updateImages) {
@@ -196,8 +217,10 @@ const ProductPage = () => {
                 if (firstAvailable) defaultOpts[type] = firstAvailable.value;
             });
             setSelectedOptions(defaultOpts);
+            setSelectedSubOptions(computeSubOptionDefaults(variant, defaultOpts));
         } else {
             setSelectedOptions({});
+            setSelectedSubOptions({});
         }
     }
 
@@ -345,7 +368,16 @@ const ProductPage = () => {
                     const selectedOption = selectedVariant.options.find(
                         o => selectedOptions[o.type] === o.value
                     );
-                    if (selectedOption?.id) payload.variant_option_id = selectedOption.id;
+                    // variant_option_id always points to the leaf-most selected level:
+                    // the sub-option's own id when one exists, otherwise the option's id.
+                    let leafOptionId = selectedOption?.id;
+                    if (Array.isArray(selectedOption?.suboptions) && selectedOption.suboptions.length > 0) {
+                        const selectedSubOption = selectedOption.suboptions.find(
+                            s => selectedSubOptions[s.type] === s.value
+                        );
+                        if (selectedSubOption?.id) leafOptionId = selectedSubOption.id;
+                    }
+                    if (leafOptionId) payload.variant_option_id = leafOptionId;
                 }
             }
             await addToCartApi(payload).unwrap();
@@ -373,6 +405,14 @@ const ProductPage = () => {
                 if (selectedEntries.length > 0) {
                     const quantities = selectedEntries.map(o => parseInt(o.quantity || '0'));
                     if (variantStock !== null) quantities.push(variantStock);
+                    selectedEntries.forEach(optionEntry => {
+                        const suboptions = Array.isArray(optionEntry.suboptions) ? optionEntry.suboptions : [];
+                        if (suboptions.length === 0) return;
+                        Object.entries(selectedSubOptions)
+                            .map(([subType, subValue]) => suboptions.find(s => s.type === subType && s.value === subValue))
+                            .filter(Boolean)
+                            .forEach(subEntry => quantities.push(parseInt(subEntry.quantity || '0')));
+                    });
                     return Math.min(...quantities);
                 }
             }
@@ -415,9 +455,15 @@ const ProductPage = () => {
                                                     <div className="price price--large">
                                                         {(() => {
                                                             const activeOption = selectedVariant?.options?.find(
-                                                                o => selectedOptions[o.type] === o.value && o.price != null
+                                                                o => selectedOptions[o.type] === o.value
                                                             );
-                                                            const activePrice = activeOption?.price ?? selectedVariant?.price ?? product.price;
+                                                            const activeSubOption = Array.isArray(activeOption?.suboptions)
+                                                                ? activeOption.suboptions.find(s => selectedSubOptions[s.type] === s.value && s.price != null)
+                                                                : null;
+                                                            const activePrice = activeSubOption?.price
+                                                                ?? (activeOption?.price != null ? activeOption.price : null)
+                                                                ?? selectedVariant?.price
+                                                                ?? product.price;
                                                             return displayPrice(activePrice);
                                                         })()}
                                                     </div>
@@ -607,7 +653,11 @@ const ProductPage = () => {
                                                                                             type="button"
                                                                                             title={hasColor && outOfStock ? `${value} - Out of stock` : undefined}
                                                                                             onClick={() => {
-                                                                                                setSelectedOptions(prev => ({ ...prev, [type]: value }));
+                                                                                                setSelectedOptions(prev => {
+                                                                                                    const next = { ...prev, [type]: value };
+                                                                                                    setSelectedSubOptions(computeSubOptionDefaults(selectedVariant, next));
+                                                                                                    return next;
+                                                                                                });
                                                                                             }}
                                                                                             style={{
                                                                                                 padding: '10px 16px',
@@ -651,6 +701,99 @@ const ProductPage = () => {
                                                                     );
                                                                 });
                                                             })()}
+
+                                                            {/* Step 3 — pick sub-options of the selected option(s) */}
+                                                            {selectedVariant && Object.entries(selectedOptions).map(([parentType, parentValue]) => {
+                                                                const parentOption = selectedVariant.options.find(o => o.type === parentType && o.value === parentValue);
+                                                                const suboptions = Array.isArray(parentOption?.suboptions) ? parentOption.suboptions : [];
+                                                                if (suboptions.length === 0) return null;
+                                                                const subTypes = suboptions.reduce((acc, s) => {
+                                                                    if (!acc[s.type]) acc[s.type] = [];
+                                                                    if (!acc[s.type].includes(s.value)) acc[s.type].push(s.value);
+                                                                    return acc;
+                                                                }, {});
+                                                                const parentQty = parseInt(parentOption.quantity || '0');
+                                                                const variantStock = getVariantStock(selectedVariant);
+                                                                return Object.entries(subTypes).map(([subType, values]) => {
+                                                                    const selectedSubVal = selectedSubOptions[subType];
+                                                                    return (
+                                                                        <div key={`${parentType}-${subType}`} style={{ marginBottom: 14 }}>
+                                                                            <div style={{ fontSize: 13, fontWeight: 600, color: '#444', marginBottom: 8, textTransform: 'capitalize' }}>
+                                                                                {subType}:
+                                                                                {selectedSubVal && (
+                                                                                    <span style={{ marginLeft: 6, color: 'var(--color_primary)', fontWeight: 700 }}>
+                                                                                        {selectedSubVal}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+                                                                                {values.map((value) => {
+                                                                                    const subEntry = suboptions.find(s => s.type === subType && s.value === value);
+                                                                                    const subQty = subEntry ? parseInt(subEntry.quantity || '0') : 0;
+                                                                                    const outOfStock = subQty <= 0
+                                                                                        || (parentQty !== null && parentQty <= 0)
+                                                                                        || (variantStock !== null && variantStock <= 0);
+                                                                                    const isSelected = selectedSubVal === value;
+                                                                                    const hasColor = !!subEntry?.color_code;
+                                                                                    const subPrice = subEntry?.price != null
+                                                                                        ? parseFloat(subEntry.price)
+                                                                                        : parentOption?.price != null
+                                                                                            ? parseFloat(parentOption.price)
+                                                                                            : selectedVariant?.price != null
+                                                                                                ? parseFloat(selectedVariant.price)
+                                                                                                : product?.price != null
+                                                                                                    ? parseFloat(product.price)
+                                                                                                    : null;
+                                                                                    return (
+                                                                                        <button
+                                                                                            key={value}
+                                                                                            type="button"
+                                                                                            title={hasColor && outOfStock ? `${value} - Out of stock` : undefined}
+                                                                                            onClick={() => {
+                                                                                                setSelectedSubOptions(prev => ({ ...prev, [subType]: value }));
+                                                                                            }}
+                                                                                            style={{
+                                                                                                padding: '10px 16px',
+                                                                                                borderRadius: 10,
+                                                                                                border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
+                                                                                                background: '#fff',
+                                                                                                color: isSelected ? 'var(--color_primary)' : '#333',
+                                                                                                fontSize: 14,
+                                                                                                fontWeight: isSelected ? 700 : 500,
+                                                                                                cursor: 'pointer',
+                                                                                                textAlign: 'left',
+                                                                                                minWidth: 110,
+                                                                                                display: 'flex',
+                                                                                                flexDirection: 'column',
+                                                                                                gap: 2,
+                                                                                            }}
+                                                                                        >
+                                                                                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                                                                {hasColor && (
+                                                                                                    <span style={{
+                                                                                                        width: 16, height: 16, borderRadius: '50%', flexShrink: 0,
+                                                                                                        background: subEntry.color_code,
+                                                                                                        border: '1px solid rgba(0,0,0,0.15)',
+                                                                                                    }} />
+                                                                                                )}
+                                                                                                {value}
+                                                                                            </span>
+                                                                                            {subPrice != null && (
+                                                                                                <CurrencyConvert amount={subPrice} style={{ fontSize: 13, fontWeight: 400, color: isSelected ? 'var(--color_primary)' : '#666' }} />
+                                                                                            )}
+                                                                                            {outOfStock && (
+                                                                                                <span style={{ fontSize: 11, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                                    Out of stock
+                                                                                                </span>
+                                                                                            )}
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                });
+                                                            })}
                                                         </div>
                                                     )}
                                                     <div className='product-template__form'>
