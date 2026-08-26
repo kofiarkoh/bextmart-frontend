@@ -89,7 +89,9 @@ function ItemStepper({ status }) {
   const s = (status || '').toLowerCase()
   const cancelled = s === 'cancelled' || s === 'failed' || s === 'returned' || s === 'refunded'
   const activeStep = STATUS_TO_STEP[s] ?? 0
-  const fillPct = (activeStep / (STEPS.length - 1)) * 100
+  const isTerminalStep = activeStep === STEPS.length - 1
+  const segmentPct = 100 / (STEPS.length - 1)
+  const fillPct = isTerminalStep ? 100 : (activeStep + 0.5) * segmentPct
 
   if (cancelled) {
     return (
@@ -108,7 +110,10 @@ function ItemStepper({ status }) {
       <div style={{ position: 'relative', marginBottom: 8 }}>
         {/* Background track, positioned center-of-first-col to center-of-last-col */}
         <div style={{ position: 'absolute', top: 7, left: '12.5%', right: '12.5%', height: 3, background: '#e5e7eb', borderRadius: 2 }}>
-          <div style={{ height: '100%', width: `${fillPct}%`, background: 'var(--color_primary)', borderRadius: 2, transition: 'width 0.4s ease' }} />
+          <div style={{ height: '100%', width: `${fillPct}%`, background: 'var(--color_primary)', borderRadius: 2, transition: 'width 0.4s ease' }}>
+            {/* non-empty child: a global stylesheet rule sets `div:empty { display: none }`, which would otherwise hide this fill bar entirely */}
+            <span />
+          </div>
         </div>
 
         {/* Step columns */}
@@ -121,9 +126,9 @@ function ItemStepper({ status }) {
               <div key={step.label} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                 <div style={{
                   width: 16, height: 16, borderRadius: '50%',
-                  background: done ? 'var(--color_primary)' : '#fff',
+                  background: done || active ? 'var(--color_primary)' : '#fff',
                   border: `2.5px solid ${done || active ? 'var(--color_primary)' : '#d1d5db'}`,
-                  boxShadow: active ? '0 0 0 4px rgba(0,0,100,0.1)' : 'none',
+                  boxShadow: active ? '0 0 0 4px rgba(0,0,100,0.15)' : 'none',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 0.2s',
                 }}>
@@ -131,6 +136,12 @@ function ItemStepper({ status }) {
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
+                  )}
+                  {active && (
+                    <span style={{
+                      width: 6, height: 6, borderRadius: '50%', background: '#fff',
+                      animation: 'orderStepPulse 1.4s ease-in-out infinite',
+                    }} />
                   )}
                 </div>
                 <span style={{
