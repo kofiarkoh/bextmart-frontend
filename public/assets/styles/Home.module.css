@@ -399,6 +399,8 @@
 @media screen and (max-width: 767px) {
   .slideshow_slide__background {
     padding-bottom: 55% !important;
+    background-size: contain !important;
+    background-color: #f4f6fb;
   }
 }
 
