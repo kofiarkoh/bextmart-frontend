@@ -37,6 +37,7 @@ function getDeliveryEstimate(days, isPickup, cityName) {
 }
 
 const ProductPage = () => {
+    if (typeof window !== 'undefined') window.__debugTop = (window.__debugTop || 0) + 1;
 
     const t = (text) =>  text;
     let { Collections_Menu, ProductSidebar } = [];
@@ -100,6 +101,10 @@ const ProductPage = () => {
     const rawApiProduct = productResponse?.data || productResponse?.product || productResponse || null;
     const isApiProductStale = !!rawApiProduct && String(rawApiProduct.uuid || rawApiProduct.id) !== String(productId);
     const apiProduct = isApiProductStale ? null : rawApiProduct;
+
+    if (typeof window !== 'undefined') {
+        window.__debug = { productId, routerIsReady: router.isReady, isProductLoading, isError, isApiProductStale };
+    }
 
     const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
         String(typeof r === 'object' ? r.id : r)
