@@ -118,7 +118,7 @@ export default function CheckoutPage() {
     }
   }, [tokenChecked, authToken, cartLoading, cartItems, router])
 
-  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery()
+  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery(undefined, { skip: !tokenChecked || !authToken })
 
   const regions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : []
   const selectedRegion = regions.find((r) => String(r.id) === String(regionId))
@@ -155,7 +155,7 @@ export default function CheckoutPage() {
         await updateCartItem({ id: itemId, quantity: newQty }).unwrap()
       }
       refetchCart()
-      if (cityId) refetchSummary()
+      if (cityId && deliveryTypeId) refetchSummary()
     } catch {
       notifyError('Could not update item. Please try again.')
     } finally {
@@ -168,7 +168,7 @@ export default function CheckoutPage() {
     try {
       await removeCartItem(itemId).unwrap()
       refetchCart()
-      if (cityId) refetchSummary()
+      if (cityId && deliveryTypeId) refetchSummary()
     } catch {
       notifyError('Could not remove item. Please try again.')
     } finally {
@@ -183,7 +183,7 @@ export default function CheckoutPage() {
   const summary = summaryData?.data || null
 
   useEffect(() => {
-    if (cityId) refetchSummary()
+    if (cityId && deliveryTypeId) refetchSummary()
   }, [cartItems])
 
   function handleContinue() {
@@ -419,7 +419,7 @@ export default function CheckoutPage() {
                     })}
                   </div>
 
-                  {loadingAddresses ? (
+                  {(!tokenChecked || loadingAddresses) ? (
                     <p>Loading delivery options...</p>
                   ) : (
                     <>
@@ -527,7 +527,7 @@ export default function CheckoutPage() {
                                         </span>
                                       ) : (
                                         <span style={{ fontSize: 12, color: isSelected ? 'var(--color_primary)' : '#6b7280', fontWeight: 500 }}>
-                                          {parseFloat(dt.fee) > 0 ? `GHC ${dt.fee}` : 'Free delivery'}
+                                          <DeliveryTypeCost cityId={cityId} deliveryTypeId={dt.delivery_type_id} fallbackFee={dt.fee} />
                                         </span>
                                       )}
                                       {!isDisabled && getDeliveryEstimate(dt.estimated_days, isPickup, selectedCity?.name) && (
@@ -914,4 +914,24 @@ export default function CheckoutPage() {
       <Footer />
     </>
   )
+}
+
+function DeliveryTypeCost({ cityId, deliveryTypeId, fallbackFee }) {
+  const { data, isFetching } = useGetCheckoutSummaryQuery(
+    { cityId, deliveryTypeId },
+    { skip: !cityId || !deliveryTypeId }
+  )
+  const summary = data?.data || null
+
+  if (isFetching && !summary) {
+    return <span style={{ fontSize: 12, color: '#9ca3af' }}>Calculating…</span>
+  }
+
+  const cost = summary
+    ? parseFloat(summary.delivery_fee || 0) + parseFloat(summary.weight_cost || 0)
+    : parseFloat(fallbackFee || 0)
+
+  return cost > 0
+    ? <>GHC {cost.toFixed(2)}</>
+    : <span style={{ color: '#059669' }}>Free delivery</span>
 }
