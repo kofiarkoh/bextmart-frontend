@@ -93,7 +93,12 @@ const ProductPage = () => {
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const authToken = useSelector((state) => state.auth?.token);
 
-    const { data: addressOptionsData } = useGetAddressOptionsQuery();
+    const [tokenChecked, setTokenChecked] = useState(false);
+    useEffect(() => {
+        setTokenChecked(true);
+    }, []);
+
+    const { data: addressOptionsData } = useGetAddressOptionsQuery(undefined, { skip: !tokenChecked || !authToken });
     const estRegions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : [];
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];
@@ -889,6 +894,11 @@ const ProductPage = () => {
                                                                                     </div>
                                                                                     {estimate && (
                                                                                         <span style={{ fontSize: 13, color: '#6b7280', fontWeight: 400 }}>{estimate}</span>
+                                                                                    )}
+                                                                                    {isPickup && (
+                                                                                        <span style={{ fontSize: 12, color: '#9ca3af', fontWeight: 400, fontStyle: 'italic' }}>
+                                                                                            You&apos;ll choose the exact pickup location at checkout.
+                                                                                        </span>
                                                                                     )}
                                                                                 </div>
                                                                                 );
