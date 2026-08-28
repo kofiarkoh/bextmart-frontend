@@ -447,7 +447,7 @@
   }
 
   .slideshow_slide_background {
-    aspect-ratio: 1600 / 900;
+    aspect-ratio: 1600 / 720;
     height: auto !important;
   }
 
