@@ -997,7 +997,7 @@ const ProductPage = () => {
                                                                     {item.name}
                                                                 </p>
                                                                 <p style={{ margin: '4px 0 0', fontSize: 13, fontWeight: 700, color: 'var(--color_primary)' }}>
-                                                                    GHC {item.price}
+                                                                    GH₵ {item.price}
                                                                 </p>
                                                             </Link>
                                                         ))}

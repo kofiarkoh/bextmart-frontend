@@ -684,7 +684,7 @@ export default function CheckoutPage() {
                         </p>
                         {parseFloat(selectedDeliveryType.fee) > 0 && (
                           <p style={{ fontSize: 14, margin: '0 0 4px' }}>
-                            <strong>Delivery fee:</strong> GHC {selectedDeliveryType.fee}
+                            <strong>Delivery fee:</strong> GH₵ {selectedDeliveryType.fee}
                           </p>
                         )}
                         {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup', selectedCity?.name) && (
@@ -932,6 +932,6 @@ function DeliveryTypeCost({ cityId, deliveryTypeId, fallbackFee }) {
     : parseFloat(fallbackFee || 0)
 
   return cost > 0
-    ? <>GHC {cost.toFixed(2)}</>
+    ? <>GH₵ {cost.toFixed(2)}</>
     : <span style={{ color: '#059669' }}>Free delivery</span>
 }
