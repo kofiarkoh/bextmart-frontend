@@ -375,11 +375,6 @@
   position: relative;
 }
 
-.slideshow_container_swiper_container {
-  border-radius: 20px;
-  overflow: hidden;
-}
-
 .slideshow_slide_link {
   display: block !important;
   background-color: #000;
@@ -400,8 +395,6 @@
   background-size: auto 100%;
   background-position: center;
   display: inherit !important;
-  border-radius: 20px;
-  overflow: hidden;
 }
 
 @media screen and (max-width: 767px) {
@@ -409,11 +402,6 @@
     padding-bottom: 55% !important;
     background-size: contain !important;
     background-color: #f4f6fb;
-    border-radius: 0;
-  }
-
-  .slideshow_container_swiper_container {
-    border-radius: 0;
   }
 }
 
