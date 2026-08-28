@@ -76,15 +76,14 @@ const SectionSlideshowIndex1 = () => {
                                 <div className={`${styles.slideshow_container} slideshow-template`}>
                                     <Swiper {...carouselOptions} className={`${styles.slideshow_container_swiper_container} swiper-container`}>
                                         {sliderBanners.map((banner) => {
-                                            const mobileImg = buildImageUrl(banner.file_mobile);
-                                            const desktopImg = mobileImg;
+                                            const img = buildImageUrl(banner.file);
                                             return (
                                                 <SwiperSlide key={banner.id} className={styles.slideshow_container_swiper_slide}>
                                                     <div className={styles.slideshow_slide_background}>
                                                         <div
                                                             className={styles.slideshow_slide__background}
-                                                            style={{ height: 0, backgroundImage: `url(${mobileImg})`,
-                                                            '--slide-bg-desktop': `url(${desktopImg})`,
+                                                            style={{ height: 0, backgroundImage: `url(${img})`,
+                                                            '--slide-bg-desktop': `url(${img})`,
                                                             paddingBottom: '40%' ,
                                                             backgroundSize: 'cover',
                                                             backgroundPosition: 'center',
@@ -109,7 +108,7 @@ const SectionSlideshowIndex1 = () => {
                                     <div className={`${styles.slideshow_ontop_row2} row`}>
                                         {overlayBanners.slice(0, 3).map((banner, i) => {
                                             const href = banner.category?.slug ? `/products?category=${banner.category.slug}` : null;
-                                            const img = <img src={buildImageUrl(banner.file || banner.file_tablet || banner.file_mobile)} alt={banner.category?.name || ''} style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }} />;
+                                            const img = <img src={buildImageUrl(banner.file)} alt={banner.category?.name || ''} style={{ width: '100%', height: 'auto', objectFit: 'cover', display: 'block' }} />;
                                             return (
                                                 <div key={banner.id} className={`slideshow-ontop-bbanner slideshow-ontop-bbanner-${i + 1} effect-shine effect col-12 col-md-6 col-lg-3`}>
                                                     {href ? (
