@@ -409,6 +409,11 @@
     padding-bottom: 55% !important;
     background-size: contain !important;
     background-color: #f4f6fb;
+    border-radius: 0;
+  }
+
+  .slideshow_container_swiper_container {
+    border-radius: 0;
   }
 }
 
