@@ -43,7 +43,7 @@ const STEPS = [
 ]
 
 const SectionHowItWorks = () => (
-  <section style={{ padding: '72px 0', position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, #f8f6ff 0%, #fff 100%)' }}>
+  <section style={{ padding: '72px 0', position: 'relative', overflow: 'hidden', background: '#fff' }}>
     {/* large radial glow top-left */}
     <div style={{ position: 'absolute', top: -80, left: -80, width: 480, height: 480, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
     {/* dot grid */}
@@ -52,8 +52,6 @@ const SectionHowItWorks = () => (
       backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.1) 1px, transparent 1px)',
       backgroundSize: '28px 28px',
     }} />
-    {/* bottom fade */}
-    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 100, background: 'linear-gradient(to top, #fff, transparent)', pointerEvents: 'none' }} />
     <div className="container" style={{ position: 'relative' }}>
 
       <div style={{ textAlign: 'center', marginBottom: 52 }}>

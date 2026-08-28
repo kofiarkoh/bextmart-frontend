@@ -6295,6 +6295,21 @@ progress {
   .container-lg, .container-md, .container-sm, .container {
     max-width: 960px;
   }
+
+  .page-shell {
+    max-width: 1140px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .page-shell .layout-header {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
 }
 
 @media screen and (min-width: 1200px) {

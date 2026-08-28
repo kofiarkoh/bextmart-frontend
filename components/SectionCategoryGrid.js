@@ -9,14 +9,12 @@ const SectionCategoryGrid = () => {
   const categories = (Array.isArray(raw) ? raw : Object.values(raw)).slice(0, 6)
 
   return (
-    <section style={{ padding: '56px 0', background: '#f4f6fb', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: '56px 0', background: '#fff', position: 'relative', overflow: 'hidden' }}>
       {/* diagonal stripe pattern */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         backgroundImage: 'repeating-linear-gradient(135deg, transparent 0px, transparent 24px, rgba(99,102,241,0.04) 24px, rgba(99,102,241,0.04) 25px)',
       }} />
-      {/* top gradient fade */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, rgba(244,246,251,1), transparent)', pointerEvents: 'none' }} />
       <div className="container" style={{ position: 'relative' }}>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 28 }}>

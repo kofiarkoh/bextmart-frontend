@@ -447,12 +447,15 @@
   }
 
   .slideshow_slide_background {
-    aspect-ratio: 1920 / 600;
+    aspect-ratio: 1600 / 900;
     height: auto !important;
   }
 
   .slideshow_slide__background {
     padding-bottom: 0 !important;
+    background-image: var(--slide-bg-desktop) !important;
+    background-size: contain !important;
+    background-color: #f4f6fb;
   }
 }
 

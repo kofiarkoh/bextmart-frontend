@@ -47,7 +47,9 @@ function MyApp({Component, pageProps}) {
 				<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
 			</Head>
 			<ReactNotifications />
-			<Component {...pageProps} />
+			<div className="page-shell">
+				<Component {...pageProps} />
+			</div>
 		</Provider>
 	);
 }
