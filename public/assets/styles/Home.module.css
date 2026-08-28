@@ -335,6 +335,7 @@
   margin-top: 0;
 }
 
+
 .slideshow_categories__content {
   position: relative;
 }
@@ -454,8 +455,8 @@
   .slideshow_slide__background {
     padding-bottom: 0 !important;
     background-image: var(--slide-bg-desktop) !important;
-    background-size: contain !important;
-    background-color: #f4f6fb;
+    background-size: cover !important;
+    background-position: center top !important;
   }
 }
 
