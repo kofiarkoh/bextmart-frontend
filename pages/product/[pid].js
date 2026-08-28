@@ -36,9 +36,7 @@ function getDeliveryEstimate(days, isPickup, cityName) {
   return `Your item will be delivered by ${date}. Delivery times may vary slightly based on your exact location within ${cityName || 'the city'}.`;
 }
 
-const ProductPage = () => {
-    if (typeof window !== 'undefined') window.__debugTop = (window.__debugTop || 0) + 1;
-
+const ProductPage = ({ seoProduct, seoUrl }) => {
     const t = (text) =>  text;
     let { Collections_Menu, ProductSidebar } = [];
 
@@ -107,9 +105,33 @@ const ProductPage = () => {
     const isApiProductStale = !!rawApiProduct && String(rawApiProduct.uuid || rawApiProduct.id) !== String(productId);
     const apiProduct = isApiProductStale ? null : rawApiProduct;
 
-    if (typeof window !== 'undefined') {
-        window.__debug = { productId, routerIsReady: router.isReady, isProductLoading, isError, isApiProductStale };
-    }
+    const seoSourceProduct = apiProduct || seoProduct || null;
+    const seoTitle = seoSourceProduct?.name ? `${seoSourceProduct.name} | Bextmart` : 'Bextmart - Online Shopping in Ghana';
+    const seoDescriptionRaw = seoSourceProduct?.short_description || seoSourceProduct?.description || '';
+    const seoDescription = seoDescriptionRaw
+        ? seoDescriptionRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160)
+        : "Shop electronics, fashion, home goods and more on Bextmart — Ghana's online marketplace with fast delivery and secure payment.";
+    const seoImage = buildImageUrl(seoSourceProduct?.photos?.[0] || seoSourceProduct?.variants?.[0]?.photos?.[0] || null);
+    const seoPrice = seoSourceProduct?.price != null ? parseFloat(seoSourceProduct.price) : null;
+    const seoHead = (
+        <Head>
+            <title key="title">{seoTitle}</title>
+            <meta key="description" name="description" content={seoDescription} />
+            {seoUrl && <link key="canonical" rel="canonical" href={seoUrl} />}
+            <meta key="og:type" property="og:type" content="product" />
+            <meta key="og:site_name" property="og:site_name" content="Bextmart" />
+            <meta key="og:title" property="og:title" content={seoTitle} />
+            <meta key="og:description" property="og:description" content={seoDescription} />
+            <meta key="og:image" property="og:image" content={seoImage} />
+            {seoUrl && <meta key="og:url" property="og:url" content={seoUrl} />}
+            {seoPrice != null && <meta key="product:price:amount" property="product:price:amount" content={String(seoPrice)} />}
+            {seoPrice != null && <meta key="product:price:currency" property="product:price:currency" content="GHS" />}
+            <meta key="twitter:card" name="twitter:card" content="summary_large_image" />
+            <meta key="twitter:title" name="twitter:title" content={seoTitle} />
+            <meta key="twitter:description" name="twitter:description" content={seoDescription} />
+            <meta key="twitter:image" name="twitter:image" content={seoImage} />
+        </Head>
+    );
 
     const restrictedRegionIds = (apiProduct?.restricted_regions || []).map((r) =>
         String(typeof r === 'object' ? r.id : r)
@@ -437,9 +459,7 @@ const ProductPage = () => {
         const exceedsStock = qty > availableStock;
         return (
             <>
-                <Head>
-                    <title>{displayName}</title>
-                </Head>
+                {seoHead}
 
                 <Header />
                 <main>
@@ -1034,6 +1054,8 @@ const ProductPage = () => {
     } else {
         return (
             <>
+                {seoHead}
+
                 <Header />
                 <main>
                     {isLoading ? <ProductPageSkeleton /> : (
@@ -1065,4 +1087,23 @@ const ProductPage = () => {
         )
     }
 }
+export async function getServerSideProps({ params, req }) {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const seoUrl = `${protocol}://${req.headers.host}/product/${params.pid}`;
+
+    let seoProduct = null;
+    try {
+        const res = await fetch(`${API_BASE_URL}/products/${params.pid}`);
+        if (res.ok) {
+            const json = await res.json();
+            seoProduct = json?.data || null;
+        }
+    } catch {
+        seoProduct = null;
+    }
+
+    return { props: { seoProduct, seoUrl } };
+}
+
 export default ProductPage

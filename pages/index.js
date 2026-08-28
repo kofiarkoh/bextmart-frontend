@@ -29,8 +29,13 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>{t('Index_page')}</title>
-        <meta name="description" content={t('Index_page')} />
+        <title key="title">Bextmart - Online Shopping in Ghana | Electronics, Fashion & More</title>
+        <meta key="description" name="description" content="Shop electronics, fashion, home goods and more on Bextmart — Ghana's online marketplace with fast delivery and secure payment." />
+        <meta key="og:type" property="og:type" content="website" />
+        <meta key="og:title" property="og:title" content="Bextmart - Online Shopping in Ghana" />
+        <meta key="og:description" property="og:description" content="Shop electronics, fashion, home goods and more on Bextmart — Ghana's online marketplace with fast delivery and secure payment." />
+        <meta key="twitter:title" name="twitter:title" content="Bextmart - Online Shopping in Ghana" />
+        <meta key="twitter:description" name="twitter:description" content="Shop electronics, fashion, home goods and more on Bextmart — Ghana's online marketplace with fast delivery and secure payment." />
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
