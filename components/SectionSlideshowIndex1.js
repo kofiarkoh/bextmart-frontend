@@ -15,10 +15,17 @@ import { buildImageUrl } from './ultils/Tools';
 SwiperCore.use([Navigation, Pagination, Autoplay]);
 
 const SectionSlideshowIndex1 = () => {
+    const { t, locale } = useTranslation();
+    const { data: bannersData } = useGetBannersQuery();
+    const published = bannersData?.data?.filter(b => b.status === 'published') || [];
+    const sliderBanners = published.filter(b => b.type === 'slider');
+    const overlayBanners = published.filter(b => b.type === 'overlay');
+    const hasMultipleSlides = sliderBanners.length > 1;
+
     const carouselOptions = {
         spaceBetween: 40,
         // loop: true,
-        pagination: {
+        pagination: hasMultipleSlides ? {
             clickable: true,
             enabled: true,
             el: '.index-slideshow-pagination',
@@ -29,14 +36,14 @@ const SectionSlideshowIndex1 = () => {
             renderBullet: function (index, className) {
                 return '<span class="' + className + '"></span>';
             }
-        },
-        navigation: {
+        } : false,
+        navigation: hasMultipleSlides ? {
             prevEl: ".tops-carousel-nav-prev",
             nextEl: ".tops.carousel-nav-next",
-        },
-        autoplay: {
+        } : false,
+        autoplay: hasMultipleSlides ? {
             delay: 5000
-        },
+        } : false,
         breakpoints: {
             0: {
                 slidesPerView: 1,
@@ -59,12 +66,6 @@ const SectionSlideshowIndex1 = () => {
         }
     };
 
-    const { t, locale } = useTranslation();
-    const { data: bannersData } = useGetBannersQuery();
-    const published = bannersData?.data?.filter(b => b.status === 'published') || [];
-    const sliderBanners = published.filter(b => b.type === 'slider');
-    const overlayBanners = published.filter(b => b.type === 'overlay');
-
     return (
         <>
             <section className={styles.index_slideshow}>
@@ -76,7 +77,7 @@ const SectionSlideshowIndex1 = () => {
                                     <Swiper {...carouselOptions} className={`${styles.slideshow_container_swiper_container} swiper-container`}>
                                         {sliderBanners.map((banner) => {
                                             const mobileImg = buildImageUrl(banner.file_mobile);
-                                            const desktopImg = buildImageUrl(banner.file || banner.file_tablet || banner.file_mobile);
+                                            const desktopImg = mobileImg;
                                             return (
                                                 <SwiperSlide key={banner.id} className={styles.slideshow_container_swiper_slide}>
                                                     <div className={styles.slideshow_slide_background}>
@@ -94,9 +95,13 @@ const SectionSlideshowIndex1 = () => {
                                             );
                                         })}
                                     </Swiper>
-                                    <div className="index-slideshow-pagination"></div>
-                                    <div className="carousel-navigation tops-carousel-nav-prev swiper-nav-prev"><SVGArrowLeft /></div>
-                                    <div className="carousel-navigation tops-carousel-nav-next swiper-nav-next"><SVGArrowRight /></div>
+                                    {hasMultipleSlides && (
+                                        <>
+                                            <div className="index-slideshow-pagination"></div>
+                                            <div className="carousel-navigation tops-carousel-nav-prev swiper-nav-prev"><SVGArrowLeft /></div>
+                                            <div className="carousel-navigation tops-carousel-nav-next swiper-nav-next"><SVGArrowRight /></div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <div className={styles.slideshow_bottom_overlay}>
