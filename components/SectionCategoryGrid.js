@@ -34,7 +34,7 @@ const SectionCategoryGrid = () => {
           </Link>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14 }}>
+        <div className="category-grid-mobile-bleed" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14 }}>
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} style={{ borderRadius: 16, background: '#e5e7eb', paddingBottom: '115%' }} />

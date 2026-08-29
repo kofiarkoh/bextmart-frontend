@@ -3882,3 +3882,9 @@ body.template-index.yam-react-2 {
     left: 50% !important;
     transform: translateX(-50%) !important;
 }
+
+@media screen and (max-width: 767px) {
+    .category-grid-mobile-bleed {
+        grid-template-columns: 1fr !important;
+    }
+}
