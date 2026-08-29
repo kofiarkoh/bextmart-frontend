@@ -46,7 +46,7 @@ const SectionCategoryGrid = () => {
                   <Link key={cat.id} href={href} style={{ textDecoration: 'none', display: 'block', borderRadius: 16, overflow: 'hidden', position: 'relative', paddingBottom: '115%', background: '#e2e8f0' }}>
                     {img && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={img} alt={cat.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.35s ease' }} />
+                      <img src={img} alt={cat.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', transition: 'transform 0.35s ease' }} />
                     )}
                     <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.18)' }} />
                     {/* solid label bar: its height always matches the text content, so a wrapped 2-line
