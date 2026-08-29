@@ -839,7 +839,7 @@ export default function CheckoutPage() {
                           </div>
                           {parseFloat(summary?.weight_cost ?? 0) > 0 && (
                             <div style={{ padding: '4px 16px 12px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)', borderBottom: '1px solid var(--color_line)' }}>
-                              <span>Weight cost</span>
+                              <span>Handling fees</span>
                               <span><CurrencyConvert amount={parseFloat(summary.weight_cost)} /></span>
                             </div>
                           )}
