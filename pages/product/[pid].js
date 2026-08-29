@@ -91,12 +91,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const authToken = useSelector((state) => state.auth?.token);
 
-    const [tokenChecked, setTokenChecked] = useState(false);
-    useEffect(() => {
-        setTokenChecked(true);
-    }, []);
-
-    const { data: addressOptionsData } = useGetAddressOptionsQuery(undefined, { skip: !tokenChecked || !authToken });
+    const { data: addressOptionsData } = useGetAddressOptionsQuery();
     const estRegions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : [];
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];

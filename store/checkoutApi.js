@@ -28,6 +28,7 @@ export const checkoutApi = apiSlice.injectEndpoints({
         url: `${BASE_URL}/checkout/summary?city_id=${cityId}&delivery_type_id=${deliveryTypeId}`,
         method: 'GET',
       }),
+      providesTags: ['Cart'],
     }),
   }),
   overrideExisting: false,
