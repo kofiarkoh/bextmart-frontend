@@ -21,7 +21,7 @@
     "react-currency-format": "^1.1.0",
     "react-dom": "18.3.1",
     "react-hooks-paginator": "^0.5.0",
-    "react-notifications-component": "^4.0.1",
+    "react-hot-toast": "^2.6.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.4.3",
     "react-sticky-box": "^1.0.2",

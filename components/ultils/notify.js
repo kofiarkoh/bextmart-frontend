@@ -1,38 +1,35 @@
-import { Store } from 'react-notifications-component'
+import toast from 'react-hot-toast'
 
-const base = {
-  insert: 'top',
-  container: 'top-center',
-  animationIn: [],
-  animationOut: [],
-  dismiss: { duration: 4500, onScreen: false, showIcon: true },
+function withTitle(title, message) {
+  return title ? `${title}: ${message}` : message
+}
+
+const errorStyle = {
+  style: { background: '#dc2626', color: '#fff' },
+  iconTheme: { primary: '#fff', secondary: '#dc2626' },
+}
+
+const successStyle = {
+  style: { background: '#16a34a', color: '#fff' },
+  iconTheme: { primary: '#fff', secondary: '#16a34a' },
 }
 
 export function notifyError(message, title = 'Error') {
-  Store.addNotification({ ...base, title, message: message || 'Something went wrong.', type: 'danger' })
+  toast.error(withTitle(title, message || 'Something went wrong.'), { duration: 4500, ...errorStyle })
 }
 
 export function notifySuccess(message, title = 'Success') {
-  Store.addNotification({ ...base, title, message, type: 'success' })
+  toast.success(withTitle(title, message), { duration: 4500, ...successStyle })
 }
 
 export function notifyInfo(message, title = '') {
-  Store.addNotification({ ...base, title, message, type: 'info' })
+  toast(withTitle(title, message), { duration: 4500 })
 }
 
 export function notifyAuth(message, title = 'Login Required') {
-  Store.addNotification({
-    title,
-    message,
-    type: 'danger',
-    insert: 'top',
-    container: 'top-center',
-    animationIn: [],
-    animationOut: [],
-    dismiss: { duration: 1200, onScreen: false, showIcon: true },
-  })
+  toast.error(withTitle(title, message), { duration: 1200, ...errorStyle })
 }
 
 export function dismissAll() {
-  Store.removeAllNotifications()
+  toast.dismiss()
 }
