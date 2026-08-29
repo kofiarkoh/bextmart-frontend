@@ -3885,7 +3885,7 @@ body.template-index.yam-react-2 {
 
 @media screen and (max-width: 767px) {
     .category-grid-mobile-bleed {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 

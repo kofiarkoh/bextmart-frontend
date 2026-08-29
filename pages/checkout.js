@@ -118,7 +118,7 @@ export default function CheckoutPage() {
     }
   }, [tokenChecked, authToken, cartLoading, cartItems, router])
 
-  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery(undefined, { skip: !tokenChecked || !authToken })
+  const { data: addressOptionsData, isLoading: loadingAddresses } = useGetAddressOptionsQuery()
 
   const regions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : []
   const selectedRegion = regions.find((r) => String(r.id) === String(regionId))
@@ -127,10 +127,28 @@ export default function CheckoutPage() {
   function handleSelectAddress(addr) {
     setSelectedAddressId(addr.id)
 
-    const matchedRegion = regions.find((r) => r.name?.toLowerCase() === addr.region?.toLowerCase())
+    // Match by city first: saved addresses store free-text region names that can
+    // drift out of sync with the canonical delivery region names (e.g. "Central Region"
+    // vs "Central"), while city names line up reliably. Derive the region from
+    // whichever region actually contains the matched city.
+    const targetCity = addr.city?.toLowerCase().trim()
+    let matchedRegion = null
+    let matchedCity = null
+    for (const region of regions) {
+      const city = (region.cities || []).find((c) => c.name?.toLowerCase().trim() === targetCity)
+      if (city) {
+        matchedRegion = region
+        matchedCity = city
+        break
+      }
+    }
+    if (!matchedRegion) {
+      matchedRegion = regions.find((r) => r.name?.toLowerCase().trim() === addr.region?.toLowerCase().trim())
+      matchedCity = (matchedRegion?.cities || []).find((c) => c.name?.toLowerCase() === addr.city?.toLowerCase()) || null
+    }
+
     if (matchedRegion) {
       setRegionId(String(matchedRegion.id))
-      const matchedCity = (matchedRegion.cities || []).find((c) => c.name?.toLowerCase() === addr.city?.toLowerCase())
       setCityId(matchedCity ? String(matchedCity.id) : '')
       const firstType = firstUsableDeliveryType(matchedCity)
       setDeliveryTypeId(firstType ? String(firstType.delivery_type_id) : '')
@@ -155,7 +173,6 @@ export default function CheckoutPage() {
         await updateCartItem({ id: itemId, quantity: newQty }).unwrap()
       }
       refetchCart()
-      if (cityId && deliveryTypeId) refetchSummary()
     } catch {
       notifyError('Could not update item. Please try again.')
     } finally {
@@ -168,7 +185,6 @@ export default function CheckoutPage() {
     try {
       await removeCartItem(itemId).unwrap()
       refetchCart()
-      if (cityId && deliveryTypeId) refetchSummary()
     } catch {
       notifyError('Could not remove item. Please try again.')
     } finally {
@@ -176,15 +192,11 @@ export default function CheckoutPage() {
     }
   }
 
-  const { data: summaryData, isLoading: loadingSummary, refetch: refetchSummary } = useGetCheckoutSummaryQuery(
+  const { data: summaryData, isFetching: loadingSummary } = useGetCheckoutSummaryQuery(
     { cityId, deliveryTypeId },
     { skip: !cityId || !deliveryTypeId }
   )
   const summary = summaryData?.data || null
-
-  useEffect(() => {
-    if (cityId && deliveryTypeId) refetchSummary()
-  }, [cartItems])
 
   function handleContinue() {
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
@@ -419,7 +431,7 @@ export default function CheckoutPage() {
                     })}
                   </div>
 
-                  {(!tokenChecked || loadingAddresses) ? (
+                  {loadingAddresses ? (
                     <p>Loading delivery options...</p>
                   ) : (
                     <>
@@ -646,7 +658,7 @@ export default function CheckoutPage() {
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
                         <Link href="/cart" className="button button--secondary">← Back to Cart</Link>
-                        <Button type="button" label="Continue →" onClick={handleContinue} disabled={hasShippingConflict} />
+                        <Button type="button" label="Continue →" onClick={handleContinue} disabled={hasShippingConflict} loading={loadingSummary} />
                       </div>
                     </>
                   )}
