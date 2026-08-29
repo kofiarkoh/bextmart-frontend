@@ -37,13 +37,13 @@ const SectionCategoryGrid = () => {
         <div className="category-grid-mobile-bleed" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14 }}>
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} style={{ borderRadius: 16, background: '#e5e7eb', paddingBottom: '115%' }} />
+                <div key={i} style={{ borderRadius: 16, background: '#e5e7eb', paddingBottom: '80%' }} />
               ))
             : categories.map((cat) => {
                 const img = buildImageUrl(cat.cover_image || cat.photo || cat.image || cat.thumbnail || null)
                 const href = `/products?category=${cat.slug || cat.id}`
                 return (
-                  <Link key={cat.id} href={href} style={{ textDecoration: 'none', display: 'block', borderRadius: 16, overflow: 'hidden', position: 'relative', paddingBottom: '115%', background: '#e2e8f0' }}>
+                  <Link key={cat.id} href={href} style={{ textDecoration: 'none', display: 'block', borderRadius: 16, overflow: 'hidden', position: 'relative', paddingBottom: '80%', background: '#e2e8f0' }}>
                     {img && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={img} alt={cat.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block', transition: 'transform 0.35s ease' }} />
