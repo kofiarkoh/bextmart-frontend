@@ -17,21 +17,13 @@ const SectionCategoryGrid = () => {
       }} />
       <div className="container" style={{ position: 'relative' }}>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 28 }}>
-          <div>
-            <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color_primary)' }}>
-              Explore
-            </p>
-            <h2 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: 'var(--color_heading)' }}>
-              Shop by Category
-            </h2>
-          </div>
-          <Link href="/products" style={{ fontSize: 13, fontWeight: 600, color: 'var(--color_primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, paddingBottom: 4 }}>
-            All categories
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </Link>
+        <div style={{ marginBottom: 28 }}>
+          <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color_primary)' }}>
+            Explore
+          </p>
+          <h2 style={{ margin: 0, fontSize: 26, fontWeight: 700, color: 'var(--color_heading)' }}>
+            Shop by Category
+          </h2>
         </div>
 
         <div className="category-grid-mobile-bleed" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 14 }}>
