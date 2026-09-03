@@ -91,12 +91,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
     const similarProducts = Array.isArray(productResponse?.similar) ? productResponse.similar : [];
     const authToken = useSelector((state) => state.auth?.token);
 
-    const [tokenChecked, setTokenChecked] = useState(false);
-    useEffect(() => {
-        setTokenChecked(true);
-    }, []);
-
-    const { data: addressOptionsData } = useGetAddressOptionsQuery(undefined, { skip: !tokenChecked || !authToken });
+    const { data: addressOptionsData } = useGetAddressOptionsQuery();
     const estRegions = Array.isArray(addressOptionsData?.data) ? addressOptionsData.data : [];
     const estSelectedRegion = estRegions.find((r) => String(r.id) === String(estRegionId));
     const estCities = estSelectedRegion?.cities || [];
@@ -612,13 +607,14 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                                 </button>
                                                                             );
                                                                         }
+                                                                        const variantPrice = variant.price != null ? parseFloat(variant.price) : (product.price != null ? parseFloat(product.price) : null);
                                                                         return (
                                                                             <button
                                                                                 key={variant.id}
                                                                                 type="button"
                                                                                 onClick={() => selectVariant(variant)}
                                                                                 style={{
-                                                                                    padding: '6px 14px',
+                                                                                    padding: '10px 16px',
                                                                                     borderRadius: 6,
                                                                                     border: isSelected ? '2px solid var(--color_primary)' : '1.5px solid #ddd',
                                                                                     background: isSelected ? 'var(--color_primary)' : '#fff',
@@ -627,11 +623,19 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                                     fontWeight: isSelected ? 700 : 400,
                                                                                     cursor: 'pointer',
                                                                                     opacity: 1,
+                                                                                    minWidth: 110,
+                                                                                    display: 'flex',
+                                                                                    flexDirection: 'column',
+                                                                                    gap: 2,
+                                                                                    textAlign: 'left',
                                                                                 }}
                                                                             >
                                                                                 {variant.sku}
+                                                                                {variantPrice != null && (
+                                                                                    <CurrencyConvert amount={variantPrice} style={{ fontSize: 13, fontWeight: 400, color: isSelected ? '#fff' : '#666' }} />
+                                                                                )}
                                                                                 {outOfStock && (
-                                                                                    <span style={{ display: 'block', fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
+                                                                                    <span style={{ fontSize: 10, color: isSelected ? '#ffcdd2' : '#e53935', marginTop: 1 }}>
                                                                                         Out of stock
                                                                                     </span>
                                                                                 )}
