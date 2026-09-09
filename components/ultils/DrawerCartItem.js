@@ -18,7 +18,7 @@ const DrawerCartItem = ({ onItemClick }) => {
                     const product = item.product || {};
                     const productId = product.uuid || item.product_uuid || product.id || item.product_id;
                     const productName = product.name || t("Product");
-                    const productImage = buildImageUrl(product?.photos?.[0]);
+                    const productImage = buildImageUrl(product?.photos?.[0] || item.variant?.photos?.[0] || null);
                     const productPrice = product.price || item.price || 0;
                     return (
                         <div className="cart__dropdown-item" key={index}>
