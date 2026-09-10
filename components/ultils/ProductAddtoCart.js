@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useAddToCartMutation } from '../../store/cartApi'
@@ -11,6 +12,7 @@ const ProductAddtoCart = ({ product }) => {
 
     const [addToCart, { isLoading }] = useAddToCartMutation();
     const [error, setError] = useState(null);
+    const hasVariants = Array.isArray(product?.variants) && product.variants.length > 0;
 
     async function handleAddToCart() {
         if (!authToken) {
@@ -34,6 +36,23 @@ const ProductAddtoCart = ({ product }) => {
 
     const buttonLabel = isLoading ? 'Adding...' : 'Add to Cart';
     const buttonClass = `product-item__icon${isLoading ? ' cart-loadding' : ''}`;
+
+    if (hasVariants) {
+        return (
+            <div className="cart-button bottom-center">
+                <div className="product-item__addcart">
+                    <Link
+                        href={`/product/${product?.uuid || product?.id}`}
+                        className="product-item__icon"
+                        title="See Options"
+                    >
+                        <SVGCart />
+                        <span>See Options</span>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="cart-button bottom-center">
