@@ -3,7 +3,8 @@ import React from "react";
 import Link from 'next/link';
 import Image from 'next/image'
 import useTranslation from './ultils/useTranslation'
-import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
+import SwiperCore from 'swiper';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';

@@ -13,7 +13,8 @@ import Footer from '../../components/Footer'
 import CollectionSkeleton from '../../components/ultils/CollectionSkeleton'
 import CollectionProduct from '../../components/ultils/CollectionProduct'
 import ProductItemList from '../../components/ultils/ProductItemList'
-import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
+import SwiperCore from 'swiper';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';

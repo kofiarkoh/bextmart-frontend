@@ -27,7 +27,7 @@
     "react-sticky-box": "^1.0.2",
     "reactjs-popup": "^2.0.5",
     "sort-by": "^1.2.0",
-    "swiper": "^8.4.5"
+    "swiper": "^14.2.0"
   },
   "devDependencies": {
     "eslint": "^9.39.2",

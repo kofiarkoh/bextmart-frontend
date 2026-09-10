@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Link from 'next/link';
 import useTranslation from './ultils/useTranslation'
-import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 import 'swiper/css';
@@ -12,8 +12,6 @@ import styles from '../public/assets/styles/Home.module.css'
 import { useGetBannersQuery } from '../store/productsApi';
 import { buildImageUrl } from './ultils/Tools';
 
-SwiperCore.use([Navigation, Pagination, Autoplay]);
-
 const SectionSlideshowIndex1 = () => {
     const { t, locale } = useTranslation();
     const { data: bannersData } = useGetBannersQuery();
@@ -21,50 +19,49 @@ const SectionSlideshowIndex1 = () => {
     const sliderBanners = published.filter(b => b.type === 'slider');
     const overlayBanners = published.filter(b => b.type === 'overlay');
     const hasMultipleSlides = sliderBanners.length > 1;
+    const swiperContainerRef = useRef(null);
+    const bannerIdsKey = sliderBanners.map(b => b.id).join(',');
 
-    const carouselOptions = {
-        spaceBetween: 40,
-        // loop: true,
-        pagination: hasMultipleSlides ? {
-            clickable: true,
-            enabled: true,
-            el: '.index-slideshow-pagination',
-            type: 'bullets',
-            bulletElement: 'span',
-            bulletClass: 'index-slideshow-pagination-bullet',
-            bulletActiveClass: 'index-slideshow-pagination-bullet-active',
-            renderBullet: function (index, className) {
-                return '<span class="' + className + '"></span>';
-            }
-        } : false,
-        navigation: hasMultipleSlides ? {
-            prevEl: ".tops-carousel-nav-prev",
-            nextEl: ".tops.carousel-nav-next",
-        } : false,
-        autoplay: hasMultipleSlides ? {
-            delay: 5000
-        } : false,
-        breakpoints: {
-            0: {
-                slidesPerView: 1,
+    // Instantiating Swiper's core class directly (instead of the swiper/react wrapper)
+    // gives us a real Swiper instance immediately, with autoplay reliably running.
+    useEffect(() => {
+        if (!swiperContainerRef.current || sliderBanners.length === 0) return undefined;
+
+        const swiper = new SwiperCore(swiperContainerRef.current, {
+            modules: [Navigation, Pagination, Autoplay],
+            spaceBetween: 40,
+            pagination: hasMultipleSlides ? {
+                clickable: true,
+                el: '.index-slideshow-pagination',
+                type: 'bullets',
+                bulletElement: 'span',
+                bulletClass: 'index-slideshow-pagination-bullet',
+                bulletActiveClass: 'index-slideshow-pagination-bullet-active',
+                renderBullet: (index, className) => '<span class="' + className + '"></span>',
+            } : false,
+            navigation: hasMultipleSlides ? {
+                prevEl: ".tops-carousel-nav-prev",
+                nextEl: ".tops.carousel-nav-next",
+            } : false,
+            autoplay: hasMultipleSlides ? {
+                enabled: true,
+                delay: 3000,
+                disableOnInteraction: false,
+            } : false,
+            breakpoints: {
+                0: { slidesPerView: 1 },
+                576: { slidesPerView: 1 },
+                768: { slidesPerView: 1 },
+                992: { slidesPerView: 1 },
+                1200: { slidesPerView: 1 },
+                1400: { slidesPerView: 1 },
             },
-            576: {
-                slidesPerView: 1,
-            },
-            768: {
-                slidesPerView: 1,
-            },
-            992: {
-                slidesPerView: 1,
-            },
-            1200: {
-                slidesPerView: 1,
-            },
-            1400: {
-                slidesPerView: 1,
-            }
-        }
-    };
+        });
+
+        return () => {
+            if (!swiper.destroyed) swiper.destroy(true, false);
+        };
+    }, [bannerIdsKey, hasMultipleSlides, sliderBanners.length]);
 
     return (
         <>
@@ -74,26 +71,28 @@ const SectionSlideshowIndex1 = () => {
                         <div className={styles.slideshow_categories__content}>
                             <div className={styles.slideshow_component}>
                                 <div className={`${styles.slideshow_container} slideshow-template`}>
-                                    <Swiper {...carouselOptions} className={`${styles.slideshow_container_swiper_container} swiper-container`}>
-                                        {sliderBanners.map((banner) => {
-                                            const img = buildImageUrl(banner.file);
-                                            return (
-                                                <SwiperSlide key={banner.id} className={styles.slideshow_container_swiper_slide}>
-                                                    <div className={styles.slideshow_slide_background}>
-                                                        <div
-                                                            className={styles.slideshow_slide__background}
-                                                            style={{ height: 0, backgroundImage: `url(${img})`,
-                                                            '--slide-bg-desktop': `url(${img})`,
-                                                            paddingBottom: '40%' ,
-                                                            backgroundSize: 'cover',
-                                                            backgroundPosition: 'center',
-                                                            backgroundRepeat: 'no-repeat',}}
-                                                        />
+                                    <div ref={swiperContainerRef} className={`${styles.slideshow_container_swiper_container} swiper-container swiper`}>
+                                        <div className="swiper-wrapper">
+                                            {sliderBanners.map((banner) => {
+                                                const img = buildImageUrl(banner.file);
+                                                return (
+                                                    <div key={banner.id} className={`${styles.slideshow_container_swiper_slide} swiper-slide`}>
+                                                        <div className={styles.slideshow_slide_background}>
+                                                            <div
+                                                                className={styles.slideshow_slide__background}
+                                                                style={{ height: 0, backgroundImage: `url(${img})`,
+                                                                '--slide-bg-desktop': `url(${img})`,
+                                                                paddingBottom: '40%' ,
+                                                                backgroundSize: 'cover',
+                                                                backgroundPosition: 'center',
+                                                                backgroundRepeat: 'no-repeat',}}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </SwiperSlide>
-                                            );
-                                        })}
-                                    </Swiper>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                     {hasMultipleSlides && (
                                         <>
                                             <div className="index-slideshow-pagination"></div>

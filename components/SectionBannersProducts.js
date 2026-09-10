@@ -10,7 +10,8 @@ import Product_fr from "../public/locales/fr/fr_Product.json";
 import Product_it from "../public/locales/it/it_Product.json";
 import styles from '../public/assets/styles/Home5.module.css'
 
-import SwiperCore, { Navigation, Autoplay } from 'swiper';
+import SwiperCore from 'swiper';
+import { Navigation, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
