@@ -45,6 +45,12 @@ const ProductAddtoCart = ({ product }) => {
                         href={`/product/${product?.uuid || product?.id}`}
                         className="product-item__icon"
                         title="See Options"
+                        style={{
+                            background: '#fff',
+                            color: '#000080',
+                            border: '1.5px solid #000080',
+                            borderRadius: 8,
+                        }}
                     >
                         <SVGCart />
                         <span>See Options</span>
@@ -63,6 +69,12 @@ const ProductAddtoCart = ({ product }) => {
                     onClick={handleAddToCart}
                     disabled={isLoading}
                     title="Add to Cart"
+                    style={{
+                        background: '#000080',
+                        color: '#fff',
+                        border: '1.5px solid #000080',
+                        borderRadius: 8,
+                    }}
                 >
                     <SVGCart />
                     <span>{buttonLabel}</span>
