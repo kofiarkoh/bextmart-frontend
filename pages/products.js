@@ -9,24 +9,33 @@ import ProductItemGrid from '../components/ultils/ProductItemGrid'
 import useTranslation from '../components/ultils/useTranslation'
 import { SVGArrowLeft, SVGArrowRight } from '../public/assets/SVG'
 import { useSearchProductsQuery } from '../store/productsApi'
+import { getSessionSeed } from '../components/ultils/sessionSeed'
 import styles from '../public/assets/styles/Home.module.css'
+
+const PRODUCTS_SEED_KEY = 'bextmart_products_seed'
 
 const ProductsPage = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const page = Number(router.query.page || 1)
   const category = router.query.category || undefined
-  const sort = router.query.sort || undefined
-  const seed = router.query.seed || undefined
+  const urlSort = router.query.sort || undefined
+  const urlSeed = router.query.seed || undefined
 
   const [mounted, setMounted] = useState(false)
+  const [sessionSeed, setSessionSeed] = useState(undefined)
   useEffect(() => {
     setMounted(true)
+    setSessionSeed(getSessionSeed(PRODUCTS_SEED_KEY))
   }, [])
+
+  // Default to a randomized, session-stable order when the URL has no explicit sort.
+  const sort = urlSort || (router.isReady ? 'random' : undefined)
+  const seed = urlSeed || (sort === 'random' ? sessionSeed : undefined)
 
   const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
     { page, ...(category && { category }), ...(sort && { sort }), ...(seed && { seed }) },
-    { skip: !router.isReady }
+    { skip: !router.isReady || (sort === 'random' && !seed) }
   )
   const isLoading = !mounted || isQueryLoading
 
@@ -34,17 +43,16 @@ const ProductsPage = () => {
   const items = Array.isArray(pageData.data) ? pageData.data : []
   const currentPage = pageData.current_page || page
   const lastPage = pageData.last_page || 1
-  const responseSeed = pageData.seed ?? data?.seed
 
   useEffect(() => {
-    if (sort === 'random' && responseSeed && !seed) {
+    if (router.isReady && !urlSort && !urlSeed && seed) {
       router.replace(
-        { pathname: '/products', query: { page, ...(category && { category }), sort, seed: responseSeed } },
+        { pathname: '/products', query: { page, ...(category && { category }), sort, seed } },
         undefined,
         { shallow: true }
       )
     }
-  }, [sort, responseSeed, seed])
+  }, [router.isReady, urlSort, urlSeed, seed])
 
   const pagesToShow = useMemo(() => {
     const start = Math.max(1, currentPage - 2)

@@ -4,30 +4,17 @@ import { useSelector } from "react-redux";
 import ProductItemGrid from "./ultils/ProductItemGrid";
 import useTranslation from "./ultils/useTranslation";
 import { useSearchProductsQuery } from "../store/productsApi";
+import { getSessionSeed } from "./ultils/sessionSeed";
 import styles from "../public/assets/styles/Home.module.css";
 
 const FEATURED_SEED_KEY = "bextmart_featured_seed";
-
-function getSessionSeed() {
-    if (typeof window === "undefined") return undefined;
-    try {
-        let seed = window.sessionStorage.getItem(FEATURED_SEED_KEY);
-        if (!seed) {
-            seed = String(Math.floor(Math.random() * 2147483647));
-            window.sessionStorage.setItem(FEATURED_SEED_KEY, seed);
-        }
-        return seed;
-    } catch {
-        return undefined;
-    }
-}
 
 const SectionProductGrid = (props) => {
     const { t } = useTranslation();
     const [seed, setSeed] = useState(undefined);
 
     useEffect(() => {
-        setSeed(getSessionSeed());
+        setSeed(getSessionSeed(FEATURED_SEED_KEY));
     }, []);
 
     const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
