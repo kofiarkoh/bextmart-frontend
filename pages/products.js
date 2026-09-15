@@ -16,6 +16,8 @@ const ProductsPage = () => {
   const router = useRouter()
   const page = Number(router.query.page || 1)
   const category = router.query.category || undefined
+  const sort = router.query.sort || undefined
+  const seed = router.query.seed || undefined
 
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -23,7 +25,7 @@ const ProductsPage = () => {
   }, [])
 
   const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
-    category ? { page, category } : { page },
+    { page, ...(category && { category }), ...(sort && { sort }), ...(seed && { seed }) },
     { skip: !router.isReady }
   )
   const isLoading = !mounted || isQueryLoading
@@ -32,6 +34,17 @@ const ProductsPage = () => {
   const items = Array.isArray(pageData.data) ? pageData.data : []
   const currentPage = pageData.current_page || page
   const lastPage = pageData.last_page || 1
+  const responseSeed = pageData.seed ?? data?.seed
+
+  useEffect(() => {
+    if (sort === 'random' && responseSeed && !seed) {
+      router.replace(
+        { pathname: '/products', query: { page, ...(category && { category }), sort, seed: responseSeed } },
+        undefined,
+        { shallow: true }
+      )
+    }
+  }, [sort, responseSeed, seed])
 
   const pagesToShow = useMemo(() => {
     const start = Math.max(1, currentPage - 2)
@@ -45,6 +58,8 @@ const ProductsPage = () => {
     if (nextPage < 1 || nextPage > lastPage) return
     const query = { page: nextPage }
     if (category) query.category = category
+    if (sort) query.sort = sort
+    if (seed) query.seed = seed
     router.push({ pathname: '/products', query })
   }
 
@@ -120,7 +135,10 @@ const ProductsPage = () => {
                 {pagesToShow.map((p) => (
                   <Link
                     key={p}
-                    href={{ pathname: '/products', query: category ? { page: p, category } : { page: p } }}
+                    href={{
+                      pathname: '/products',
+                      query: { page: p, ...(category && { category }), ...(sort && { sort }), ...(seed && { seed }) },
+                    }}
                     className="button button--secondary"
                     style={{
                       minWidth: 40,

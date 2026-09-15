@@ -22,9 +22,11 @@ export default function SearchPage() {
     const { t } = useTranslation()
     const q = router.query.q || ''
     const page = Number(router.query.page || 1)
+    const seed = router.query.seed || undefined
+    const sort = router.query.sort || undefined
 
     const { data, isLoading, isError } = useSearchProductsQuery(
-        { q, page },
+        { q, page, ...(sort && { sort }), ...(seed && { seed }) },
         { skip: q.length < 2 }
     )
 
@@ -41,6 +43,17 @@ export default function SearchPage() {
     const currentPage = pageData.current_page || page
     const lastPage = pageData.last_page || 1
     const total = pageData.total ?? items.length
+    const responseSeed = pageData.seed ?? data?.seed
+
+    useEffect(() => {
+        if (sort === 'random' && responseSeed && !seed) {
+            router.replace(
+                { pathname: '/search', query: { q, page, sort, seed: responseSeed } },
+                undefined,
+                { shallow: true }
+            )
+        }
+    }, [sort, responseSeed, seed])
 
     const pagesToShow = useMemo(() => {
         const start = Math.max(1, currentPage - 2)
@@ -52,7 +65,10 @@ export default function SearchPage() {
 
     const goToPage = (nextPage) => {
         if (nextPage < 1 || nextPage > lastPage) return
-        router.push({ pathname: '/search', query: { q, page: nextPage } })
+        router.push({
+            pathname: '/search',
+            query: { q, page: nextPage, ...(sort && { sort }), ...(seed && { seed }) },
+        })
     }
 
     if (q.length < 2) {
@@ -128,7 +144,7 @@ export default function SearchPage() {
                                                     {pagesToShow.map((p) => (
                                                         <Link
                                                             key={p}
-                                                            href={{ pathname: '/search', query: { q, page: p } }}
+                                                            href={{ pathname: '/search', query: { q, page: p, ...(sort && { sort }), ...(seed && { seed }) } }}
                                                             className="button button--secondary"
                                                             style={{
                                                                 minWidth: 40,
