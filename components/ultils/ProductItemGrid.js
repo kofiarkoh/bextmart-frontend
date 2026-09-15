@@ -4,13 +4,13 @@ import ProductLabels from "./ProductLabels";
 import ProductWishlist from './ProductWishlist'
 import ProductAddtoCart from './ProductAddtoCart'
 import CurrencyConvert from './CurrencyConvert'
-import { buildImageUrl } from './Tools'
+import { buildImageUrl, firstPhoto } from './Tools'
 import useTranslation from './useTranslation'
 
 const ProductItemGrid = ({ product }) => {
     const { t } = useTranslation();
     const firstVariant = product?.variants?.[0]
-    const primaryPhoto = firstVariant?.photos?.[0] || product?.photos?.[0]
+    const primaryPhoto = firstPhoto(firstVariant?.photos) || firstPhoto(product?.photos)
 
     return (
         <div className="product-item__grid product-card">

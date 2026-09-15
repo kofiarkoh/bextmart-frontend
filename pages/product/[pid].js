@@ -14,7 +14,7 @@ import ProductPageGallery from '../../components/ultils/ProductPageGallery';
 import ProductPageRelated from '../../components/ultils/ProductPageRelated';
 import ProductPageReview from '../../components/ultils/ProductPageReview';
 import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton';
-import { buildImageUrl, displayPrice } from '../../components/ultils/Tools';
+import { buildImageUrl, displayPrice, firstPhoto } from '../../components/ultils/Tools';
 import { dismissAll, notifyAuth, notifyError, notifySuccess } from '../../components/ultils/notify';
 import { SVGArrowDown, SVGMinus, SVGPlus } from '../../public/assets/SVG';
 import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
@@ -106,7 +106,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
     const seoDescription = seoDescriptionRaw
         ? seoDescriptionRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160)
         : "Shop electronics, fashion, home goods and more on Bextmart — Ghana's online marketplace with fast delivery and secure payment.";
-    const seoImage = buildImageUrl(seoSourceProduct?.photos?.[0] || seoSourceProduct?.variants?.[0]?.photos?.[0] || null);
+    const seoImage = buildImageUrl(firstPhoto(seoSourceProduct?.photos) || firstPhoto(seoSourceProduct?.variants?.[0]?.photos) || null);
     const seoPrice = seoSourceProduct?.price != null ? parseFloat(seoSourceProduct.price) : null;
     const seoHead = (
         <Head>
@@ -138,7 +138,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
         if (!apiProduct) return [];
         const photos = Array.isArray(apiProduct.photos) ? apiProduct.photos : [];
         const variantPhotos = (Array.isArray(apiProduct.variants) ? apiProduct.variants : [])
-            .map(v => v.photos?.[0])
+            .map(v => firstPhoto(v.photos))
             .filter(Boolean);
         return [...new Set([...photos, ...variantPhotos])];
     }, [apiProduct]);
@@ -224,8 +224,8 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
     function selectVariant(variant, updateImages = true) {
         setSelectedVariant(variant);
         if (updateImages) {
-            if (variant?.photos?.[0]) {
-                const variantPhoto = variant.photos[0];
+            const variantPhoto = firstPhoto(variant?.photos);
+            if (variantPhoto) {
                 const rest = allPhotos.filter(p => p !== variantPhoto);
                 setGroupImages([variantPhoto, ...rest]);
             } else {
@@ -519,7 +519,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                             {/* Step 1 — pick a variant */}
                                                             {(() => {
                                                             const allHaveThumbnails = product.variants.every(
-                                                                (v) => Array.isArray(v.photos) && v.photos.length > 0
+                                                                (v) => !!firstPhoto(v.photos)
                                                             );
                                                             return (
                                                             <div style={{ marginBottom: 14 }}>
@@ -535,8 +535,9 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                     {product.variants.map((variant) => {
                                                                         const outOfStock = variant.quantity - (variant.reserved_stock || 0) <= 0;
                                                                         const isSelected = selectedVariant?.id === variant.id;
-                                                                        const thumbSrc = allHaveThumbnails && variant.photos?.[0]
-                                                                            ? buildImageUrl(variant.photos[0])
+                                                                        const variantThumbPhoto = firstPhoto(variant.photos);
+                                                                        const thumbSrc = allHaveThumbnails && variantThumbPhoto
+                                                                            ? buildImageUrl(variantThumbPhoto)
                                                                             : null;
                                                                         const hasColor = !!variant.color_code;
 
@@ -1022,7 +1023,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>
                                                                     <img
-                                                                        src={buildImageUrl(item?.photos?.[0] || item?.variants?.[0]?.photos?.[0])}
+                                                                        src={buildImageUrl(firstPhoto(item?.photos) || firstPhoto(item?.variants?.[0]?.photos))}
                                                                         alt={item.name}
                                                                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                                                     />

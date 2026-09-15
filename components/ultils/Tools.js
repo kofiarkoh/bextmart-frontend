@@ -12,6 +12,13 @@ export function buildImageUrl(path) {
     return url
 }
 
+// The backend returns `photos` as an array on products but, inconsistently, as a
+// single string on some variants — indexing a string with [0] silently returns
+// its first character instead of the path, producing broken image URLs.
+export function firstPhoto(photos) {
+    return Array.isArray(photos) ? photos[0] : photos
+}
+
 export function randomString(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

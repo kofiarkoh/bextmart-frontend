@@ -9,7 +9,7 @@ import { clearCart } from '../../store/cartSlice'
 import { useGetOrderQuery, useRetryPaymentMutation } from '../../store/ordersApi'
 import { notifyError } from '../../components/ultils/notify'
 import CurrencyConvert from '../../components/ultils/CurrencyConvert'
-import { buildImageUrl } from '../../components/ultils/Tools'
+import { buildImageUrl, firstPhoto } from '../../components/ultils/Tools'
 
 const SUCCESS_STATUSES = ['paid', 'success', 'completed', 'delivered']
 const FAILED_STATUSES  = ['failed', 'cancelled']
@@ -236,7 +236,7 @@ export default function PaymentVerifyPage() {
                                                     const product  = item.product || {}
                                                     const variant  = item.variant  || null
                                                     const name     = product?.name || 'Product'
-                                                    const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
+                                                    const imgSrc   = buildImageUrl(firstPhoto(variant?.photos) ?? firstPhoto(product?.photos) ?? null)
                                                     const qty      = item.quantity ?? 1
                                                     const price    = parseFloat(item.price ?? 0)
                                                     const rowTotal = parseFloat(item.total_price ?? price * qty)

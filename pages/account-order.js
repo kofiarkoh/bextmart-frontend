@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import { useGetOrderQuery } from '../store/ordersApi'
-import { buildImageUrl } from '../components/ultils/Tools'
+import { buildImageUrl, firstPhoto } from '../components/ultils/Tools'
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -316,7 +316,7 @@ export default function OrderDetailPage() {
                         const product  = item.product || item
                         const variant  = item.variant || null
                         const name     = product?.name || item?.name || 'Product'
-                        const imgSrc   = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? item?.photos?.[0] ?? null)
+                        const imgSrc   = buildImageUrl(firstPhoto(variant?.photos) ?? firstPhoto(product?.photos) ?? firstPhoto(item?.photos) ?? null)
                         const qty      = item?.quantity ?? item?.qty ?? 1
                         const price    = parseFloat(item?.price ?? product?.price ?? 0)
                         const rowTotal = parseFloat(item?.total_price ?? item?.total ?? item?.subtotal ?? price * qty)

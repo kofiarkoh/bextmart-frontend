@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useTranslation from './useTranslation';
 import CurrencyConvert from './CurrencyConvert';
-import { buildImageUrl } from './Tools';
+import { buildImageUrl, firstPhoto } from './Tools';
 import { useGetSuggestionsQuery } from '../../store/productsApi';
 import { SVGSearchMobile, SVGClose } from '../../public/assets/SVG';
 
@@ -107,7 +107,7 @@ const DrawerMobileSearch = () => {
                                         {suggestions.map((item, i) => {
                                             const name = item.label || item.name || item.query || (typeof item === 'string' ? item : '');
                                             const price = item.price;
-                                            const photo = item?.photos?.[0];
+                                            const photo = firstPhoto(item?.photos);
                                             return (
                                                 <li
                                                     key={item.id || i}

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import CurrencyConvert from './CurrencyConvert'
 import useTranslation from './useTranslation'
 import { useSelector } from 'react-redux'
-import { buildImageUrl } from './Tools'
+import { buildImageUrl, firstPhoto } from './Tools'
 
 const DrawerCartItem = ({ onItemClick }) => {
     const { t } = useTranslation();
@@ -18,7 +18,7 @@ const DrawerCartItem = ({ onItemClick }) => {
                     const product = item.product || {};
                     const productId = product.uuid || item.product_uuid || product.id || item.product_id;
                     const productName = product.name || t("Product");
-                    const productImage = buildImageUrl(product?.photos?.[0] || item.variant?.photos?.[0] || null);
+                    const productImage = buildImageUrl(firstPhoto(product?.photos) || firstPhoto(item.variant?.photos) || null);
                     const productPrice = product.price || item.price || 0;
                     return (
                         <div className="cart__dropdown-item" key={index}>

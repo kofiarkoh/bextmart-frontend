@@ -8,7 +8,7 @@ import Footer from '../components/Footer'
 import Breadcrumbs from '../components/ultils/Breadcrumbs'
 import CurrencyConvert from '../components/ultils/CurrencyConvert'
 import useTranslation from '../components/ultils/useTranslation'
-import { buildImageUrl } from '../components/ultils/Tools'
+import { buildImageUrl, firstPhoto } from '../components/ultils/Tools'
 import { notifyError, notifySuccess } from '../components/ultils/notify'
 import Button from '../components/ultils/Button'
 import AddressBook from '../components/account/AddressBook'
@@ -357,7 +357,7 @@ export default function CheckoutPage() {
                       const name          = product?.name || 'Product'
                       const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
                       const qty           = item?.quantity || 1
-                      const imgSrc        = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
+                      const imgSrc        = buildImageUrl(firstPhoto(variant?.photos) ?? firstPhoto(product?.photos) ?? null)
                       const isUpdating    = loadingItemId === item.id
                       return (
                         <div key={item.id ?? i} style={{
@@ -749,7 +749,7 @@ export default function CheckoutPage() {
                       const name          = product?.name || 'Product'
                       const price         = parseFloat(variantOption?.price ?? variant?.price ?? product?.price ?? item?.price ?? 0)
                       const qty           = item?.quantity || 1
-                      const imgSrc        = buildImageUrl(variant?.photos?.[0] ?? product?.photos?.[0] ?? null)
+                      const imgSrc        = buildImageUrl(firstPhoto(variant?.photos) ?? firstPhoto(product?.photos) ?? null)
                       const isUpdating    = loadingItemId === item.id
                       return (
                         <div key={item.id ?? i} style={{

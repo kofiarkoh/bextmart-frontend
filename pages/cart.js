@@ -13,7 +13,7 @@ import { SVGTrash } from '../public/assets/SVG';
 import styles from '../public/assets/styles/CartPage.module.css'
 import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation } from '../store/cartApi'
 import { useSelector } from 'react-redux'
-import { buildImageUrl } from '../components/ultils/Tools'
+import { buildImageUrl, firstPhoto } from '../components/ultils/Tools'
 
 export default function CartPage() {
     if (typeof window !== 'undefined') {
@@ -98,8 +98,8 @@ export default function CartPage() {
                                             const productName = product.name || t("Product");
                                             const variant = item.variant || item.product_variant || null;
                                             const variantOption = item.variant_option || null;
-                                            const variantImage = variant?.photos?.[0];
-                                            const productImage = buildImageUrl(variantImage || product?.photos?.[0]);
+                                            const variantImage = firstPhoto(variant?.photos);
+                                            const productImage = buildImageUrl(variantImage || firstPhoto(product?.photos));
                                             const unitPrice = parseFloat(variantOption?.price ?? variant?.price ?? product.price ?? item.price ?? 0);
                                             return (
                                                 <tr key={index} className={styles.cart_item} id={`CartItem-${index}`}>
