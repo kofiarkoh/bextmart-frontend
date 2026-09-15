@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import ProductItemGrid from "./ultils/ProductItemGrid";
@@ -6,10 +6,35 @@ import useTranslation from "./ultils/useTranslation";
 import { useSearchProductsQuery } from "../store/productsApi";
 import styles from "../public/assets/styles/Home.module.css";
 
+const FEATURED_SEED_KEY = "bextmart_featured_seed";
+
+function getSessionSeed() {
+    if (typeof window === "undefined") return undefined;
+    try {
+        let seed = window.sessionStorage.getItem(FEATURED_SEED_KEY);
+        if (!seed) {
+            seed = String(Math.floor(Math.random() * 2147483647));
+            window.sessionStorage.setItem(FEATURED_SEED_KEY, seed);
+        }
+        return seed;
+    } catch {
+        return undefined;
+    }
+}
 
 const SectionProductGrid = (props) => {
     const { t } = useTranslation();
-    const { data, isLoading, isError } = useSearchProductsQuery();
+    const [seed, setSeed] = useState(undefined);
+
+    useEffect(() => {
+        setSeed(getSessionSeed());
+    }, []);
+
+    const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
+        { sort: "random", ...(seed && { seed }) },
+        { skip: !seed }
+    );
+    const isLoading = !seed || isQueryLoading;
     const products = useSelector((state) => state.products.items);
     const resolvedItems = products?.length
         ? products
