@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -13,6 +13,17 @@ import { getSessionSeed } from '../components/ultils/sessionSeed'
 import styles from '../public/assets/styles/Home.module.css'
 
 const PRODUCTS_SEED_KEY = 'bextmart_products_seed'
+
+// Must match .products_page_grid's grid-template-columns in Home.module.css
+// (repeat(auto-fill, minmax(GRID_CARD_MIN_WIDTH, 1fr))) with gap GRID_GAP.
+const GRID_CARD_MIN_WIDTH = 180
+const GRID_GAP = 16
+const GRID_ROWS_PER_PAGE = 4
+
+function columnsForWidth(width) {
+  if (!width) return 1
+  return Math.max(1, Math.floor((width + GRID_GAP) / (GRID_CARD_MIN_WIDTH + GRID_GAP)))
+}
 
 const ProductsPage = () => {
   const { t } = useTranslation()
@@ -33,11 +44,60 @@ const ProductsPage = () => {
   const sort = urlSort || (router.isReady ? 'random' : undefined)
   const seed = urlSeed || (sort === 'random' ? sessionSeed : undefined)
 
+  // Ask the API for exactly as many products as will fill whole grid rows,
+  // so the last page never leaves a lone, stretched-out card behind.
+  const gridRef = useRef(null)
+  const [perPage, setPerPage] = useState(undefined)
+  const updatePerPage = useCallback(() => {
+    const width = gridRef.current?.clientWidth
+    if (!width) return
+    setPerPage((prev) => {
+      const next = Math.min(100, columnsForWidth(width) * GRID_ROWS_PER_PAGE)
+      return next === prev ? prev : next
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    updatePerPage()
+    let timer
+    const onResize = () => {
+      clearTimeout(timer)
+      timer = setTimeout(updatePerPage, 200)
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [mounted, updatePerPage])
+
+  // If the fill count changes (e.g. window resized into a different column
+  // count) after we've already loaded a page, jump back to page 1 rather
+  // than risk landing on a now out-of-range page under the new page size.
+  const lastPerPage = useRef(perPage)
+  useEffect(() => {
+    if (lastPerPage.current === undefined) {
+      lastPerPage.current = perPage
+      return
+    }
+    if (perPage !== undefined && perPage !== lastPerPage.current) {
+      lastPerPage.current = perPage
+      if (page !== 1) {
+        const query = { page: 1 }
+        if (category) query.category = category
+        if (sort) query.sort = sort
+        if (seed) query.seed = seed
+        router.replace({ pathname: '/products', query }, undefined, { shallow: true })
+      }
+    }
+  }, [perPage])
+
   const { data, isLoading: isQueryLoading, isError } = useSearchProductsQuery(
-    { page, ...(category && { category }), ...(sort && { sort }), ...(seed && { seed }) },
-    { skip: !router.isReady || (sort === 'random' && !seed) }
+    { page, per_page: perPage, ...(category && { category }), ...(sort && { sort }), ...(seed && { seed }) },
+    { skip: !router.isReady || !perPage || (sort === 'random' && !seed) }
   )
-  const isLoading = !mounted || isQueryLoading
+  const isLoading = !mounted || !perPage || isQueryLoading
 
   const pageData = data?.data || {}
   const items = Array.isArray(pageData.data) ? pageData.data : []
@@ -95,7 +155,7 @@ const ProductsPage = () => {
                 )}
                 <div className={styles.products_grid_content}>
                   <div className="collection-grid__content">
-                    <div className={styles.products_grid_row}>
+                    <div ref={gridRef} className={styles.products_page_grid}>
                       {isLoading && (
                         <div className="col">
                           <div className="product-item__content">Loading...</div>

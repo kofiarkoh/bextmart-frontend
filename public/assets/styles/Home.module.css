@@ -325,6 +325,22 @@
   min-width: 0;
 }
 
+/* Standalone /products page grid: plain CSS grid (no Bootstrap row/col
+   classes involved here), so a partial last row keeps normal-sized cards
+   instead of the lone leftover card stretching to fill the row. */
+.products_page_grid {
+  margin: 0;
+  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.products_page_grid>div {
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
 /* Slidershow Banner Categories */
 .index_slideshow {
   position: relative;
