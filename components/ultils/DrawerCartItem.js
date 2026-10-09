@@ -16,7 +16,7 @@ const DrawerCartItem = ({ onItemClick }) => {
             <>{
                 items.map((item, index) => {
                     const product = item.product || {};
-                    const productId = product.uuid || item.product_uuid || product.id || item.product_id;
+                    const productId = product.slug || product.uuid || item.product_uuid || product.id || item.product_id;
                     const productName = product.name || t("Product");
                     const productImage = buildImageUrl(firstPhoto(product?.photos) || firstPhoto(item.variant?.photos) || null);
                     const productPrice = product.price || item.price || 0;

@@ -15,7 +15,7 @@ const ProductItemGrid = ({ product }) => {
     return (
         <div className="product-item__grid product-card">
             <div className="product-item__top">
-                <Link className="product-item__link" href={`/product/${product.uuid}`}>
+                <Link className="product-item__link" href={`/product/${product.slug || product.uuid}`}>
                     <div className="product-card__image-wrapper">
                         <img
                             className="product-card__image"
@@ -37,7 +37,7 @@ const ProductItemGrid = ({ product }) => {
             </div>
 
             <div className="product-card__info">
-                <Link href={`/product/${product.uuid}`} className="product-card__name">
+                <Link href={`/product/${product.slug || product.uuid}`} className="product-card__name">
                     {product.name}
                 </Link>
                 <div className="product-card__price">

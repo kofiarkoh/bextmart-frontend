@@ -97,7 +97,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
     const estCities = estSelectedRegion?.cities || [];
     const estSelectedCity = estCities.find((c) => String(c.id) === String(estCityId));
     const rawApiProduct = productResponse?.data || productResponse?.product || productResponse || null;
-    const isApiProductStale = !!rawApiProduct && String(rawApiProduct.uuid || rawApiProduct.id) !== String(productId);
+    const isApiProductStale = !!rawApiProduct && ![rawApiProduct.slug, rawApiProduct.uuid, rawApiProduct.id].some((k) => k != null && String(k) === String(productId));
     const apiProduct = isApiProductStale ? null : rawApiProduct;
 
     const seoSourceProduct = apiProduct || seoProduct || null;
@@ -328,7 +328,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                         <span className="form__label-title">{t("Choose_style")}:</span>
                     </legend>
                     <div className={styles.product_advance_form_item}>
-                        <Link className={`${styles.product_advance_item} product-advance__item ${styles.isactive}`} href={`/product/${product.uuid || product.handle}`}>
+                        <Link className={`${styles.product_advance_item} product-advance__item ${styles.isactive}`} href={`/product/${product.handle || product.uuid}`}>
                             <div className={styles.product_advance_item_image}>
                                 <Image src={product.image[0].imgpath} alt='' width={119} height={119} />
                             </div>
@@ -373,7 +373,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
             notifyAuth('Please log in to add items to your cart and continue shopping.');
             setTimeout(() => {
                 dismissAll();
-                router.push(`/account-login?redirect=/product/${product?.uuid || product?.id}`);
+                router.push(`/account-login?redirect=/product/${product?.handle || product?.uuid}`);
             }, 1500);
             return;
         }
@@ -1018,7 +1018,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                         {similarProducts.slice(0, 6).map((item, index) => (
                                                             <Link
                                                                 key={item.id || index}
-                                                                href={`/product/${item.uuid || item.id}`}
+                                                                href={`/product/${item.slug || item.uuid || item.id}`}
                                                                 style={{ textDecoration: 'none' }}
                                                             >
                                                                 <div style={{ background: '#f5f6f8', borderRadius: 8, padding: 12, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 140 }}>

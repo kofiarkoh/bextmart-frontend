@@ -19,7 +19,7 @@ const ProductAddtoCart = ({ product }) => {
             notifyAuth('Please log in to add items to your cart and continue shopping.');
             setTimeout(() => {
                 dismissAll();
-                router.push(`/account-login?redirect=/product/${product?.uuid || product?.id}`);
+                router.push(`/account-login?redirect=/product/${product?.slug || product?.uuid || product?.id}`);
             }, 1500);
             return;
         }
@@ -42,7 +42,7 @@ const ProductAddtoCart = ({ product }) => {
             <div className="cart-button bottom-center">
                 <div className="product-item__addcart">
                     <Link
-                        href={`/product/${product?.uuid || product?.id}`}
+                        href={`/product/${product?.slug || product?.uuid || product?.id}`}
                         className="product-item__icon"
                         title="See Options"
                         style={{
