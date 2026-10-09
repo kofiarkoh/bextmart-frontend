@@ -18,8 +18,8 @@ export function notifyError(message, title = 'Error') {
   toast.error(withTitle(title, message || 'Something went wrong.'), { duration: 4500, ...errorStyle })
 }
 
-export function notifySuccess(message, title = 'Success') {
-  toast.success(withTitle(title, message), { duration: 4500, ...successStyle })
+export function notifySuccess(message, title = 'Success', options = {}) {
+  toast.success(withTitle(title, message), { duration: 4500, ...successStyle, ...options })
 }
 
 export function notifyInfo(message, title = '') {

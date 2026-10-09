@@ -409,7 +409,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
             }
             await addToCartApi(payload).unwrap();
             setClassStatus('');
-            notifySuccess(`${product.name} added to cart.`, 'Added to Cart');
+            notifySuccess('Product added to cart', '', { position: 'top-center' });
         } catch (error) {
             setClassStatus('');
             const msg = error?.data?.message || 'Could not add to cart.';

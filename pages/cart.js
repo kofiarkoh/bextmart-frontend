@@ -11,9 +11,10 @@ import CartPageSkeleton from '../components/ultils/CartPageSkeleton'
 import ExtNotification from '../components/ExtNotification'
 import { SVGTrash } from '../public/assets/SVG';
 import styles from '../public/assets/styles/CartPage.module.css'
-import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation } from '../store/cartApi'
+import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation, useClearCartItemsMutation } from '../store/cartApi'
 import { useSelector } from 'react-redux'
 import { buildImageUrl, firstPhoto, resolveCartItemPrice } from '../components/ultils/Tools'
+import { notifySuccess, notifyError } from '../components/ultils/notify'
 
 export default function CartPage() {
     if (typeof window !== 'undefined') {
@@ -26,6 +27,7 @@ export default function CartPage() {
     const { isLoading, refetch } = useGetCartQuery(undefined, { skip: !authToken });
     const [updateCartItem] = useUpdateCartItemMutation();
     const [removeCartItem] = useRemoveCartItemMutation();
+    const [clearCartItems, { isLoading: isClearing }] = useClearCartItemsMutation();
     const [loadingItemId, setLoadingItemId] = React.useState(null);
     React.useEffect(() => {
         if (authToken) refetch();
@@ -71,6 +73,17 @@ export default function CartPage() {
             await removeCartItem(itemId).unwrap();
         } finally {
             setLoadingItemId(null);
+        }
+    }
+
+    async function handleClearCart() {
+        const cartId = cartItems[0]?.cart_id;
+        if (!cartId || !window.confirm('Remove all items from your cart?')) return;
+        try {
+            await clearCartItems(cartId).unwrap();
+            notifySuccess('Cart cleared', '');
+        } catch (error) {
+            notifyError(error?.data?.message || 'Could not clear the cart.', 'Could Not Clear Cart');
         }
     }
 
@@ -205,6 +218,16 @@ export default function CartPage() {
                             </div>
                             <div className="col-12 col-sm-6">
                                 <Link href="/checkout" className="button button--primary">{t("Cart_checkout")}</Link>
+                            </div>
+                            <div className={`col-12 ${styles.clear_cart}`}>
+                                <button
+                                    type="button"
+                                    className={`button button--secondary ${styles.clear_cart_button}`}
+                                    disabled={isClearing}
+                                    onClick={handleClearCart}
+                                >
+                                    Clear cart
+                                </button>
                             </div>
                         </div>
                     </div>

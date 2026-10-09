@@ -6,10 +6,23 @@ import CurrencyConvert from './CurrencyConvert'
 import useTranslation from './useTranslation'
 import { useSelector } from 'react-redux'
 import { buildImageUrl, firstPhoto, resolveCartItemPrice } from './Tools'
+import { useRemoveCartItemMutation } from '../../store/cartApi'
+import { SVGTrash } from '../../public/assets/SVG'
 
 const DrawerCartItem = ({ onItemClick }) => {
     const { t } = useTranslation();
     const items = useSelector((state) => state.cart.items);
+    const [removeCartItem] = useRemoveCartItemMutation();
+    const [removingId, setRemovingId] = React.useState(null);
+
+    async function handleRemove(itemId) {
+        setRemovingId(itemId);
+        try {
+            await removeCartItem(itemId).unwrap();
+        } finally {
+            setRemovingId(null);
+        }
+    }
 
     if (items.length) {
         return (
@@ -51,7 +64,17 @@ const DrawerCartItem = ({ onItemClick }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="cart__dropdown-remove"></div>
+                                <div className="cart__dropdown-remove">
+                                    <button
+                                        type="button"
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                        disabled={removingId === item.id}
+                                        onClick={() => handleRemove(item.id)}
+                                        aria-label="Remove item"
+                                    >
+                                        <SVGTrash />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )
