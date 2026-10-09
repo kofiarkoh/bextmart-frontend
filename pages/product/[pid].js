@@ -14,7 +14,7 @@ import ProductPageGallery from '../../components/ultils/ProductPageGallery';
 import ProductPageRelated from '../../components/ultils/ProductPageRelated';
 import ProductPageReview from '../../components/ultils/ProductPageReview';
 import ProductPageSkeleton from '../../components/ultils/ProductPageSkeleton';
-import { buildImageUrl, displayPrice, firstPhoto } from '../../components/ultils/Tools';
+import { buildImageUrl, displayPrice, firstPhoto, positivePrice } from '../../components/ultils/Tools';
 import { dismissAll, notifyAuth, notifyError, notifySuccess } from '../../components/ultils/notify';
 import { SVGArrowDown, SVGMinus, SVGPlus } from '../../public/assets/SVG';
 import sidebarBanner from "../../public/assets/images/yam-banner-ads.png";
@@ -485,9 +485,9 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                             const activeSubOption = Array.isArray(activeOption?.suboptions)
                                                                 ? activeOption.suboptions.find(s => selectedSubOptions[s.type] === s.value && s.price != null)
                                                                 : null;
-                                                            const activePrice = activeSubOption?.price
-                                                                ?? (activeOption?.price != null ? activeOption.price : null)
-                                                                ?? selectedVariant?.price
+                                                            const activePrice = positivePrice(activeSubOption?.price)
+                                                                ?? positivePrice(activeOption?.price)
+                                                                ?? positivePrice(selectedVariant?.price)
                                                                 ?? product.price;
                                                             return displayPrice(activePrice);
                                                         })()}
@@ -608,7 +608,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                                 </button>
                                                                             );
                                                                         }
-                                                                        const variantPrice = variant.price != null ? parseFloat(variant.price) : (product.price != null ? parseFloat(product.price) : null);
+                                                                        const variantPrice = positivePrice(variant.price) ?? positivePrice(product.price);
                                                                         return (
                                                                             <button
                                                                                 key={variant.id}
@@ -676,13 +676,9 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                                     const isSelected = selectedVal === value;
                                                                                     const hasColor = !!optionEntry?.color_code;
                                                                                     const hasSuboptions = Array.isArray(optionEntry?.suboptions) && optionEntry.suboptions.length > 0;
-                                                                                    const optionPrice = hasSuboptions ? null : (optionEntry?.price != null
-                                                                                        ? parseFloat(optionEntry.price)
-                                                                                        : selectedVariant?.price != null
-                                                                                            ? parseFloat(selectedVariant.price)
-                                                                                            : product?.price != null
-                                                                                                ? parseFloat(product.price)
-                                                                                                : null);
+                                                                                    const optionPrice = hasSuboptions ? null : (positivePrice(optionEntry?.price)
+                                                                                        ?? positivePrice(selectedVariant?.price)
+                                                                                        ?? positivePrice(product?.price));
                                                                                     return (
                                                                                         <button
                                                                                             key={value}
@@ -771,15 +767,10 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                                         || (variantStock !== null && variantStock <= 0);
                                                                                     const isSelected = selectedSubVal === value;
                                                                                     const hasColor = !!subEntry?.color_code;
-                                                                                    const subPrice = subEntry?.price != null
-                                                                                        ? parseFloat(subEntry.price)
-                                                                                        : parentOption?.price != null
-                                                                                            ? parseFloat(parentOption.price)
-                                                                                            : selectedVariant?.price != null
-                                                                                                ? parseFloat(selectedVariant.price)
-                                                                                                : product?.price != null
-                                                                                                    ? parseFloat(product.price)
-                                                                                                    : null;
+                                                                                    const subPrice = positivePrice(subEntry?.price)
+                                                                                        ?? positivePrice(parentOption?.price)
+                                                                                        ?? positivePrice(selectedVariant?.price)
+                                                                                        ?? positivePrice(product?.price);
                                                                                     return (
                                                                                         <button
                                                                                             key={value}

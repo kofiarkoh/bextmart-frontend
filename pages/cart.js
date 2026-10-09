@@ -13,7 +13,7 @@ import { SVGTrash } from '../public/assets/SVG';
 import styles from '../public/assets/styles/CartPage.module.css'
 import { useGetCartQuery, useUpdateCartItemMutation, useRemoveCartItemMutation } from '../store/cartApi'
 import { useSelector } from 'react-redux'
-import { buildImageUrl, firstPhoto } from '../components/ultils/Tools'
+import { buildImageUrl, firstPhoto, resolveCartItemPrice } from '../components/ultils/Tools'
 
 export default function CartPage() {
     if (typeof window !== 'undefined') {
@@ -42,7 +42,7 @@ export default function CartPage() {
             ? cartItems.reduce((sum, item) => {
                 const variant = item?.variant || item?.product_variant;
                 const variantOption = item?.variant_option;
-                const price = parseFloat(variantOption?.price ?? variant?.price ?? item?.product?.price ?? item?.price ?? 0);
+                const price = resolveCartItemPrice(item);
                 const qty = item?.quantity || 0;
                 return sum + (price * qty);
             }, 0)
@@ -100,7 +100,7 @@ export default function CartPage() {
                                             const variantOption = item.variant_option || null;
                                             const variantImage = firstPhoto(variant?.photos);
                                             const productImage = buildImageUrl(variantImage || firstPhoto(product?.photos));
-                                            const unitPrice = parseFloat(variantOption?.price ?? variant?.price ?? product.price ?? item.price ?? 0);
+                                            const unitPrice = resolveCartItemPrice(item);
                                             return (
                                                 <tr key={index} className={styles.cart_item} id={`CartItem-${index}`}>
                                                     <td className={styles.cart_item__media}>

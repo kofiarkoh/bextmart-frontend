@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 
 import { SVGCart, SVGCartMobile, SVGClose } from '../../public/assets/SVG';
 import DrawerCartItem from './DrawerCartItem'
+import { resolveCartItemPrice } from './Tools'
 
 const DrawerCart = () => {
     const { t } = useTranslation();
@@ -24,7 +25,7 @@ const DrawerCart = () => {
         ? cartItems.reduce((sum, item) => {
             const variant = item?.variant || item?.product_variant;
             const variantOption = item?.variant_option;
-            const price = parseFloat(variantOption?.price ?? variant?.price ?? item?.product?.price ?? item?.price ?? 0);
+            const price = resolveCartItemPrice(item);
             const qty = item?.quantity || 0;
             return sum + (price * qty);
         }, 0)
