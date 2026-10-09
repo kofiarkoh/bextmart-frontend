@@ -1092,10 +1092,9 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
         )
     }
 }
-export async function getServerSideProps({ params, req }) {
+export async function getServerSideProps({ params, req, locale, defaultLocale }) {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const protocol = req.headers['x-forwarded-proto'] || 'http';
-    const seoUrl = `${protocol}://${req.headers.host}/product/${params.pid}`;
 
     let seoProduct = null;
     try {
@@ -1108,6 +1107,14 @@ export async function getServerSideProps({ params, req }) {
         seoProduct = null;
     }
 
+    // Old uuid/id URLs permanently redirect to the slug URL so Google indexes one URL per product.
+    const slug = seoProduct?.slug;
+    if (slug && String(params.pid) !== String(slug)) {
+        const prefix = locale && locale !== defaultLocale ? `/${locale}` : '';
+        return { redirect: { destination: `${prefix}/product/${encodeURIComponent(slug)}`, permanent: true } };
+    }
+
+    const seoUrl = `${protocol}://${req.headers.host}/product/${slug || params.pid}`;
     return { props: { seoProduct, seoUrl } };
 }
 
