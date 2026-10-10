@@ -188,7 +188,7 @@ export default function CartPage() {
                                                     <td className={`${styles.cart_item__remove} center`}>
                                                         <button
                                                             type="button"
-                                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#000' }}
                                                             disabled={loadingItemId === item.id}
                                                             onClick={() => handleRemove(item.id)}
                                                             aria-label="Remove item"

@@ -67,7 +67,7 @@ const DrawerCartItem = ({ onItemClick }) => {
                                 <div className="cart__dropdown-remove">
                                     <button
                                         type="button"
-                                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#000' }}
                                         disabled={removingId === item.id}
                                         onClick={() => handleRemove(item.id)}
                                         aria-label="Remove item"
