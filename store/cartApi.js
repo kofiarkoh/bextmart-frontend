@@ -1,5 +1,5 @@
 import { apiSlice } from './apiSlice'
-import { setCart } from './cartSlice'
+import { setCart, clearCart } from './cartSlice'
 
 const CART_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -81,6 +81,21 @@ export const cartApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Cart'],
     }),
+    clearCartItems: builder.mutation({
+      query: (cartId) => ({
+        url: `${CART_BASE_URL}/cart/${cartId}/clear`,
+        method: 'DELETE',
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(clearCart())
+        } catch {
+          // no-op
+        }
+      },
+      invalidatesTags: ['Cart'],
+    }),
   }),
   overrideExisting: false,
 })
@@ -90,4 +105,5 @@ export const {
   useAddToCartMutation,
   useUpdateCartItemMutation,
   useRemoveCartItemMutation,
+  useClearCartItemsMutation,
 } = cartApi

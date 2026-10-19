@@ -46,6 +46,29 @@ export function displayRating(number) {
     )
 }
 
+// A price of 0/null/'' means "not set", so callers fall through to the next level.
+export function positivePrice(value) {
+    const n = parseFloat(value);
+    return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+// Cart line price: sub-option -> parent option -> variant -> product.
+export function resolveCartItemPrice(item) {
+    const variant = item?.variant || item?.product_variant;
+    const option = item?.variant_option;
+    const parentOption = option?.parent_option_id
+        ? (variant?.options || []).find((o) => o.id === option.parent_option_id)
+        : null;
+    return (
+        positivePrice(option?.price)
+        ?? positivePrice(parentOption?.price)
+        ?? positivePrice(variant?.price)
+        ?? positivePrice(item?.product?.price)
+        ?? positivePrice(item?.price)
+        ?? 0
+    );
+}
+
 export function displayPrice(price) {
     return (
         <div className="price product-item__price">

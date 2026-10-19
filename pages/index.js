@@ -91,10 +91,10 @@ export default function Home() {
               </div>
               <div>
                 <h2 style={{ margin: '0 0 12px', fontSize: 34, fontWeight: 800, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.5px' }}>
-                  Fast &amp; Reliable Delivery<br />Across Ghana
+                  Fast &amp; Reliable Delivery
                 </h2>
-                <p style={{ margin: 0, fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.75, maxWidth: 480 }}>
-                  From Accra to Kumasi, Takoradi to Tamale — we deliver to your doorstep quickly and safely, every time.
+                <p style={{ margin: 0, fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.75, maxWidth: 560 }}>
+                  Shop with confidence at Bextmart and enjoy safe, convenient, and dependable delivery straight to your doorstep. We&apos;re continually expanding our delivery network to serve you better.
                 </p>
               </div>
               <a href="/products" style={{

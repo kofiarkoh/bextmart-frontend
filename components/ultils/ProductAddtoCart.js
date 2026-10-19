@@ -26,7 +26,7 @@ const ProductAddtoCart = ({ product }) => {
         setError(null);
         try {
             await addToCart({ product_uuid: product.uuid, quantity: 1 }).unwrap();
-            notifySuccess(`${product.name} added to cart.`, 'Added to Cart')
+            notifySuccess('Product added to cart', '', { position: 'top-center' })
         } catch (err) {
             const msg = err?.data?.message || 'Could not add to cart.';
             setError(msg);
