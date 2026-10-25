@@ -696,7 +696,7 @@ export default function CheckoutPage() {
                         </p>
                         {parseFloat(selectedDeliveryType.fee) > 0 && (
                           <p style={{ fontSize: 14, margin: '0 0 4px' }}>
-                            <strong>Delivery fee:</strong> GH₵ {selectedDeliveryType.fee}
+                            <strong>Estimated delivery:</strong> GH₵ {selectedDeliveryType.fee}
                           </p>
                         )}
                         {getDeliveryEstimate(selectedDeliveryType.estimated_days, selectedDeliveryType.type?.slug === 'pickup', selectedCity?.name) && (
@@ -833,10 +833,6 @@ export default function CheckoutPage() {
                             <span>Subtotal</span>
                             <span><CurrencyConvert amount={parseFloat(summary?.cart_total ?? 0)} /></span>
                           </div>
-                          <div style={{ padding: '4px 16px 4px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)' }}>
-                            <span>Delivery fee ({selectedCity?.name})</span>
-                            <span><CurrencyConvert amount={parseFloat(summary?.delivery_fee ?? selectedCity?.delivery_fee ?? 0)} /></span>
-                          </div>
                           {parseFloat(summary?.weight_cost ?? 0) > 0 && (
                             <div style={{ padding: '4px 16px 12px', display: 'flex', justifyContent: 'space-between', fontSize: 14, color: 'var(--color_body)', borderBottom: '1px solid var(--color_line)' }}>
                               <span>Handling fees</span>
@@ -844,11 +840,22 @@ export default function CheckoutPage() {
                             </div>
                           )}
                           <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: parseFloat(summary?.weight_cost ?? 0) > 0 ? 'none' : '1px solid var(--color_line)' }}>
-                            <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>Total</span>
+                            <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--color_heading)' }}>Total to pay</span>
                             <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--color_primary)' }}>
                               <CurrencyConvert amount={parseFloat(summary?.total_amount ?? 0)} />
                             </span>
                           </div>
+                          {parseFloat(summary?.estimated_delivery_fee ?? 0) > 0 && (
+                            <div style={{ padding: '0 16px 14px', fontSize: 13, color: '#6b7280' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span>Estimated delivery*</span>
+                                <span><CurrencyConvert amount={parseFloat(summary.estimated_delivery_fee)} /></span>
+                              </div>
+                              {summary?.estimated_delivery_note && (
+                                <p style={{ margin: '4px 0 0', fontSize: 12 }}>* {summary.estimated_delivery_note}</p>
+                              )}
+                            </div>
+                          )}
                         </>
                       )}
                     </div>
@@ -940,10 +947,10 @@ function DeliveryTypeCost({ cityId, deliveryTypeId, fallbackFee }) {
   }
 
   const cost = summary
-    ? parseFloat(summary.delivery_fee || 0) + parseFloat(summary.weight_cost || 0)
+    ? parseFloat(summary.estimated_delivery_fee || 0)
     : parseFloat(fallbackFee || 0)
 
   return cost > 0
-    ? <>GH₵ {cost.toFixed(2)}</>
+    ? <>Estimated: GH₵ {cost.toFixed(2)}</>
     : <span style={{ color: '#059669' }}>Free delivery</span>
 }

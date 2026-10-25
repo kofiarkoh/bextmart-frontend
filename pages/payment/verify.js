@@ -85,7 +85,7 @@ export default function PaymentVerifyPage() {
 
     const items       = Array.isArray(order?.items) ? order.items : []
     const subtotal    = parseFloat(order?.cart_price   ?? 0)
-    const shippingFee = parseFloat(order?.delivery_fee ?? 0)
+    const estimatedDeliveryFee = parseFloat(order?.estimated_delivery_fee ?? 0)
     const weightCost  = parseFloat(order?.weight_cost  ?? 0)
     const totalPrice  = parseFloat(order?.total_price  ?? 0)
     // delivery info: address object + top-level nearby_city / delivery_instructions
@@ -310,10 +310,6 @@ export default function PaymentVerifyPage() {
                                                             <span>Cart Subtotal</span><span><CurrencyConvert amount={subtotal} /></span>
                                                         </div>
                                                     )}
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 8 }}>
-                                                        <span>Delivery Fee</span>
-                                                        <span>{shippingFee > 0 ? <CurrencyConvert amount={shippingFee} /> : 'Free'}</span>
-                                                    </div>
                                                     {weightCost > 0 && (
                                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--color_body)', marginBottom: 8 }}>
                                                             <span>Weight Cost</span>
@@ -323,6 +319,16 @@ export default function PaymentVerifyPage() {
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: 'var(--color_heading)', paddingTop: 10, borderTop: '1px solid var(--color_line)', marginTop: 4 }}>
                                                         <span>Total</span><span><CurrencyConvert amount={totalPrice} /></span>
                                                     </div>
+                                                    {estimatedDeliveryFee > 0 && (
+                                                        <div style={{ marginTop: 10, fontSize: 13, color: '#6b7280' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                <span>Estimated delivery*</span><span><CurrencyConvert amount={estimatedDeliveryFee} /></span>
+                                                            </div>
+                                                            {order?.estimated_delivery_note && (
+                                                                <p style={{ margin: '4px 0 0', fontSize: 12 }}>* {order.estimated_delivery_note}</p>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </>
                                         )}
