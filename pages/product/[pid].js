@@ -492,25 +492,6 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                             return displayPrice(activePrice);
                                                         })()}
                                                     </div>
-                                                    <div className={styles.product_earnpoints}>
-                                                        <span className="earnpoints-text" style={{ fontWeight: 500 }}>{t("Quantity")}:</span>
-                                                        <div className="quantity" style={{ width: 'auto', minWidth: 120 }}>
-                                                            <button className="quantity__button no-js-hidden" name="minus" type="button" onClick={(e) => changeQty(true, product.price)}>
-                                                                <span className="visually-hidden">{t("Decrease_quantity")}</span>
-                                                                <SVGMinus />
-                                                            </button>
-                                                            <input readOnly className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
-                                                            <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
-                                                                <span className="visually-hidden">{t("Increase_quantity")}</span>
-                                                                <SVGPlus />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    {exceedsStock && (
-                                                        <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
-                                                            Out of stock
-                                                        </div>
-                                                    )}
                                                     {
                                                         product.advanced != undefined ? loadStyles() : ''
                                                     }
@@ -821,6 +802,25 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                                     );
                                                                 });
                                                             })}
+                                                        </div>
+                                                    )}
+                                                    <div className={styles.product_earnpoints}>
+                                                        <span className="earnpoints-text" style={{ fontWeight: 500 }}>{t("Quantity")}:</span>
+                                                        <div className="quantity" style={{ width: 'auto', minWidth: 120 }}>
+                                                            <button className="quantity__button no-js-hidden" name="minus" type="button" onClick={(e) => changeQty(true, product.price)}>
+                                                                <span className="visually-hidden">{t("Decrease_quantity")}</span>
+                                                                <SVGMinus />
+                                                            </button>
+                                                            <input readOnly className="quantity__input" type="number" name="updates[]" value={qty} min="0" autoComplete="off" />
+                                                            <button className="quantity__button no-js-hidden" name="plus" type="button" onClick={(e) => changeQty(false, product.price)}>
+                                                                <span className="visually-hidden">{t("Increase_quantity")}</span>
+                                                                <SVGPlus />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    {exceedsStock && (
+                                                        <div style={{ fontSize: 13, color: '#e53935', marginTop: -8, marginBottom: 16 }}>
+                                                            Out of stock
                                                         </div>
                                                     )}
                                                     <div className='product-template__form'>
