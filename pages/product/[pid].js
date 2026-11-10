@@ -958,7 +958,7 @@ const ProductPage = ({ seoProduct, seoUrl }) => {
                                                         </div>
                                                     </div>
                                                     <div className="product-template__sharing">
-                                                        <div className="product-sharing__desktop d-none d-md-block">
+                                                        <div className="product-sharing__desktop">
                                                             <div className={`product-sharing__title ${styles.details_strong}`}>{t("Share")}</div>
                                                             <ul className="social-sharing">
                                                                 <li>
